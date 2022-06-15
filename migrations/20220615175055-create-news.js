@@ -26,6 +26,8 @@ module.exports = {
           model: "Categories",
           key: "id",
         },
+         onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       softDeletes: {
         type: Sequelize.INTEGER,

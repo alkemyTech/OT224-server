@@ -14,40 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Member.init({
-    id: {
-      type:DataTypes.INTEGER,
-      autoIncrement: true,
-      allowNull:false,
-    },
-    name: {
-      type:DataTypes.STRING,
-      allowNull:false
-    },
-
-    facebookUrl: {
-      type:DataTypes.STRING
-    },
-
-    instagramUrl: {
-      type:DataTypes.STRING
-    },
-
-    linkedinUrl: {
-      type:DataTypes.STRING
-    },
-
-    image: {
-      type:DataTypes.STRING,
-      allowNull:false
-    },
-
-    description: {
-      type:DataTypes.STRING
-    }
+    id:DataTypes.INTEGER,
+    name: DataTypes.STRING,
+    facebookUrl:DataTypes.STRING,
+    instagramUrl: DataTypes.STRING,
+    linkedinUrl:DataTypes.STRING,
+    image:DataTypes.STRING,
+    description:DataTypes.STRING 
   }, {
-    timestamps: false,
-    createdAt: true,
-    updatedAt: true,
     sequelize,
     modelName: 'Member',
   });

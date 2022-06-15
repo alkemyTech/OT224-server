@@ -7,6 +7,7 @@ const Organization = require("../models/organization")(sequelize, Sequelize.Data
 
 
 //Create and save a organization
+
 module.exports = {
  create(req, res) {
     return Organization

@@ -9,14 +9,14 @@ const login = async (req, res) => {
       },
     });
     if (!user) {
-      res.status(401).json({ ok: false });
+      res.status(401).json({ ok: "Unauthorized" });
     } else {
       if (bcrypt.compareSync(req.body.password, user.password)) {
         res.status(200).json({
           user: user,
         });
       } else {
-        res.status(401).json({ msg: "Incorrect password" });
+        res.status(401).json({ msg: "Unauthorized" });
       }
     }
   } catch (error) {

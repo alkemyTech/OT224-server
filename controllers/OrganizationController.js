@@ -2,8 +2,8 @@ const Sequelize = require('sequelize');
 const sequelize = require('../models/index').sequelize;
 
 // Bring in Model
-const Organization = require("../models/organization")(sequelize, Sequelize.DataTypes,
-     Sequelize.Model);
+const Organization = require("../models/organization")(sequelize, Sequelize.DataTypes, Sequelize.Model);
+
 
 //Create and save a organization
 module.exports = {

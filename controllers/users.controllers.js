@@ -1,13 +1,17 @@
 const ModeloUser = require('../models').User;
 
 const getAllUsers = async(req, res) =>{
-    const users =  await ModeloUser.findAll()
     try {
-        if(users){
-            res.send(users)
-        }     
+        const users =  await ModeloUser.findAll()
+        if(!users){
+            res.status(400).json({
+                msg: 'users not found'
+            })
+        }else{
+            res.status(200).send(users)
+        }
     } catch (error) {
-        res.send(error)        
+        res.status(500).send(error)       
     }
 }
 

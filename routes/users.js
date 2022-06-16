@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const userController = require('../controllers/users.controllers')
+const userController = require('../controllers/users.controllers');
+const { authenticatedUser } = require('../middlewares/authenticatedUser');
 
 
 /* GET users listing. */
-router.get('/', userController.getAllUsers )
+router.get('/', authenticatedUser, userController.getAllUsers )
 // create user
 router.post('/create', userController.createUser)
 //update user

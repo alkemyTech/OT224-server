@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "News",
       paranoid: true,
-      deletedAt: 'destroyTime'
     }
   );
   return News;

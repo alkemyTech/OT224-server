@@ -9,7 +9,7 @@ const login = async (req, res) => {
       },
     });
     if (!user) {
-      res.json({ ok: false });
+      res.status(401).json({ ok: false });
     } else {
       if (bcrypt.compareSync(req.body.password, user.password)) {
         res.status(200).json({
@@ -21,7 +21,7 @@ const login = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(404).json(error);
+    res.status(500).json(error);
   }
 };
 

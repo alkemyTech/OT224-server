@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Categories.init({
+    
     name: { type: DataTypes.STRING, 
             allowNull: false },
 
@@ -21,12 +22,11 @@ module.exports = (sequelize, DataTypes) => {
                    allowNull: true },
 
     image: { type: DataTypes.STRING, 
-             allowNull: true },
-             
-    deletedAt: DataTypes.DATE,
+             allowNull: true }
   }, {
     sequelize,
     modelName: 'Categories',
+    paranoid:true,
   });
   return Categories;
 };

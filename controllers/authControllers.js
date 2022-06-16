@@ -9,7 +9,7 @@ const login = async (req, res) => {
       },
     });
     if (!user) {
-      res.status(401).json({ ok: "Unauthorized" });
+      res.status(401).json({ msg: "Unauthorized" });
     } else {
       if (bcrypt.compareSync(req.body.password, user.password)) {
         res.status(200).json({

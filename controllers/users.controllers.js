@@ -1,4 +1,5 @@
 const ModeloUser = require('../models').User;
+const bcrypt = require('bcryptjs')
 
 const getAllUsers = async(req, res) =>{
     try {
@@ -20,7 +21,25 @@ const createUser = async (req, res) =>{
 }
 
 const updateUser = async (req, res) =>{
-    res.send('Hello from update user')
+    const editUser = await db.ModeloUser.findByPk(req.params.id,{
+        include: [{ association: 'roles' }]
+    })
+    try{
+        if(editUser){
+            editUser.update({
+                firstName: !req.body.firstName ?  editUser.firstName : req.body.firstName ,
+                lastName: !req.body.lastName ? editUser.lastName :  req.body.lastName ,
+                email: !req.body.email ? editUser.email : req.body.email,
+                image: !req.file ?  editUser.file : req.file.filename,
+                password: !req.body.password ? editUser.password : bcrypt.hashSync(req.body.password, 5),                
+            })
+        }else{
+            res.status(404).json({
+                msg:'No se encontro el usuario',
+                status:404
+            })
+        }
+    } catch (err) { console.log(err) }
 }
 
 const deleteUser = async (req, res) =>{

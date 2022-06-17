@@ -13,9 +13,6 @@ module.exports = {
                 type: Sequelize.STRING
             },
             image: {
-                type: Sequelize.STRING
-            },
-            image: {
                 allowNull: false,
                 type: Sequelize.STRING
             },
@@ -27,6 +24,10 @@ module.exports = {
                 type: Sequelize.DATE
             },
             updatedAt: {
+                allowNull: false,
+                type: Sequelize.DATE
+            },
+            deletedAt: {
                 allowNull: false,
                 type: Sequelize.DATE
             }

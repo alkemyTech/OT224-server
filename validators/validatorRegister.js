@@ -1,4 +1,7 @@
 const { check } = require('express-validator');
+const User = require('../models').User
+
+
 
 
 
@@ -7,36 +10,31 @@ const validateRegister = [
         .not()
         .isEmpty()
         .withMessage('Please enter your first name'),
-    check('firstName')
-        .isAlpha()
-        .withMessage('The first name can only contain letters'),
-    check('firstName')
-        .isLength({ min: 3 })
-        .withMessage('First name must contain 3 or more characters'),
     check('lastName')
         .not()
         .isEmpty()
         .withMessage('Please enter your last name'),
-    check('lastName')
-        .isAlpha()
-        .withMessage('The last name can only contain letters'),
-    check('lastName')
-        .isLength({ min: 3 })
-        .withMessage('Last name must contain 3 or more characters'),
     check('email')
-        .not()
-        .isEmpty()
-        .withMessage('Please enter your email'),
-    check('email')
-        .isEmail()
-        .withMessage('Enter a valid email'),
+        .custom(async (email) => {
+            if (email === '') {
+                throw new Error('Please enter your email')
+            } else {
+                let testMail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+                if (!testMail.test(email)) {
+                    throw new Error('Please enter a valid email')
+                } else {
+                    const user = await User.findOne({ where: { email: email } })
+                    if (user) {
+                        throw new Error('Email already registered')
+                    }
+                }
+            }
+
+        }),
     check('password')
         .not()
         .isEmpty()
         .withMessage('Please enter a password'),
-    check('password')
-        .isLength({ min: 6 })
-        .withMessage('The password must contain 3 or more characters'),
 ]
 
 module.exports = { validateRegister }

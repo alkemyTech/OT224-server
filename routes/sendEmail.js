@@ -1,8 +1,3 @@
-//AGREGAR AL CONTROLLER DE REGISTER ( al servicio de create user ):
-//importar la función : const {welcomeEmail}=require ('./sendEmail);
-//Luego de la respuesta de "usuario creado"...
-//invocar a la función : welcomeEmail(users.dataValues);
-
 const sgMail = require("../services/sendgrid");
 const ejs = require("ejs");
 const htmlMessage = require("../views/emailWelcome.ejs");

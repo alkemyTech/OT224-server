@@ -30,8 +30,7 @@ const updateUser = async (req, res) =>{
                 firstName: !req.body.firstName ?  editUser.firstName : req.body.firstName ,
                 lastName: !req.body.lastName ? editUser.lastName :  req.body.lastName ,
                 email: !req.body.email ? editUser.email : req.body.email,
-                image: !req.file ?  editUser.file : req.file.filename,
-                password: !req.body.password ? editUser.password : bcrypt.hashSync(req.body.password, 5),                
+                image: !req.file ?  editUser.file : req.file.filename,                
             })
         }else{
             res.status(404).json({

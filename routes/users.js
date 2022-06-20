@@ -16,4 +16,3 @@ router.put('/update/:id', userController.updateUser)
 router.delete('/delete/:id',userController.deleteUser)
 
 module.exports = router;
-

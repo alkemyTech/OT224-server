@@ -50,9 +50,14 @@ const deleteUser = async (req, res) => {
     res.send('Hello from delete user')
 }
 
+const findMe = async (req, res, next) => {
+    return res.status(200).send(res.user);
+};
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
-    deleteUser
-}
+    deleteUser,
+    findMe,
+};

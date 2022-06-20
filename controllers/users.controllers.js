@@ -3,18 +3,18 @@ const bcrypt = require('bcrypt')
 const { validationResult } = require('express-validator')
 
 const getAllUsers = async (req, res) => {
-  try {
-      const users = await ModeloUser.findAll()
-      if (!users) {
-          res.status(400).json({
-              msg: 'users not found'
-          })
-      } else {
-          res.status(200).send(users)
-      }
-  } catch (error) {
-      res.status(500).send(error)
-  }
+    try {
+        const users = await ModeloUser.findAll()
+        if (!users) {
+            res.status(400).json({
+                msg: 'users not found'
+            })
+        } else {
+            res.status(200).send(users)
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
 }
 
 const createUser = async (req, res) => {
@@ -51,13 +51,13 @@ const deleteUser = async (req, res) => {
 }
 
 const findMe = async (req, res, next) => {
-  return res.status(200).send(res.user);
+    return res.status(200).send(res.user);
 };
 
 module.exports = {
-  getAllUsers,
-  createUser,
-  updateUser,
-  deleteUser,
-  findMe,
+    getAllUsers,
+    createUser,
+    updateUser,
+    deleteUser,
+    findMe,
 };

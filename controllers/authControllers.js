@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken')
 
 const login = async (req, res) => {
   try {
@@ -12,8 +13,9 @@ const login = async (req, res) => {
       res.status(401).json({ msg: "Unauthorized" });
     } else {
       if (bcrypt.compareSync(req.body.password, user.password)) {
+        const token = jwt.sign({ user: user }, process.env.PRIVATE_KEY, { expiresIn: process.env.EXPIRES_IN })
         res.status(200).json({
-          user: user,
+          token: token,
         });
       } else {
         res.status(401).json({ msg: "Unauthorized" });

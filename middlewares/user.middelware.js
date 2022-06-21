@@ -19,4 +19,6 @@ const verifyIsAdmin = (req, res, next) =>{
     }
 }
 
-module.exports = verifyIsAdmin
+module.exports = {
+    verifyIsAdmin,
+}

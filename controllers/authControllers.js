@@ -13,7 +13,21 @@ const login = async (req, res) => {
       res.status(401).json({ msg: "Unauthorized" });
     } else {
       if (bcrypt.compareSync(req.body.password, user.password)) {
-        const token = jwt.sign({ user: user }, process.env.PRIVATE_KEY, { expiresIn: process.env.EXPIRES_IN })
+        const token = jwt.sign(
+          {
+            user: {
+              firstName:user.firstName,
+              lastName:user.lastName,
+              email:user.email,
+              photo:user.photo,
+              roleId:user.roleId
+            }
+          },
+          process.env.PRIVATE_KEY,
+          {
+            expiresIn: process.env.EXPIRES_IN
+          }
+        )
         res.status(200).json({
           token: token,
         });

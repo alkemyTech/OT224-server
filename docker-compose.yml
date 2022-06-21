@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_DATABASE=OT224
+      - MYSQL_USER=OT224
+      - MYSQL_PASSWORD=OT224
+      - MYSQL_ROOT_PASSWORD=OT224
+    volumes:
+      - mysql-data:/var/lib/mysql/
+volumes:
+  mysql-data:

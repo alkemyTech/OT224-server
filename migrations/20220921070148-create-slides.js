@@ -22,10 +22,10 @@ module.exports = {
             type: Sequelize.STRING
         },
         organizationId: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
             references: {
-                model: Organization,
-                key: id
+                model: 'Organizations',
+                key: 'id'
             }
         },
         createdAt: {

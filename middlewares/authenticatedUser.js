@@ -1,29 +1,29 @@
-const jwt = require('jsonwebtoken')
-const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
 
 const authenticatedUser = async ( req, res, next ) =>{
 
     const token = req.header('Authorization');
 
     if( !token ){
-        return res.status(401).json({
+        return res.status(403).json({
             msg: 'The request does not have a token'
         })
     }
 
     try{
 
-        const { uid } = jwt.verify( token , process.env.PRIVATE_KEY);
-
-        const user = await User.findByPk( uid )
-
-        if( !user ){
+        const { user } = jwt.verify( token , process.env.PRIVATE_KEY);
+        
+        const userdb = await User.findOne({where: { email: user.email }} )
+      
+        if( !userdb ){
             return res.status(401).json({
                 msg: 'User does not exist'
             })
         }
 
-        req.user = user
+        req.user = userdb
 
         next()
 
@@ -34,8 +34,6 @@ const authenticatedUser = async ( req, res, next ) =>{
         })
         
     }
-
-
 }
 
 

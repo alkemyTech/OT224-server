@@ -12,14 +12,14 @@ const ejs = require("ejs");
           const body= output;
 
           await email.send(to,subject,body);
-          return true  
+          return emailSent=true
 
         } else { 
-          return false 
+          return emailSent=false
         }
     } catch (error) {
         console.log(error)
-        return false       
+        return emailSent=false   
     }
 
  }  

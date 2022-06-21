@@ -1,6 +1,7 @@
 const ModeloUser = require('../models').User;
 const bcrypt = require('bcrypt')
 const { validationResult } = require('express-validator')
+const {welcomeEmail}=require('../services/welcomeEmail')
 
 const getAllUsers = async (req, res) => {
     try {
@@ -36,7 +37,10 @@ const createUser = async (req, res) => {
             password: pass,
             roleId: roleId
         })
-        res.status(200).json({ newUser: user })
+                
+        welcomeEmail(user)
+        res.status(200).json({ newUser: user, emailSent})
+
     } catch (error) {
         res.status(500).json({ error:error})
     }

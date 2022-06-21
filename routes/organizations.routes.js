@@ -8,6 +8,6 @@ const router = express.Router();
 /* POST create organization. */
 router.post('/create', validateOrganization, organization.createOrganization);
 
-router.get('/public', organization.getOrganization);
+router.get('/public/:id', organization.getOrganizationById);
 router.put('/public/:id', authenticatedUser, verifyIsAdmin, organization.updateOrganization);
 module.exports = router;

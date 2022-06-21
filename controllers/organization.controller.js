@@ -11,13 +11,15 @@ const createOrganization = async (req, res) => {
     }
 }
 // Get Organization
-const getOrganization = async(req, res) => {    
+const getOrganizationById = async(req, res) => {    
     try {
+        const id = req.params.id
         const organization = await OrganizationModel.findOne({
+            where: { id },
             attributes: ['name', 'image', 'phone', 'address']
         });
         if(!organization){
-            res.status(200).send({message: "There is no information about the organization"})
+            res.status(404).send({message: "There is no information about the organization"})
         }else{            
             res.status(200).send(organization);
         }        
@@ -47,7 +49,7 @@ const updateOrganization = async (req, res) => {
 }
 
 module.exports = {
-    getOrganization,
+    getOrganizationById,
     createOrganization,
     updateOrganization
 }

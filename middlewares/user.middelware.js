@@ -16,7 +16,7 @@ const verifyIsAdmin =(req, res, next) =>{
     try {        
         const decodedToken = jwt.verify(token, process.env.PRIVATE_KEY)
          
-        if(decodedToken.roleId === ADMIN_ROLE_ID){
+        if(decodedToken.user.roleId === ADMIN_ROLE_ID){
             next()
         }else{
             res.send("you do not have the necessary permissions")

@@ -2,6 +2,7 @@ const ModeloUser = require('../models').User;
 const bcrypt = require('bcrypt')
 const { validationResult } = require('express-validator')
 const {welcomeEmail}=require('../services/welcomeEmail')
+const jwt = require('jsonwebtoken')
 
 const getAllUsers = async (req, res) => {
     try {
@@ -37,9 +38,25 @@ const createUser = async (req, res) => {
             password: pass,
             roleId: roleId
         })
-                
+
+        const token = jwt.sign(
+            {
+              user: {
+                firstName:user.firstName,
+                lastName:user.lastName,
+                email:user.email,
+                photo:user.photo,
+                roleId:user.roleId
+              }
+            },
+            process.env.PRIVATE_KEY,
+            {
+              expiresIn: process.env.EXPIRES_IN
+            }
+          ) 
+    
         const emailSent=await welcomeEmail(user)
-        res.status(200).json({ newUser: user, emailSent})
+        res.status(200).json({ newUser: user, emailSent, token:token})
 
     } catch (error) {
         res.status(500).json({ error: error })

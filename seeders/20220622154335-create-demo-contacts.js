@@ -7,7 +7,6 @@ module.exports = {
       phone: '375501966',
       email: 'example@example.com',
       message:'mensaje de Jhon',
-      deletedAt: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -16,7 +15,6 @@ module.exports = {
       phone: '375501966',
       email: 'example@example.com',
       message:'Nuevo mensaje de Jhon',
-      deletedAt: new Date(),
       createdAt: new Date(),
       updatedAt: new Date()
     }

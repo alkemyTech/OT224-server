@@ -16,6 +16,7 @@ const authRouter = require('./routes/auth')
 const membersRouter = require('./routes/members')
 const rolesRouter = require('./routes/role');
 const activitiesRouter = require('./routes/activities');
+const slidesRouter = require('./routes/slides');
 
 const app = express();
 app.use(cors())
@@ -40,6 +41,7 @@ app.use('/auth', authRouter);
 app.use('/members', membersRouter )
 app.use('/roles', rolesRouter);
 app.use('/activities', activitiesRouter);
+app.use('/slides', slidesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

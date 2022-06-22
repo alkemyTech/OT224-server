@@ -14,7 +14,7 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
-      adress: {
+      address: {
         type: Sequelize.STRING
       },
       email: {
@@ -29,7 +29,13 @@ module.exports = {
       aboutUsText: {
         type: Sequelize.TEXT
       },
-      contacts: {
+      facebookUrl: {
+        type: Sequelize.STRING
+      },
+      instagramUrl: {
+        type: Sequelize.STRING
+      },
+      linkedinUrl: {
         type: Sequelize.STRING
       },
       deletedAt: {

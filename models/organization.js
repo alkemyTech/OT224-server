@@ -21,11 +21,14 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.INTEGER,
     welcomeText: DataTypes.TEXT,
     aboutUsText: DataTypes.TEXT,
-    contacts: DataTypes.STRING
+    facebookUrl: DataTypes.STRING,
+    instagramUrl: DataTypes.STRING,
+    linkedinUrl: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Organization',
-    paranoid:true
+    paranoid: true,
+    
   });
   return Organization;
 };

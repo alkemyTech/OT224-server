@@ -1,6 +1,6 @@
 const ModeloUser = require('../models').User;
 const bcrypt = require('bcrypt')
-const { validationResult } = require('express-validator')
+const { validationResult } = require('express-validator');
 
 const getAllUsers = async (req, res) => {
     try {
@@ -64,7 +64,20 @@ const updateUser = async (req, res) =>{
 }
 
 const deleteUser = async (req, res) => {
-    res.send('Hello from delete user')
+ try {
+    const user = await ModeloUser.findOne({where : {id : req.params.id}})
+    if(user){
+        await ModeloUser.destroy({
+            where: {id: req.params.id}
+        })
+        res.send("User deleted succefuly")
+    }else{
+        res.send("User does not exist")
+    }
+ } catch (error) {
+    res.send(error)
+    
+ }
 }
 
 const findMe = async (req, res, next) => {

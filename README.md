@@ -20,6 +20,13 @@ npx sequelize-cli db:migrate
 ``` bash
 npx sequelize-cli db:seed:all
 ```
+``` bash
+Al ejecutar el comando anterior se van a crear 3 usuarios
+* id: 1  email: userRegular@test.com  password: 1234  releId: 2
+* id: 2  email: admin@test.com        password: 1234  releId: 1
+* id: 3  email: userStandar@test.com  password: 1234  releId: 1
+```
+
 
 ## Start local server
 

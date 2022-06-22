@@ -3,12 +3,12 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert('Users', [{
-      firstName: 'userRegular',
+      firstName: 'Admin',
       lastName: 'none',
-      email: 'userRegular@test.com',
+      email: 'Admin@test.com',
       // Important: Password not encrypted yet! 
       password: '1234',
-      roleId: 2,
+      roleId: 1,
       photo: 'https://www.freepng.es/png-p3b3eu/',
       createdAt: new Date,
       updatedAt: new Date

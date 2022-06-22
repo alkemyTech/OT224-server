@@ -38,7 +38,7 @@ const createUser = async (req, res) => {
             roleId: roleId
         })
                 
-        await welcomeEmail(user)
+        const emailSent=await welcomeEmail(user)
         res.status(200).json({ newUser: user, emailSent})
 
     } catch (error) {

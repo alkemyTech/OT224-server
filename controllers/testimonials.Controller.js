@@ -1,7 +1,7 @@
 let db = require('../models/');
 
 const testimonialsController = {
-    get: (req,res) => {
+    get: (req,res) =>{
         res.send("respond with a resource");
     }
 }

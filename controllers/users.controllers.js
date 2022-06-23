@@ -70,9 +70,9 @@ const deleteUser = async (req, res) => {
         await ModeloUser.destroy({
             where: {id: req.params.id}
         })
-        res.send("User deleted succefuly")
+        res.status(200).send("User deleted succefuly")
     }else{
-        res.send("User does not exist")
+        res.status(500).send("User does not exist")
     }
  } catch (error) {
     res.send(error)

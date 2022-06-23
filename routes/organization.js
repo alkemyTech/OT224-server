@@ -9,5 +9,5 @@ const router = express.Router();
 router.post('/create', validateOrganization, organization.createOrganization);
 
 router.get('/public', organization.getOrganization);
-// router.put('/public/:id', authenticatedUser, verifyIsAdmin, validateOrganization, organization.updateOrganization);
+router.put('/public/:id', authenticatedUser, verifyIsAdmin, validateOrganization, organization.updateOrganization);
 module.exports = router;

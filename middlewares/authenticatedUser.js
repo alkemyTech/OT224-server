@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/user');
+const User = require('../models/').User;
 
 const authenticatedUser = async ( req, res, next ) =>{
 
@@ -13,9 +13,10 @@ const authenticatedUser = async ( req, res, next ) =>{
 
     try{
 
-        const { uid } = jwt.verify( token , process.env.PRIVATE_KEY);
+        const uid = jwt.verify( token , process.env.PRIVATE_KEY);
 
-        const user = await User.findByPk( uid )
+        const user = await User.findByPk( uid.user.id )
+       
 
         if( !user ){
             return res.status(401).json({

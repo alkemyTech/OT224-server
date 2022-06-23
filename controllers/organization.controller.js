@@ -16,7 +16,7 @@ const getOrganizationById = async(req, res) => {
         const id = req.params.id
         const organization = await OrganizationModel.findOne({
             where: { id },
-            attributes: ['name', 'image', 'phone', 'address', 'facebookUrl', 'instagramUrl', 'linkedinUrl']
+            attributes: ['name', 'image', 'phone', 'address']
         });
         if(!organization){
             res.status(404).send({message: "There is no information about the organization"})

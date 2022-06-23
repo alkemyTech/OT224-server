@@ -1,17 +1,16 @@
 const jwt = require('jsonwebtoken')
-const ADMIN_ROLE_ID = require('../sharedConstants')
+const {ADMIN_ROLE_ID} = require('../sharedConstants')
 
 
 const verifyIsAdmin = (req, res, next) =>{
     const token = req.headers['authorization']
 
+    if (!token) {
+        return res.status(403).send('invalid or nonexistent token')
+      }
     
     if (token && token.toLowerCase().startsWith('bearer')) {
         token = token.substring(7)
-      }   
-
-    if (!token) {
-        return res.status(403).send('invalid or nonexistent token')
       } 
       
     try {        

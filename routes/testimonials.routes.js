@@ -11,4 +11,7 @@ router.get('/', testimonialController.getAllTestimonials);
 /* POST testimonial. */
 router.post('/',authenticatedUser, verifyIsAdmin, validateTestimonial, testimonialController.createTestimonial);
 
+/* PUT testimonial. */ 
+router.put('/:id', authenticatedUser, verifyIsAdmin, validateTestimonial, testimonialController.updateTestimonial);
+
 module.exports = router;

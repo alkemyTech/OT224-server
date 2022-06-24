@@ -1,15 +1,13 @@
 const ModelCategories= require('../models').Categories;
 
 const getAllCategories= async (req, res) => {
-    const categories= await ModelCategories.findAll()
-    try{
-      if(categories){
-        res.send("all categories")
-      }
+  try{
+     const categories= await ModelCategories.findAll({attributes: ['name']})
+     res.status(200).json({msg:'successfully',categories})    
 
-    } catch(error) {
-      res.status(400).send(error)
-    }
+   } catch(error) {
+     res.status(500).json(error)
+   }
 };
 
 

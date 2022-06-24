@@ -16,11 +16,7 @@ const createTestimonial = async (req, res) => {
 const getAllTestimonials = async (req, res) => {
     try {        
         const testimonials = await TestimonialModel.findAll();
-        if(!testimonials){
-            res.status(200).send(testimonials);
-        }else{            
-            res.status(200).send(testimonials);
-        }        
+        res.status(200).send(testimonials);                
     } catch (error) {
         res.status(500).send(error);
     }

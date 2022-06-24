@@ -6,6 +6,6 @@ const { authenticatedUser } = require('../middlewares/authenticatedUser');
 const { verifyIsAdmin } = require('../middlewares/user.middelware');
 
 // Create News
-router.post('/', authenticatedUser, verifyIsAdmin ,validateNews ,newsController.createNews);
+router.post('/', validateNews ,newsController.createNews);
 
 module.exports = router;

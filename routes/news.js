@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express();
+const newsController = require('../controllers/news.controller');
+const {validateNews} = require('../validators/newsValidator');
 
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
+router.post('/', validateNews ,newsController.createNews);
 
 module.exports = router;

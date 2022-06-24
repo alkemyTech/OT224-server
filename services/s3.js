@@ -13,7 +13,7 @@ const getBucket = ()=>{
 }
  
 //Cargar archivos al bucket
-const uploadToBacket = async (file)=>{
+const uploadToBucket = async (file)=>{
    const fileName= file.name
    const stream= fs.createReadStream(file.tempFilePath)
    const params = {
@@ -26,6 +26,6 @@ const uploadToBacket = async (file)=>{
 }
 
 module.exports= {
-    uploadToBacket,
+    uploadToBucket,
     getBucket
 }

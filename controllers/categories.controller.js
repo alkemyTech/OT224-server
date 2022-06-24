@@ -15,16 +15,11 @@ const getAllCategories= async (req, res) => {
 
 const createCategory= async (req,res)=> {
   try {
-    const findName=await ModelCategories.findOne({where:{name:req.body.name}}) 
-    if(findName) {
-      res.status(403).json('category already exists')
-    } else {
-      const category=await ModelCategories.create({name:req.body.name,
-                                                  description:req.body.description,
-                                                  image:req.body.image
-                                                })         
-      res.status(201).json({msg:'category created successfully',category})
-    }
+    const category=await ModelCategories.create({name:req.body.name,
+                                                description:req.body.description,
+                                                image:req.body.image
+                                              })         
+    res.status(201).json({msg:'category created successfully',category})
 
   } catch (error) {
     console.log(error)

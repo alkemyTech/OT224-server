@@ -13,21 +13,31 @@ const getAllCategories= async (req, res) => {
 };
 
 
-const createCategorie= async (req,res)=> {
-    res.send('create categorie')
+const createCategory= async (req,res)=> {
+  try {
+    const category=await ModelCategories.create({name:req.body.name,
+                                                description:req.body.description,
+                                                image:req.body.image
+                                              })         
+    res.status(201).json({msg:'category created successfully',category})
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json(error)
+  }
+};
+
+  const updateCategory=async (req,res)=>{
+    res.send('update category')
   };
 
-  const updateCategorie=async (req,res)=>{
-    res.send('update categorie')
-  };
-
-  const deleteCategorie=async (req,res)=>{
-    res.send('delete categorie')
+  const deleteCategory=async (req,res)=>{
+    res.send('delete category')
   };
 
 
 
 module.exports = {getAllCategories,
-                  createCategorie,
-                  updateCategorie,
-                  deleteCategorie};
+                  createCategory,
+                  updateCategory,
+                  deleteCategory};

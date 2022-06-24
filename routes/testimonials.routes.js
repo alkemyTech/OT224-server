@@ -14,4 +14,7 @@ router.post('/',authenticatedUser, verifyIsAdmin, validateTestimonial, testimoni
 /* PUT testimonial. */ 
 router.put('/:id', authenticatedUser, verifyIsAdmin, validateTestimonial, testimonialController.updateTestimonial);
 
+/* DELETE testimonial. */ 
+router.delete('/:id', authenticatedUser, verifyIsAdmin, testimonialController.deleteTestimonial);
+
 module.exports = router;

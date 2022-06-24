@@ -44,8 +44,20 @@ const updateTestimonial = async (req, res) => {
     }
 }
 
+//Delete testimonial
+const deleteTestimonial = async (req, res) => {
+    try {
+        const id = req.params.id;
+        await TestimonialModel.destroy({ where: { id } });
+        res.status(200).send({ message: "Testimonial deleted"});
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
 module.exports = {
     createTestimonial,
     getAllTestimonials,
-    updateTestimonial
+    updateTestimonial,
+    deleteTestimonial
 }

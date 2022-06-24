@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Slide.belongsTo(models.Organization,{
-                as:'organizations'
+                as:'organization'
             })
         }
     };

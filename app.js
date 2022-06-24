@@ -9,7 +9,7 @@ require('dotenv').config()
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const organizationRouter = require('./routes/organizations.routes');
-const testimonialsRouter = require('./routes/testimonials');
+const testimonialsRouter = require('./routes/testimonials.routes');
 const newsRouter = require('./routes/news');
 const categoriesRouter = require('./routes/categories');
 const authRouter = require('./routes/auth')
@@ -17,6 +17,7 @@ const membersRouter = require('./routes/members')
 const rolesRouter = require('./routes/role');
 const activitiesRouter = require('./routes/activities');
 const slidesRouter = require('./routes/slides');
+const contactRoutes = require('./routes/contacts.routes')
 
 const app = express();
 app.use(cors())
@@ -34,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/organizations', organizationRouter);
-app.use('./testimonials',testimonialsRouter)
+app.use('/testimonials',testimonialsRouter)
 app.use('/news', newsRouter);
 app.use('/categories', categoriesRouter);
 app.use('/auth', authRouter);
@@ -42,6 +43,7 @@ app.use('/members', membersRouter )
 app.use('/roles', rolesRouter);
 app.use('/activities', activitiesRouter);
 app.use('/slides', slidesRouter);
+app.use('/contacts',contactRoutes)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

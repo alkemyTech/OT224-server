@@ -20,10 +20,27 @@ const createSlide = async ( req, res ) => {
 
 const getSlideById = async ( req, res ) => {
 
-   res.json({
-    msg: 'Hello from get slide by id'
-   })
+    const id = req.params.id;
 
+    try {
+
+        const slide = await Slide.findByPk(id);
+        if(!slide){
+            return res.status(404).json({
+                msg:'Invalid or nonexisting slide'
+            })
+        }
+        res.status(200).json({
+            slide
+        })
+        
+    } catch (error) {
+        console.log( error )
+        res.status(500).json({
+            msg: 'Something went wrong call the admin'
+        })
+    }
+   
 }
 
 const updateSlide = async ( req, res ) => {

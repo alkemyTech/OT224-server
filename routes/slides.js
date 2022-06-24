@@ -1,11 +1,12 @@
 const { Router } = require('express');
-const { getAllSlides } = require('../controllers/slide.controller');
+const { getAllSlides, getSlideById } = require('../controllers/slide.controller');
+const { verifyIsAdmin } = require('../middlewares/user.middelware');
 
 const router = Router();
 
 router.get('/', getAllSlides );
 
-router.get('/:id', /*controller*/);
+router.get('/:id', verifyIsAdmin ,getSlideById);
 
 router.post('/create', /* controller*/);
 

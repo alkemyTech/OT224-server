@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
+const fileUpload= require('express-fileupload')
 require('dotenv').config()
 
 const indexRouter = require('./routes/index');
@@ -21,8 +22,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir : '/tmp/',
+  debug: true
+}));
+
 
 app.use('/api', indexRouter);
+
 
 
 // catch 404 and forward to error handler

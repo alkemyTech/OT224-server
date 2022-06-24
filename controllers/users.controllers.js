@@ -2,7 +2,7 @@ const ModeloUser = require('../models').User;
 const bcrypt = require('bcrypt')
 const { validationResult } = require('express-validator')
 const {welcomeEmail}=require('../services/welcomeEmail')
-const jwt = require('jsonwebtoken')
+const { tokenGenerator } = require('../helpers/tokenGenerator')
 
 const getAllUsers = async (req, res) => {
     try {
@@ -39,21 +39,7 @@ const createUser = async (req, res) => {
             roleId: roleId
         })
 
-        const token = jwt.sign(
-            {
-              user: {
-                firstName:user.firstName,
-                lastName:user.lastName,
-                email:user.email,
-                photo:user.photo,
-                roleId:user.roleId
-              }
-            },
-            process.env.PRIVATE_KEY,
-            {
-              expiresIn: process.env.EXPIRES_IN
-            }
-          ) 
+        const token = tokenGenerator(user)
     
         const emailSent=await welcomeEmail(user)
         res.status(200).json({ newUser: user, emailSent, token:token})

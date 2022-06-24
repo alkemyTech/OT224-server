@@ -3,13 +3,17 @@ const { User } = require('../models');
 
 const authenticatedUser = async ( req, res, next ) =>{
 
-    const token = req.header('Authorization');
+    let token = req.header('Authorization');
 
     if( !token ){
         return res.status(403).json({
             msg: 'The request does not have a token'
         })
     }
+
+    if (token && token.toLowerCase().startsWith('bearer')) {
+        token = token.substring(7)
+    } 
 
     try{
 

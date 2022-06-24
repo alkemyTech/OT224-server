@@ -3,7 +3,7 @@ const {ADMIN_ROLE_ID} = require('../sharedConstants')
 
 
 const verifyIsAdmin = (req, res, next) =>{
-    const token = req.headers['authorization']
+    let token = req.headers['authorization']
 
     if (!token) {
         return res.status(403).send('invalid or nonexistent token')
@@ -11,7 +11,7 @@ const verifyIsAdmin = (req, res, next) =>{
     
     if (token && token.toLowerCase().startsWith('bearer')) {
         token = token.substring(7)
-      } 
+    } 
       
     try {        
         const decodedToken = jwt.verify(token, process.env.PRIVATE_KEY)

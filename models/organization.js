@@ -17,18 +17,14 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     image: DataTypes.STRING,
     address: DataTypes.STRING,
-    email: DataTypes.STRING,
     phone: DataTypes.INTEGER,
+    email: DataTypes.STRING,
     welcomeText: DataTypes.TEXT,
-    aboutUsText: DataTypes.TEXT,
-    facebookUrl: DataTypes.STRING,
-    instagramUrl: DataTypes.STRING,
-    linkedinUrl: DataTypes.STRING
+    aboutUsText: DataTypes.TEXT
   }, {
     sequelize,
     modelName: 'Organization',
-    paranoid: true,
-    
+    paranoid: true
   });
   return Organization;
 };

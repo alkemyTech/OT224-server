@@ -9,34 +9,32 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       image: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       address: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true
       },
       phone: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       welcomeText: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: false
       },
       aboutUsText: {
-        type: Sequelize.TEXT
-      },
-      facebookUrl: {
-        type: Sequelize.STRING
-      },
-      instagramUrl: {
-        type: Sequelize.STRING
-      },
-      linkedinUrl: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       deletedAt: {
         type: Sequelize.DATE

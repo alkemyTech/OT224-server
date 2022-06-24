@@ -1,5 +1,3 @@
-const { ProcessCredentials } = require('aws-sdk')
-
 require('dotenv').config()
 
 module.exports = {

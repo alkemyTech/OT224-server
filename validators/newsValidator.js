@@ -13,6 +13,10 @@ const validateNews = [
     check('content')
         .notEmpty()
         .withMessage('El campo no puede estar vacio'),
+    
+    check('type')
+        .notEmpty()
+        .withMessage('El campo no puede estar vacio'),
 
     check('categoryId')
         .notEmpty()

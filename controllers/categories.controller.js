@@ -14,7 +14,7 @@ const getAllCategories= async (req, res) => {
 
 const getOneCategory= async (req, res) => {
   try{
-    const category= await ModelCategories.findOne({where:{id:req.params.id}}) 
+    const category= await ModelCategories.findByPk(req.params.id) 
     
     if(!category){
       return res.status(404).json({msg:'the category does not exist'})

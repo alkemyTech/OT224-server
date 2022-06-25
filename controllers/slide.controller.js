@@ -1,5 +1,6 @@
 const { Slide } = require('../models');
-
+const { uploadToBucket } = require('../services/s3');
+const sequelize = require('sequelize');
 
 const getAllSlides = async ( req, res ) => {
 
@@ -11,10 +12,55 @@ const getAllSlides = async ( req, res ) => {
 
 const createSlide = async ( req, res ) => {
 
-    res.json({
-        msg: 'Hello from create slide'
-    })
+    let img = req.files.img;
+    const body = req.body;
 
+    
+    const decodedName = Buffer.from( img.name , 'base64').toString('ascii');
+    img['name'] = decodedName;
+    
+    
+    try {
+        
+        const location = await uploadToBucket(img);
+        if( !body.hasOwnProperty('order') ){
+            const [lastOrder] = await  Slide.findAll({
+                where: { organizationId: body.organizationId },
+                attributes: [[sequelize.fn('max', sequelize.col('order')), 'maxOrder']],
+                raw: true
+            })
+            body['order'] = lastOrder.maxOrder + 1
+        }else{
+            
+            const slidesByOrg  = await Slide.findAll({ where: { organizationId: body.organizationId }})
+    
+            const checkForRepeatedOrder = (slide) => slide.order == body.order;
+            
+            if(slidesByOrg.some( checkForRepeatedOrder )){
+                return res.status(400).json({
+                    msg:`You already have an image with order: ${body.order}`
+                })
+            } 
+        }
+        
+        
+        const slide = await Slide.create({ 
+            text: body.text,
+            order: body.order,
+            imageUrl: location,
+            organizationId: body.organizationId
+        })
+        res.status(200).json({
+            msg: 'Slide was succesfully created',
+            slide
+        }) 
+
+    } catch (error) {
+        console.log( error )
+        res.status(500).json({
+            msg: 'Something went wrong call the admin'
+        })
+    }
 }
 
 

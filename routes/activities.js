@@ -1,23 +1,25 @@
 var express = require('express');
 var router = express.Router();
-const activityController = require('../controllers/activities');
+const activityController = require('../controllers/activity.controller');
 const { authenticatedUser } = require('../middlewares/authenticatedUser');
+const { verifyIsAdmin } = require('../middlewares/user.middelware');
+const { validateActivity } = require('../validators/activity.validator');
 
 
 // Get all activities
-router.get('/', activityController.getAllActivities)
+router.get('', authenticatedUser, activityController.getAllActivities)
 
 // Create activity
-router.post('/', activityController.createActivity)
+router.post('', authenticatedUser, verifyIsAdmin, validateActivity, activityController.createActivity)
 
 // Get activity by id
-router.get('/:id', activityController.getActivityById)
+router.get('/:id', authenticatedUser, activityController.getActivityById)
 
 // Update activity
-router.put('/:id', activityController.updateActivity)
+router.put('/:id', authenticatedUser, verifyIsAdmin, validateActivity, activityController.updateActivity)
 
 // Delete activity
-router.delete('/:id',activityController.deleteActivity)
+router.delete('/:id', authenticatedUser, verifyIsAdmin, activityController.deleteActivity)
 
 module.exports = router;
 

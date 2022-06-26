@@ -26,5 +26,5 @@ const verifyIsAdmin = (req, res, next) =>{
 }
 
 module.exports = {
-    verifyIsAdmin,
+    verifyIsAdmin
 }

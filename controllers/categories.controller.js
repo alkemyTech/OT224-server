@@ -10,6 +10,19 @@ const getAllCategories= async (req, res) => {
    }
 };
 
+const getOneCategory= async (req, res) => {
+  try{
+    const category= await ModelCategories.findByPk(req.params.id) 
+    
+    if(!category){
+      return res.status(404).json({msg:'the category does not exist'})
+    };
+    res.status(200).json({msg:'successful',category})
+
+  } catch(error) {
+    res.status(500).json(error)
+  }
+};
 
 const createCategory= async (req,res)=> {
   try {
@@ -36,6 +49,7 @@ const createCategory= async (req,res)=> {
 
 
 module.exports = {getAllCategories,
+                  getOneCategory,
                   createCategory,
                   updateCategory,
                   deleteCategory};

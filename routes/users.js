@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const userController = require('../controllers/users.controllers');
 const { authenticatedUser } = require('../middlewares/authenticatedUser');
-const { validateRegister } = require('../validators/validatorRegister')
+const { validateRegister } = require('../validators/validatorRegister');
 
 
 
@@ -13,6 +13,6 @@ router.post('/auth/register',validateRegister, userController.createUser)
 //update user
 router.put('/update/:id', userController.updateUser)
 //delete user
-router.delete('/delete/:id',userController.deleteUser)
+router.delete('/:id',authenticatedUser,userController.deleteUser)
 
 module.exports = router;

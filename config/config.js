@@ -22,5 +22,10 @@ module.exports = {
         "database": process.env.DB_NAME,
         "host": process.env.DB_HOST,
         "dialect": "mysql"
+    },
+    "aws": { 
+"accessKeyId": process.env.ACCESS_KEY_ID,
+"secretAccessKey": process.env.SECRET_ACCESS_KEY,
+"s3BucketName": process.env.S3_BUCKET_NAME
     }
 }

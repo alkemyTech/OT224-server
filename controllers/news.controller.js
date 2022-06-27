@@ -23,10 +23,7 @@ const detailNews = async (req,res) =>{
             status:404
         });
         }else {
-            res.status(200).send({
-                data:news, 
-                status:200
-            }); 
+            res.status(200).send(news); 
         }
     } catch (error) {res.status(500).send(error);}
 }

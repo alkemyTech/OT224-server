@@ -5,7 +5,9 @@ const {validateCategories}=require('../validators/categoriesValidator')
 const categoriesController=require('../controllers/categories.controller');
 
 
-router.get('/',categoriesController.getAllCategories)
+router.get('/',verifyIsAdmin,categoriesController.getAllCategories)
+
+router.get('/:id',verifyIsAdmin,categoriesController.getOneCategory)
 
 router.post('/',verifyIsAdmin,validateCategories,categoriesController.createCategory)
 

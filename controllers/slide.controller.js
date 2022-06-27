@@ -34,7 +34,7 @@ const createSlide = async ( req, res ) => {
         }else{
             
             const slidesByOrg  = await Slide.findAll({ where: { organizationId: body.organizationId }})
-            console.log( slidesByOrg )
+         
             const checkForRepeatedOrder = (slide) => slide.order == body.order;
             
             if(slidesByOrg.some( checkForRepeatedOrder )){

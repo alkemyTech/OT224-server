@@ -9,7 +9,7 @@ router.get('/', getAllSlides );
 
 router.get('/:id', verifyIsAdmin ,getSlideById);
 
-router.post('/', validateSlide ,createSlide);
+router.post('/', verifyIsAdmin ,validateSlide ,createSlide);
 
 router.put('/update/:id' , /*controller*/);
 

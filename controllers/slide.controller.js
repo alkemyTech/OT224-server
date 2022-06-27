@@ -8,7 +8,7 @@ const getAllSlides = async ( req, res ) => {
 
   try {
 
-    const slides = await Slide.findAll({ attributes: ['thumbnailUrl', 'order']})
+    const slides = await Slide.findAll({ attributes: ['id','thumbnailUrl', 'order']})
     
     res.status(200).json({
         slides

@@ -76,10 +76,10 @@ const deleteUser = async (req, res) => {
             })
             res.status(200).send("User deleted succefuly")
         }else{
-            res.status(500).send("User does not exist")
+            res.status(404).send("User does not exist")
         }
      } catch (error) {
-        res.send(error)
+        res.status(500).send(error)
      }
 }
 

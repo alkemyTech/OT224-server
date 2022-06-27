@@ -7,20 +7,19 @@ const contactsValidators = [
         .not()
         .isEmpty()
         .withMessage('Please enter your name!'),
-    check('email')
-        .not()
-        .isEmpty()
-        .withMessage('Please enter your email!')
-        .isEmail()
-        .withMessage('Please enter a valid email!'),
     check('email').custom(async (email) => {
-        const contact = await Contacts.findOne({
-            where: {
-                email: email
+        if (email === '') {
+            throw new Error('Please enter your email')
+        } else {
+            let testMail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+            if (!testMail.test(email)) {
+                throw new Error('Please enter a valid email')
+            } else {
+                const contact = await Contacts.findOne({ where: { email: email } })
+                if (contact) {
+                    throw new Error('Email already registered')
+                }
             }
-        })
-        if (contact) {
-            throw new Error('Email already registered')
         }
     }),
 

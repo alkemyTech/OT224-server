@@ -1,6 +1,7 @@
 const { Slide } = require('../models');
 const { uploadToBucket } = require('../services/s3');
 const sequelize = require('sequelize');
+const { Op } = require('sequelize')
 
 const getAllSlides = async ( req, res ) => {
 
@@ -33,13 +34,18 @@ const createSlide = async ( req, res ) => {
         }else{
             
             const slidesByOrg  = await Slide.findAll({ where: { organizationId: body.organizationId }})
-    
+            console.log( slidesByOrg )
             const checkForRepeatedOrder = (slide) => slide.order == body.order;
             
             if(slidesByOrg.some( checkForRepeatedOrder )){
-                return res.status(400).json({
-                    msg:`You already have an image with order: ${body.order}`
-                })
+             await Slide.increment(
+                'order',
+                {
+                    where: {
+                        [Op.and]:[ { organizationId: body.organizationId }, { order:{ [Op.gte]: body.order } }]
+                    }
+                }
+              )
             } 
         }
         
@@ -51,7 +57,6 @@ const createSlide = async ( req, res ) => {
             organizationId: body.organizationId
         })
         res.status(200).json({
-            msg: 'Slide was succesfully created',
             slide
         }) 
 

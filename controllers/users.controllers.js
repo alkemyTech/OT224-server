@@ -71,7 +71,19 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    res.send('Hello from delete user')
+    try {
+        const user = await ModeloUser.findOne({where : {id : req.params.id}})
+        if(user){
+            await ModeloUser.destroy({
+                where: {id: req.params.id}
+            })
+            res.status(200).send("User deleted succefuly")
+        }else{
+            res.status(404).send("User does not exist")
+        }
+     } catch (error) {
+        res.status(500).send(error)
+     }
 }
 
 const findMe = async (req, res) => {

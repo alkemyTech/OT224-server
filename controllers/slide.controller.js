@@ -1,20 +1,32 @@
 const { Slide } = require('../models');
 
 
+ 
+
+
 const getAllSlides = async ( req, res ) => {
 
-    res.json({
-        msg: 'Hello from get all slides'
+  try {
+
+    const slides = await Slide.findAll({ attributes: ['thumbnailUrl', 'order']})
+    
+    res.status(200).json({
+        slides
     })
+
+  } catch (error) {
+    console.log( error )
+    res.status(500)
+  }
 
 }
 
 const createSlide = async ( req, res ) => {
 
     res.json({
-        msg: 'Hello from create slide'
+        msg: 'Hello from create Slide'
     })
-
+    
 }
 
 

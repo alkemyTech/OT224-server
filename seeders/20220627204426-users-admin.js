@@ -6,12 +6,10 @@ const bcrypt = require("bcrypt");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const userAdmin = [];
+    const passwordUsersAdmin = "userAdmin2022";
+    const pass = bcrypt.hashSync(passwordUsersAdmin, parseInt(process.env.SALT)); 
 
-
-
-    for (let i = 0; i < 10; i++) {    
-      
-      const pass = bcrypt.hashSync(faker.internet.password(), parseInt(process.env.SALT)); 
+    for (let i = 0; i < 10; i++) {      
 
 
       userAdmin.push({

@@ -7,13 +7,15 @@ require('dotenv').config()
 module.exports = {
   up: async (queryInterface, Sequelize) => {
 
-    const userRegular = [];
+    const userStandar = [];
+
+    const passwordUsersStandar = "userStandar2022";
+    const pass = bcrypt.hashSync(passwordUsersStandar, parseInt(process.env.SALT)); 
    
     for (let i = 0; i < 10; i++) {    
       
-      const pass = bcrypt.hashSync(faker.internet.password(), parseInt(process.env.SALT)); 
-
-      userRegular.push({
+      
+      userStandar.push({
         firstName:faker.name.firstName(),
         lastName:faker.name.lastName(),
         email:faker.internet.email(),
@@ -24,7 +26,7 @@ module.exports = {
         updatedAt: new Date
       });
     }
-    await queryInterface.bulkInsert('Users',userRegular , {});
+    await queryInterface.bulkInsert('Users',userStandar , {});
   },
 
 

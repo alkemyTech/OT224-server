@@ -8,7 +8,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -18,7 +18,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -28,7 +28,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -38,7 +38,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -48,7 +48,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -58,7 +58,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -68,7 +68,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -78,7 +78,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -88,7 +88,7 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
@@ -98,12 +98,13 @@ module.exports = {
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
       password: faker.internet.password(),
-      roleId: 1,
+      roleId: 2,
       photo: faker.image.avatar(),
       createdAt: new Date,
       updatedAt: new Date
-    } ], {});
+    }], {});
   },
+
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete('Users', null, {})

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
+const swaggerUi = require('swagger-ui-express');
+const swagger = require('../documentation/swagger');
 
 const usersRouter = require('./users');
 const organizationRouter = require('./organizations.routes');
@@ -20,24 +20,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-const swaggerSpec = {
-  definition: {
-    openapi: '3.0.2',
-    info: {
-      title: 'ONG Somos más API',
-      description: 'API Documentation for use',
-      version: '1.0.0',
-    },
-    servers: [
-        {
-            url:"http://localhost:3000"
-        }
-    ]
-  },
-  // looks for configuration in specified directories
-  apis: ['./routes/*.js'],
-};
-
 router.use('/users', usersRouter);
 router.use('/organization', organizationRouter);
 router.use('/testimonials',testimonialsRouter)
@@ -49,6 +31,6 @@ router.use('/roles', rolesRouter);
 router.use('/activities', activitiesRouter);
 router.use('/slides', slidesRouter);
 router.use('/contacts',contactRoutes);
-router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swaggerSpec)));
+router.use('/docs', swaggerUi.serve, swaggerUi.setup(swagger));
 
 module.exports = router;

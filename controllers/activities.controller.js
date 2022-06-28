@@ -12,7 +12,11 @@ const getAllActivities = async (req, res) => {
 
 const getActivityById = async (req, res) => {
 	try {
-		const a = await ActivityModel.findByPk(req.params.id);
+		const id = req.params.id;
+		const a = await ActivityModel.findByPk(id);
+		if (!a) {
+			return sendNotFound(res, id)
+		}
 		return res.status(200).json(a);
 	} catch (error) {
 		console.log(error);
@@ -34,26 +38,39 @@ const createActivity = async (req, res) => {
 const updateActivity = async (req, res) => {
 	try {
 		const id = req.params.id;
-		await ActivityModel.update(req.body, { where: { id } })
 		const activity = await ActivityModel.findByPk(id)
-		res.status(200).json(activity)
-
+		if (!activity) {
+			return sendNotFound(res, id)
+		}
+		ActivityModel.update(req.body, {
+			where: { id }
+		})
+		return res.status(200).json(`The activity with id ${id} was updated`)
 	} catch (error) {
 		console.log(error);
 		res.status(500).send(error);
 	}
 };
+
 
 const deleteActivity = async (req, res) => {
 	try {
 		const id = req.params.id;
+		const activity = await ActivityModel.findByPk(id)
+		if (!activity) {
+			return sendNotFound(res, id)
+		}
 		await ActivityModel.destroy({ where: { id } })
-		res.status(200).json(true)
+		return res.status(204).json(true)
 	} catch (error) {
 		console.log(error);
 		res.status(500).send(error);
 	}
 };
+
+const sendNotFound = (res, id) => res.status(404).json(
+	`The activity with id ${id} does not exist`
+)
 
 module.exports = {
 	getAllActivities,

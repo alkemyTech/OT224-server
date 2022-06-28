@@ -4,11 +4,23 @@ const sequelize = require('sequelize');
 const { Op } = require('sequelize');
 const { resizeImg } = require('../helpers/thumbNailConverter');
 
+ 
+
+
 const getAllSlides = async ( req, res ) => {
 
-    res.json({
-        msg: 'Hello from get all slides'
+  try {
+
+    const slides = await Slide.findAll({ attributes: ['id','thumbnailUrl', 'order']})
+    
+    res.status(200).json({
+        slides
     })
+
+  } catch (error) {
+    console.log( error )
+    res.status(500)
+  }
 
 }
 
@@ -54,7 +66,6 @@ const createSlide = async ( req, res ) => {
               )
             } 
         }
-
 
         const slide = await Slide.create({ 
             text: body.text,

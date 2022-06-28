@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const activityController = require('../controllers/activity.controller');
+const activityController = require('../controllers/activities.controller');
 const { authenticatedUser } = require('../middlewares/authenticatedUser');
 const { verifyIsAdmin } = require('../middlewares/user.middelware');
 const { validateActivity } = require('../validators/activity.validator');

@@ -16,10 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   Categories.init({
     
     name: { type: DataTypes.STRING, 
-            allowNull: false },
+            allowNull: false,
+            unique:true},
 
     description: { type: DataTypes.STRING, 
-                   allowNull: true },
+                   allowNull: true
+                  },
 
     image: { type: DataTypes.STRING, 
              allowNull: true }

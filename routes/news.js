@@ -11,4 +11,8 @@ router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews
 // Create News
 router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsController.createNews);
 
+
+//Update News
+router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsController.editNews);
+
 module.exports = router;

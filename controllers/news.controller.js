@@ -14,6 +14,28 @@ const createNews = async (req,res) =>{
     }
 }
 
+const editNews = async (req, res) =>{
+    try {
+        
+        const news = await newsModel.findByPk(req.params.id);
+        if(!news){
+            res.status(404).send({
+                message: 'News no found!',
+                satatus: 404
+            })
+        }else{
+            const updateNews = await newsModel.update(req.body,{ where: { id: req.params.id } });
+            
+            if(updateNews == 1){
+                res.status(201).send( updateNews );
+            }
+        }        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }   
+}
+
 const detailNews = async (req,res) =>{
     try{
         news = await newsModel.findByPk(req.params.id);
@@ -31,5 +53,6 @@ const detailNews = async (req,res) =>{
 
 module.exports = {
     createNews,
-    detailNews
+    detailNews,
+    editNews
 }

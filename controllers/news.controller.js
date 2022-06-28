@@ -14,7 +14,22 @@ const createNews = async (req,res) =>{
     }
 }
 
+const detailNews = async (req,res) =>{
+    try{
+        news = await newsModel.findByPk(req.params.id);
+        if(!news){
+            res.status(404).send({
+            message: "News no found!", 
+            status:404
+        });
+        }else {
+            res.status(200).send(news); 
+        }
+    } catch (error) {res.status(500).send(error);}
+}
+
 
 module.exports = {
     createNews,
+    detailNews
 }

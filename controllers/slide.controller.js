@@ -1,22 +1,91 @@
 const { Slide } = require('../models');
+const { uploadToBucket } = require('../services/s3');
+const sequelize = require('sequelize');
+const { Op } = require('sequelize');
+const { resizeImg } = require('../helpers/thumbNailConverter');
+
+ 
 
 
 const getAllSlides = async ( req, res ) => {
 
-    res.json({
-        msg: 'Hello from get all slides'
+  try {
+
+    const slides = await Slide.findAll({ attributes: ['id','thumbnailUrl', 'order']})
+    
+    res.status(200).json({
+        slides
     })
+
+  } catch (error) {
+    console.log( error )
+    res.status(500)
+  }
 
 }
 
 const createSlide = async ( req, res ) => {
 
-    res.json({
-        msg: 'Hello from create slide'
-    })
+    let img = req.files.img;
+    const body = req.body;
 
+
+    const decodedName = Buffer.from( img.name , 'base64').toString('ascii');
+    img['name'] = decodedName;
+
+
+    try {
+
+        const regularImglocation = await uploadToBucket(img);
+
+        const resizedImg = await resizeImg(img); 
+        
+        const thumbnailImgLocation = await uploadToBucket(resizedImg)
+
+        if( !body.hasOwnProperty('order') ){
+            const [lastOrder] = await  Slide.findAll({
+                where: { organizationId: body.organizationId },
+                attributes: [[sequelize.fn('max', sequelize.col('order')), 'maxOrder']],
+                raw: true
+            })
+            body['order'] = lastOrder.maxOrder + 1
+        }else{
+
+            const slidesByOrg  = await Slide.findAll({ where: { organizationId: body.organizationId }})
+
+            const checkForRepeatedOrder = (slide) => slide.order == body.order;
+
+            if(slidesByOrg.some( checkForRepeatedOrder )){
+             await Slide.increment(
+                'order',
+                {
+                    where: {
+                        [Op.and]:[ { organizationId: body.organizationId }, { order:{ [Op.gte]: body.order } }]
+                    }
+                }
+              )
+            } 
+        }
+
+        const slide = await Slide.create({ 
+            text: body.text,
+            order: body.order,
+            imageUrl: regularImglocation,
+            thumbnailUrl: thumbnailImgLocation,
+            organizationId: body.organizationId
+        })
+        res.status(200).json({
+            slide
+        }) 
+
+    } catch (error) {
+        console.log( error )
+        res.status(500).json({
+            msg: 'Something went wrong call the admin'
+        })
+    }
+    
 }
-
 
 const getSlideById = async ( req, res ) => {
 

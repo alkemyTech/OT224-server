@@ -33,5 +33,6 @@ const getAllContacts = async (req,res)=>{
 }
 
 module.exports = {
-    createContact
+    createContact,
+    getAllContacts
 }

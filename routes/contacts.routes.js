@@ -1,11 +1,12 @@
 const { Router } = require('express')
-const { createContact } = require('../controllers/contact.controller')
+const { createContact, getAllContacts } = require('../controllers/contact.controller')
 const { authenticatedUser } = require('../middlewares/authenticatedUser')
 const { verifyIsAdmin } = require('../middlewares/user.middelware')
 const { contactsValidators } = require('../validators/contactsValidators')
 
 const router = Router()
 
-router.post('/', authenticatedUser, verifyIsAdmin, contactsValidators, createContact)
+router.post('/',  contactsValidators, createContact)
+router.get('/', authenticatedUser, verifyIsAdmin, getAllContacts)
 
 module.exports = router

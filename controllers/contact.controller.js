@@ -42,17 +42,17 @@ const deleteContact = async (req, res) => {
     try {
         const { id } = req.params
 
-        const contact = await Contact.destroy({
+        const response = await Contact.destroy({
             where: {
                 id: id
             }
         })
     
-        if(!contact) return res.status(404).json({
-            contact:contact
+        if(!response) return res.status(404).json({
+            response:response
         })
         res.status(200).json({
-            contact:contact
+            response:response
         })
     } catch (error) {
         res.status(500).json({

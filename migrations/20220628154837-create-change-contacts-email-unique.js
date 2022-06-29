@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.changeColumn(
+      await queryInterface.changeColumn(
         'Contacts',
         'email',
         {
@@ -11,13 +11,13 @@ module.exports = {
           allowNull: false,
           unique: true,
         }
-      ),
-    ]);
-  },
+        ),
+      ]);
+    },
 
   down: async (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn('Contacts', 'email'),
+      await queryInterface.removeColumn('Contacts', 'email'),
     ]);
   }
 };

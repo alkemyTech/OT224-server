@@ -13,7 +13,7 @@ module.exports = {
     {
       name: 'John',
       phone: '375501966',
-      email: 'example@example.com',
+      email: 'johnmail@example.com',
       message:'Nuevo mensaje de Jhon',
       createdAt: new Date(),
       updatedAt: new Date()

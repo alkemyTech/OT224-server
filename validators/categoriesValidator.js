@@ -1,5 +1,4 @@
 const { check } = require('express-validator');
-const { delimiter } = require('path/posix');
 const { validateResult } = require("../helpers/validate");
 const Category=require('../models').Categories;
 

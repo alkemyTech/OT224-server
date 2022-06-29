@@ -15,4 +15,7 @@ router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsControlle
 //Update News
 router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsController.editNews);
 
+//Delete News
+router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteNews);
+
 module.exports = router;

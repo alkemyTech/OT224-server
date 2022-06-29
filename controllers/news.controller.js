@@ -50,9 +50,30 @@ const detailNews = async (req,res) =>{
     } catch (error) {res.status(500).send(error);}
 }
 
+const deleteNews = async (req, res) =>{
+    try{
+        news = await newsModel.findOne({
+            where:{
+                id: req.params.id
+            }
+        })
+        if(!news){
+            res.status(404).send({
+                message: 'News no found!', 
+                status:404
+            });
+        }else {
+            news.destroy(news)
+            res.status(200).send({ message: 'News deleted'}) 
+        }
+    } catch (error) { res.status(500).send(error);}
+}
+
+
 
 module.exports = {
     createNews,
     detailNews,
-    editNews
+    editNews,
+    deleteNews
 }

@@ -13,9 +13,9 @@ const createContact = async (req, res) => {
             message: message
         })
 
-        res.status(200).json({contact})
+        res.status(200).json({ contact })
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({ error })
     }
 }
 
@@ -23,10 +23,10 @@ const getAllContacts = async (req, res) => {
 
     try {
         const contacts = await Contact.findAll()
-        res.status(200).json({contacts})
+        res.status(200).json({ contacts })
 
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({ error })
     }
 }
 
@@ -39,11 +39,11 @@ const deleteContact = async (req, res) => {
                 id: id
             }
         })
-            
-        if(!response) return res.status(404).json({response})
-        res.status(200).json({response})
+
+        if (!response) return res.status(404).json({ response })
+        res.status(200).json({ response })
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({ error })
     }
 }
 

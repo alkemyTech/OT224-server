@@ -1,9 +1,8 @@
 const CommentModel = require("../models").Comment;
 
 const createComment = async (req, res) => {
-    try {
-        let comment = req.body;
-        comment = await CommentModel.create(comment);
+    try {         
+        const comment = await CommentModel.create(req.body);
         return res.status(201).send(comment);
 
     } catch (error) {

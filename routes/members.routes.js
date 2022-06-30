@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 const memberController = require('../controllers/members.controller')
+const {validateMembers} =  require('../validators/members.validator')
 
 
 /* GET users listing. */
 router.get('/', memberController.getAllMember )
 // create member
-router.post('/create', memberController.createMember)
+router.post('/',validateMembers ,memberController.createMember)
 //update member
 router.put('/update/:id', memberController.updateMember)
 //delete member

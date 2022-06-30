@@ -13,7 +13,7 @@ const verifyIsAdmin = (req, res, next) =>{
             if(decodedToken.user.roleId === ADMIN_ROLE_ID){
                 next()
             }else{
-                res.send("you do not have the necessary permissions")
+                res.status(401).send("you do not have the necessary permissions")
             }        
         } catch (error) {
             res.send(error)        

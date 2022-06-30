@@ -1,26 +1,29 @@
-const ModelMember = require('../models').Member;
+const ModelMember = require('../models').Member
+const { Op } = require('sequelize')
+const ModelHelper = require("../helpers/modelHelper")
+const modelHelper = new ModelHelper(ModelMember)
 
-const getAllMember = async(req, res) =>{
-    const members = await ModelMember.findAll()
+const getAllMember = async (req, res) => {
+
     try {
-        if(members){
-            res.send(members)
-        }           
+        const page = req.query.page || 1
+        const members = await modelHelper.findAndPaginate(page)
+        return res.status(200).json(members);
     } catch (error) {
         res.status(400).send(error)
-        
+
     }
 }
 
-const createMember = async (req, res) =>{
+const createMember = async (req, res) => {
     res.send('hello from create member')
 }
 
-const updateMember = async (req, res) =>{
+const updateMember = async (req, res) => {
     res.send('Hello from update member')
 }
 
-const deleteMember = async (req, res) =>{
+const deleteMember = async (req, res) => {
     res.send('Hello from delete member')
 }
 

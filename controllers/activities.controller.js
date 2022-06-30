@@ -1,24 +1,8 @@
-const { Op } = require('sequelize')
-const ActivityModel = require("../models").Activity
-const ModelHelper = require("../helpers/modelHelper")
-const modelHelper = new ModelHelper(ActivityModel)
+const ActivityModel = require("../models").Activity;
 
 const getAllActivities = async (req, res) => {
 	try {
-		const limit = 10
-		let page = 1
-		if (req.query.page) {
-			page = req.query.page
-		}
-		let where = {}
-		if (req.query.query) {
-			where['name'] = {
-				[Op.like]: `%${req.query.query}%`
-			}
-		}
-		const order = [['name', 'ASC']];
-
-		const activities = await modelHelper.findAndPaginate(page, limit, where, order)
+		const activities = await ActivityModel.findAll();
 		return res.status(200).json(activities);
 	} catch (error) {
 		console.log(error);

@@ -40,20 +40,17 @@ const validateCreateCategories = [
 ]
 
 const validateUpdateCategories = [
-    check('id')
-        .isInt()
-        .withMessage('invalid data type'),
     check('name')
         .custom(async (value,{req})=>{
-        if(req.params.id){
-            const existsValue = await Category.findByPk(req.params.id)
-            if (existsValue && existsValue.name!==req.body.name){
-                const isDuplicated = await Category.findOne({ where: { name: req.body.name } })
-                    if (isDuplicated) {
-                        throw new Error('category name already exists')
-                    }
+            if(req.params.id){
+                const existsValue = await Category.findByPk(req.params.id)
+                if (existsValue && existsValue.name!==req.body.name){
+                    const isDuplicated = await Category.findOne({ where: { name: req.body.name } })
+                        if (isDuplicated) {
+                            throw new Error('category name already exists')
+                        }
+                }
             }
-        }
         return true
         }),
 ]

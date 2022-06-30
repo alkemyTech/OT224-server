@@ -13,12 +13,11 @@ const getAllCategories= async (req, res) => {
 const getOneCategory= async (req, res) => {
   try{
     const category= await ModelCategories.findByPk(req.params.id) 
-    
     if(!category){
       return res.status(404).send({msg:'the category does not exist'})
     };
     res.status(200).send(category)
-
+    
   } catch(error) {
     res.status(500).send(error)
   }
@@ -45,7 +44,7 @@ const createCategory= async (req,res)=> {
       if(!categoryExists){
         return res.status(404).send({msg:'the category does not exist'})
       } else {
-        categoryExists.update({
+        await categoryExists.update({
             name:req.body.name,
             description:req.body.description,
             image:req.body.image

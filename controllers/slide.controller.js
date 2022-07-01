@@ -4,33 +4,33 @@ const sequelize = require('sequelize');
 const { Op } = require('sequelize');
 const { resizeImg } = require('../helpers/thumbNailConverter');
 
- 
 
 
-const getAllSlides = async ( req, res ) => {
 
-  try {
+const getAllSlides = async (req, res) => {
 
-    const slides = await Slide.findAll({ attributes: ['id','thumbnailUrl', 'order']})
-    
-    res.status(200).json({
-        slides
-    })
+    try {
 
-  } catch (error) {
-    console.log( error )
-    res.status(500)
-  }
+        const slides = await Slide.findAll({ attributes: ['id', 'thumbnailUrl', 'order'] })
+
+        res.status(200).json({
+            slides
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500)
+    }
 
 }
 
-const createSlide = async ( req, res ) => {
+const createSlide = async (req, res) => {
 
     let img = req.files.img;
     const body = req.body;
 
 
-    const decodedName = Buffer.from( img.name , 'base64').toString('ascii');
+    const decodedName = Buffer.from(img.name, 'base64').toString('ascii');
     img['name'] = decodedName;
 
 
@@ -38,36 +38,36 @@ const createSlide = async ( req, res ) => {
 
         const regularImglocation = await uploadToBucket(img);
 
-        const resizedImg = await resizeImg(img); 
-        
+        const resizedImg = await resizeImg(img);
+
         const thumbnailImgLocation = await uploadToBucket(resizedImg)
 
-        if( !body.hasOwnProperty('order') ){
-            const [lastOrder] = await  Slide.findAll({
+        if (!body.hasOwnProperty('order')) {
+            const [lastOrder] = await Slide.findAll({
                 where: { organizationId: body.organizationId },
                 attributes: [[sequelize.fn('max', sequelize.col('order')), 'maxOrder']],
                 raw: true
             })
             body['order'] = lastOrder.maxOrder + 1
-        }else{
+        } else {
 
-            const slidesByOrg  = await Slide.findAll({ where: { organizationId: body.organizationId }})
+            const slidesByOrg = await Slide.findAll({ where: { organizationId: body.organizationId } })
 
             const checkForRepeatedOrder = (slide) => slide.order == body.order;
 
-            if(slidesByOrg.some( checkForRepeatedOrder )){
-             await Slide.increment(
-                'order',
-                {
-                    where: {
-                        [Op.and]:[ { organizationId: body.organizationId }, { order:{ [Op.gte]: body.order } }]
+            if (slidesByOrg.some(checkForRepeatedOrder)) {
+                await Slide.increment(
+                    'order',
+                    {
+                        where: {
+                            [Op.and]: [{ organizationId: body.organizationId }, { order: { [Op.gte]: body.order } }]
+                        }
                     }
-                }
-              )
-            } 
+                )
+            }
         }
 
-        const slide = await Slide.create({ 
+        const slide = await Slide.create({
             text: body.text,
             order: body.order,
             imageUrl: regularImglocation,
@@ -76,43 +76,43 @@ const createSlide = async ( req, res ) => {
         })
         res.status(200).json({
             slide
-        }) 
+        })
 
     } catch (error) {
-        console.log( error )
+        console.log(error)
         res.status(500).json({
             msg: 'Something went wrong call the admin'
         })
     }
-    
+
 }
 
-const getSlideById = async ( req, res ) => {
+const getSlideById = async (req, res) => {
 
     const id = req.params.id;
 
     try {
 
         const slide = await Slide.findByPk(id);
-        if(!slide){
+        if (!slide) {
             return res.status(404).json({
-                msg:'Invalid or nonexisting slide'
+                msg: 'Invalid or nonexisting slide'
             })
         }
         res.status(200).json({
             slide
         })
-        
+
     } catch (error) {
-        console.log( error )
+        console.log(error)
         res.status(500).json({
             msg: 'Something went wrong call the admin'
         })
     }
-   
+
 }
 
-const updateSlide = async ( req, res ) => {
+const updateSlide = async (req, res) => {
 
     res.json({
         msg: 'Hello from update slide'
@@ -120,11 +120,35 @@ const updateSlide = async ( req, res ) => {
 }
 
 
-const deleteSlide = async ( req, res ) => {
+const deleteSlide = async (req, res) => {
 
-    res.json({
-        msg: 'Hello from delete slide'
-    })
+    const slideId = req.params.id;
+
+    try {
+        const slide = await Slide.findByPk(slideId)
+        if(slide === null){
+            return res.status(400).send({
+                msg:'Invalid slide ID'
+            })
+        }else{
+            Slide.destroy({
+                where:{
+                    id: slideId
+                }
+            })
+            res.status(200).send({
+                msg:'Slide has been removed succesfully'
+            })
+        }
+    } catch (error) {
+
+        console.log(error)
+        return res.status(500).json({
+            msg: 'Something went wrong call the admin'
+        })
+
+    }
+
 
 }
 

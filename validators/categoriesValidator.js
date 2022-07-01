@@ -11,50 +11,30 @@ const validateCategories = [
         .withMessage('invalid data type')
         .trim()
         .isLength({ min: 3 })
-        .withMessage('category name must contain at least 3 characters'),
-    check('description')    
-        .isString()
-        .withMessage('invalid data type'),
-    check('image')    
-        .isString()
-        .withMessage('invalid data type')
-        .trim(),
-    (req, res, next) => {
-    validateResult(req, res, next)
-}
-]
-
-const validateCreateCategories = [
-    check('name')
-        .custom(async (name)=>{ 
-            if(name){
-                const isDuplicated = await Category.findOne({ where: { name: name } ,attributes:['name']})
-                if (isDuplicated) {
-                    throw new Error('category name already exists')
+        .withMessage('category name must contain at least 3 characters')
+        .custom(async (name,{req,res})=>{      
+            if(req.params.id){ 
+                const existId = await Category.findByPk(req.params.id,{attributes:['id']})          
+                if(name && existId!==null){                                  
+                    const isDuplicated = await Category.findOne({ where: { name: name } ,attributes:['name','id']})                                                                          
+                    if (isDuplicated!==null  && isDuplicated.name===name && isDuplicated.id !==Number(req.params.id)) {
+                        throw new Error('category name already exists')
+                    } 
+                    return true 
+                }
+            } else {
+                if(name){
+                    const isDuplicated = await Category.findOne({ where: { name: name } ,attributes:['name']})
+                    if (isDuplicated) {
+                        throw new Error('category name already exists')
+                    }
+                    return true
                 }
             }
         }),
-        (req, res, next) => {
+    (req, res, next) => {
         validateResult(req, res, next)
     }
 ]
 
-const validateUpdateCategories = [
-    check('name')
-        .custom(async (value,{req})=>{
-            if(req.params.id){
-                const existsValue = await Category.findByPk(req.params.id,{attributes:['name']})
-                if (existsValue && existsValue.name!==req.body.name){
-                    const isDuplicated = await Category.findOne({ where: { name: req.body.name },attributes:['name']} )
-                        if (isDuplicated) {
-                            throw new Error('category name already exists')
-                        }
-                }
-            }
-        return true
-        }),
-]
-
-module.exports = { validateCreateCategories, 
-                   validateUpdateCategories,
-                   validateCategories }
+module.exports = { validateCategories }

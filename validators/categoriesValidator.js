@@ -28,7 +28,7 @@ const validateCreateCategories = [
     check('name')
         .custom(async (name)=>{ 
             if(name){
-                const isDuplicated = await Category.findOne({ where: { name: name } })
+                const isDuplicated = await Category.findOne({ where: { name: name } ,attributes:['name']})
                 if (isDuplicated) {
                     throw new Error('category name already exists')
                 }
@@ -43,9 +43,9 @@ const validateUpdateCategories = [
     check('name')
         .custom(async (value,{req})=>{
             if(req.params.id){
-                const existsValue = await Category.findByPk(req.params.id)
+                const existsValue = await Category.findByPk(req.params.id,{attributes:['name']})
                 if (existsValue && existsValue.name!==req.body.name){
-                    const isDuplicated = await Category.findOne({ where: { name: req.body.name } })
+                    const isDuplicated = await Category.findOne({ where: { name: req.body.name },attributes:['name']} )
                         if (isDuplicated) {
                             throw new Error('category name already exists')
                         }

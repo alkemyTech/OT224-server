@@ -14,7 +14,7 @@ const getAllMember = async(req, res) =>{
 
 const createMember = async (req, res) =>{
     try {
-        const {name, facebookUrl, instagramUrl, linkedinUrl, image, description} =  await req.body;
+        const {name, facebookUrl, instagramUrl, linkedinUrl, image, description} =  req.body;
         const member = await ModelMember.create({
             name : name,
             facebookUrl: facebookUrl,
@@ -23,10 +23,7 @@ const createMember = async (req, res) =>{
             image: image,
             description: description
         })
-        res.status(200).send({
-            msg: 'Member created succefuly',
-            newMember: member
-        })        
+        res.status(200).send({member})        
     } catch (error) {
        res.status(500).send(error) 
     }

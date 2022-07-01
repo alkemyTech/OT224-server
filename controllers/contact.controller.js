@@ -1,4 +1,5 @@
 const Contact = require('../models').Contacts
+const { emailContact } = require('../services/emailContact')
 
 
 const createContact = async (req, res) => {
@@ -13,7 +14,9 @@ const createContact = async (req, res) => {
             message: message
         })
 
-        res.status(200).json({ contact })
+        const emailSend = await emailContact(contact)
+
+        res.status(200).json({ contact, emailSend })
     } catch (error) {
         res.status(500).json({ error })
     }

@@ -1,4 +1,6 @@
 const OrganizationModel = require("../models").Organization;
+const { Slide } = require("../models");
+
 
 //Create and save an organization
 const createOrganization = async (req, res) => {    
@@ -18,10 +20,21 @@ const getOrganizationById = async(req, res) => {
             where: { id },
             attributes: ['name', 'image', 'phone', 'address', 'facebookUrl', 'instagramUrl', 'linkedinUrl']
         });
+
+        const slidesByOrg = await Slide.findAll({
+            where:{
+               organizationId: id
+           },
+           order:[['order','ASC']]
+        })
+
         if(!organization){
             res.status(404).send({message: "There is no information about the organization"})
         }else{            
-            res.status(200).send(organization);
+            res.status(200).send({
+                organization,
+                slides: slidesByOrg
+            });
         }        
     } catch (error) {
         res.status(500).send(error);

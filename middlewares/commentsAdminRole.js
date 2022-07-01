@@ -13,10 +13,10 @@ const verifyIsCommentsAdmin = (req, res, next) => {
                 console.log("paso el token:" +decodedToken.user.roleId);
                 next();                
             }else{
-                res.send({"message":"You do not have the necessary permissions"});
+                res.status(401).send({"message":"You do not have the necessary permissions"});
             }
         } catch (error) {
-            res.send(error);
+            res.status(500).send(error);
         }
     }else{
         return res.status(400).send({"message":"The request does not have a token"});

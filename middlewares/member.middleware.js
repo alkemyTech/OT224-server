@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { tokenParser } = require('../helpers/tokenParser')
-const {MEMBER_ADMIN_ROLE_ID} = require('../sharedConstants')
+const {MEMBER_ADMIN_ROLE_ID, ADMIN_ROLE_ID} = require('../sharedConstants')
 
 
 const verifyIsMemberAdmin = (req, res, next) =>{
@@ -10,7 +10,7 @@ const verifyIsMemberAdmin = (req, res, next) =>{
     if(token){
         try {        
             const decodedToken = jwt.verify(token, process.env.PRIVATE_KEY)
-            if(decodedToken.user.roleId === MEMBER_ADMIN_ROLE_ID){
+            if(decodedToken.user.roleId === MEMBER_ADMIN_ROLE_ID || decodedToken.user.roleId === ADMIN_ROLE_ID){
                 next()
             }else{
                 res.status(401).send("you do not have the necessary permissions")

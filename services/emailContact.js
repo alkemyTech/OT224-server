@@ -10,7 +10,6 @@ const ejs = require("ejs");
           const to=contact.email;
           const subject= `Bienvenid@ a Somos Más 🙌  !!! `;
           const body= output;
-          console.log(body)
 
           await send(to,subject,body);
           return true

@@ -9,39 +9,29 @@ class ModelHelper {
      * 
      * @param {number} pageIndex 
      * @param {number} pageLimit 
-     * @param {object where of sequelize} where 
-     * @param {array order of sequelize} order 
      * @returns rows
      */
-    findAndPaginate = async (pageIndex = 1, pageLimit = 10, where = {}, order = []) => {
+    findAndPaginate = async (pageIndex = 1, pageLimit = 10) => {
         try {
 
             pageLimit = parseInt(pageLimit, 10);
             pageIndex = parseInt(pageIndex, 10);
+            pageIndex = pageIndex === 0 ? 1 : pageIndex
 
-            // create an options object
             let options = {
                 offset: this._getOffset(pageIndex, pageLimit),
                 limit: pageLimit,
             };
 
-            // check if the search object is empty
-            if (Object.keys(where).length) {
-                options['where'] = where;
-            }
-
-            // check if the order array is empty
-            if (order && order.length) {
-                options['order'] = order;
-            }
-
-            // take in the model, take in the options
             let { count, rows } = await this.model.findAndCountAll(options);
 
+            const totalPages = this._getTotalPages(count, pageLimit)
+
             return {
-                previousPage: this._getPreviousPage(pageIndex),
+                previousPage: this._getPreviousPage(pageIndex, totalPages),
                 currentPage: pageIndex,
-                nextPage: this._getNextPage(pageIndex, pageIndex, count),
+                nextPage: this._getNextPage(pageIndex, totalPages),
+                totalPages: totalPages,
                 total: count,
                 limit: pageLimit,
                 data: rows
@@ -56,19 +46,26 @@ class ModelHelper {
         return (page * limit) - limit;
     }
 
-    _getNextPage = (page, limit, total) => {
-        if ((total / limit) > page) {
+    _getNextPage = (page, totalPages) => {
+        if (page < totalPages) {
             return page + 1;
         }
 
         return null
     }
 
-    _getPreviousPage = (page) => {
+    _getPreviousPage = (page, totalPages) => {
         if (page <= 1) {
             return null
         }
+        if (page > totalPages) {
+            return totalPages
+        }
         return page - 1;
+    }
+
+    _getTotalPages = (count, limit) => {
+        return Math.ceil(count / limit);
     }
 }
 

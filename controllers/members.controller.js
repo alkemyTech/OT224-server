@@ -10,7 +10,7 @@ const getAllMember = async (req, res) => {
         const members = await modelHelper.findAndPaginate(page)
         return res.status(200).json(members);
     } catch (error) {
-        res.status(400).send(error)
+        res.status(500).send(error)
 
     }
 }

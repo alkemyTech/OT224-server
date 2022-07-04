@@ -42,14 +42,14 @@ const createCategory= async (req,res)=> {
       const categoryExists=await ModelCategories.findByPk(req.params.id) 
       if(!categoryExists){
         return res.status(404).json({msg:'the category does not exist'})
-      } else {
+      } else {        
         await categoryExists.update({
             name:req.body.name,
             description:req.body.description,
             image:req.body.image
           })         
         res.status(200).json(categoryExists)
-      }
+        }
     } catch(error) {
       res.status(500).json(error)
     }

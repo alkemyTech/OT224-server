@@ -9,11 +9,12 @@ const testimonialsRouter = require('./testimonials.routes');
 const newsRouter = require('./news');
 const categoriesRouter = require('./categories');
 const authRouter = require('./auth')
-const membersRouter = require('./members')
+const membersRouter = require('./members.routes')
 const rolesRouter = require('./role');
 const activitiesRouter = require('./activities.routes');
 const slidesRouter = require('./slides');
 const contactRoutes = require('./contacts.routes');
+const commentRouter = require('./comments.routes');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -30,7 +31,8 @@ router.use('/members', membersRouter)
 router.use('/roles', rolesRouter);
 router.use('/activities', activitiesRouter);
 router.use('/slides', slidesRouter);
-router.use('/contacts', contactRoutes)
+router.use('/contacts', contactRoutes);
+router.use('/comments', commentRouter);
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swagger));
 
 module.exports = router;

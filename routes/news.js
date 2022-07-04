@@ -5,14 +5,124 @@ const { validateNews } = require('../validators/newsValidator');
 const { authenticatedUser } = require('../middlewares/authenticatedUser');
 const { verifyIsAdmin } = require('../middlewares/user.middelware');
 
+
+// Define news tags
+/**
+ * @swagger
+ * tags:
+ *   name: News
+ *   description: The news API
+ */
+
+//List News
+
+/**
+ * 
+ * @swagger
+ * /api/news:
+ *    get:
+ *      tags:
+ *        - News
+ *      summary: "List all News"
+ *      description: This endpoint is for list all news 
+ *      parameters: []
+ *      responses:
+ *        '200':
+ *          description: Return all News.
+ *        '400':
+ *          description: Bad request.
+ *      security:
+ *       - bearerAuth: []
+ */
+router.get('/', newsController.getAllNews);
+
 //Detail News
-router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews)
+
+/**
+ * 
+ * @swagger
+ * /api/news/{id}::
+ *    get:
+ *      tags:
+ *        - News
+ *      summary: "Display the specified News"
+ *      description: This endpoint is for get a specific news 
+ *      parameters: []
+ *      responses:
+ *        '200':
+ *          description: Return news by.
+ *        '400':
+ *          description: Bad request.
+ *      security:
+ *       - bearerAuth: []
+ */
+router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews);
 
 // Create News
+
+/**
+ * 
+ * @swagger
+ * /api/news:
+ *    post:
+ *      tags:
+ *        - News
+ *      summary: "Create News "
+ *      description: This endpoint is for create news 
+ *      parameters: []
+ *      responses:
+ *        '200':
+ *          description: Return news created .
+ *        '400':
+ *          description: Bad request.
+ *      security:
+ *       - bearerAuth: []
+ */
 router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsController.createNews);
 
-
 //Update News
-router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsController.editNews);
+
+/**
+ * 
+ * @swagger
+ * /api/news:
+ *    put:
+ *      tags:
+ *        - News
+ *      summary: "Update News "
+ *      description: This endpoint is for update news 
+ *      parameters: []
+ *      responses:
+ *        '200':
+ *          description: Successful response .
+ *        '400':
+ *          description: Bad request.
+ *      security:
+ *       - bearerAuth: []
+ */
+router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsController.updateNews);
+
+//Delete News
+
+/**
+ * 
+ * @swagger
+ * /api/news:
+ *    delete:
+ *      tags:
+ *        - News
+ *      summary: "Remove the specified News "
+ *      description: This endpoint is for destroy a specific news 
+ *      parameters: []
+ *      responses:
+ *        '200':
+ *          description: Successful response .
+ *        '400':
+ *          description: Bad request.
+ *      security:
+ *       - bearerAuth: []
+ */
+router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteNews);
+
 
 module.exports = router;

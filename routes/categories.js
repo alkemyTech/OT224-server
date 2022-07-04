@@ -13,6 +13,6 @@ router.post('/',verifyIsAdmin,validateCategories,categoriesController.createCate
 
 router.put('/:id',categoriesController.updateCategory)
 
-router.delete('/:id',categoriesController.deleteCategory)
+router.delete('/:id',verifyIsAdmin,categoriesController.deleteCategory)
 
 module.exports = router;

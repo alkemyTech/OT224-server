@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      body: {
+        type: Sequelize.TEXT
+      },
       user_id: {
         type: Sequelize.INTEGER,
         references: {
@@ -16,10 +19,7 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
-      },
-      body: {
-        type: Sequelize.TEXT
-      },
+      },      
       news_id: {
         type: Sequelize.INTEGER,
         references: {

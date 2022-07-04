@@ -1,6 +1,15 @@
 const newsModel = require('../models').News;
 
 
+const getAllNews = async (req, res) =>{
+    try{
+        const news = await newsModel.findAll()
+        res.status(200).send(news)
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
 const createNews = async (req,res) =>{
     try{
         let news = req.body;
@@ -14,7 +23,7 @@ const createNews = async (req,res) =>{
     }
 }
 
-const editNews = async (req, res) =>{
+const updateNews = async (req, res) =>{
     try {
         
         const news = await newsModel.findByPk(req.params.id);
@@ -72,8 +81,9 @@ const deleteNews = async (req, res) =>{
 
 
 module.exports = {
+    getAllNews,
     createNews,
     detailNews,
-    editNews,
+    updateNews,
     deleteNews
 }

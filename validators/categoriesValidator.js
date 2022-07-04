@@ -18,7 +18,7 @@ const validateCategories = [
                 const where = req.params.id  
                 ? {name,id:{[Op.not]:req.params.id}}
                 : {name};
-                let isDuplicated = await Category.findOne({where, attributes:['name','id']})  
+                const isDuplicated = await Category.findOne({where, attributes:['name','id']})  
                 if (isDuplicated) {
                     throw new Error('category name already exists')
                 } 

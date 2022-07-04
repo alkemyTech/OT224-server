@@ -9,12 +9,11 @@ const getAllCategories= async (req, res) => {
      const pageLimit=10 
      const categoriesPaginated= await paginated.findAndPaginate(page,pageLimit,{attributes: ['name']})
 
-     const previous=categoriesPaginated.previousPage===null ? '' : `http://localhost:3000/api/categories?page=${categoriesPaginated.previousPage}`
-     const next=categoriesPaginated.nextPage===null ? '' : `http://localhost:3000/api/categories?page=${categoriesPaginated.nextPage}`
-     
      const showNames=categoriesPaginated.data.map((element=>{return element.name}))
-     res.status(200).json({previousPage:previous,nextPage:next,categories:showNames})
-
+     
+     res.status(200).json({previousPage:categoriesPaginated.previousPage,
+                           nextPage:categoriesPaginated.nextPage,
+                           categories:showNames})
    } catch(error) {
      res.status(500).json(error)
    }

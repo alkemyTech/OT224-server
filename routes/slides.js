@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getAllSlides, getSlideById, createSlide, updateSlide } = require('../controllers/slide.controller');
+const { getAllSlides, getSlideById, createSlide, updateSlide, deleteSlide } = require('../controllers/slide.controller');
 const { verifyIsAdmin } = require('../middlewares/user.middelware');
 const { validateSlide, validateSlideToUpdate } = require('../validators/slideValidator');
 
@@ -13,6 +13,6 @@ router.post('/', verifyIsAdmin ,validateSlide ,createSlide);
 
 router.put('/:id' ,verifyIsAdmin, validateSlideToUpdate, updateSlide );
 
-router.delete('/delete/:id', /*controller*/);
+router.delete('/:id', verifyIsAdmin ,deleteSlide);
 
 module.exports = router;

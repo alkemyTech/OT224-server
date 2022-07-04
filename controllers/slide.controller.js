@@ -11,7 +11,6 @@ const sequelize = require('sequelize');
 const getAllSlides = async (req, res) => {
 
     try {
-
         const slides = await Slide.findAll({ attributes: ['id', 'thumbnailUrl', 'order'] })
 
         res.status(200).json({
@@ -23,10 +22,7 @@ const getAllSlides = async (req, res) => {
         res.status(500)
     }
 
-}
-
 const createSlide = async (req, res) => {
-
     let img = req.files.img;
     let body = req.body;
 
@@ -40,11 +36,8 @@ const createSlide = async (req, res) => {
 
         const thumbnailImgLocation = await uploadToBucket(resizedImg)
 
-        body['imageUrl'] = regularImglocation;
-        body['thumbnailUrl'] = thumbnailImgLocation;
-
-        if( !body.hasOwnProperty('order') ){
-            const [lastOrder] = await  Slide.findAll({
+        if (!body.hasOwnProperty('order')) {
+            const [lastOrder] = await Slide.findAll({
                 where: { organizationId: body.organizationId },
                 attributes: [[sequelize.fn('max', sequelize.col('order')), 'maxOrder']],
                 raw: true
@@ -52,7 +45,6 @@ const createSlide = async (req, res) => {
             body['order'] = lastOrder.maxOrder + 1
         }else{
             await checkSlideOrder(body)
-
         }
 
         const slide = await Slide.create({
@@ -155,11 +147,32 @@ const updateSlide = async (req, res) => {
 
 
 const deleteSlide = async (req, res) => {
+    const slideId = req.params.id;
 
-    res.json({
-        msg: 'Hello from delete slide'
-    })
+    try {
+        const slide = await Slide.findByPk(slideId)
+        if(slide === null){
+            return res.status(404).send({
+                msg:'Invalid slide ID'
+            })
+        }else{
+            Slide.destroy({
+                where:{
+                    id: slideId
+                }
+            })
+            res.status(200).send({
+                msg:'Slide has been removed succesfully'
+            })
+        }
+    } catch (error) {
 
+        console.log(error)
+        return res.status(500).json({
+            msg: 'Something went wrong call the admin'
+        })
+
+    }
 }
 
 module.exports = {

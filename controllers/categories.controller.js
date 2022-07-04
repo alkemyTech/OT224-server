@@ -1,10 +1,19 @@
 const ModelCategories= require('../models').Categories;
 const ModelNews=require('../models').News;
+const ModelHelper=require('../helpers/modelHelper');
 
 const getAllCategories= async (req, res) => {
   try{
-     const categories= await ModelCategories.findAll({attributes: ['name']})
-     res.status(200).json(categories)    
+     const paginated=new ModelHelper(ModelCategories)
+     const {page}=req.query
+     const pageLimit=10 
+     const categoriesPaginated= await paginated.findAndPaginate(page,pageLimit,{attributes: ['name']})
+
+     const previous=categoriesPaginated.previousPage===null ? '' : `http://localhost:3000/api/categories?page=${categoriesPaginated.previousPage}`
+     const next=categoriesPaginated.nextPage===null ? '' : `http://localhost:3000/api/categories?page=${categoriesPaginated.nextPage}`
+     
+     const showNames=categoriesPaginated.data.map((element=>{return element.name}))
+     res.status(200).json({previousPage:previous,nextPage:next,categories:showNames})
 
    } catch(error) {
      res.status(500).json(error)

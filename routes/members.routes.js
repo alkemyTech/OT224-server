@@ -1,12 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const memberController = require('../controllers/members.controller')
+const {validateMembers} =  require('../validators/members.validator')
+const {verifyIsMemberAdmin} = require('../middlewares/member.middleware')
 
 
 /* GET users listing. */
-router.get('/', memberController.getAllMember )
+router.get('/', verifyIsMemberAdmin, memberController.getAllMember )
 // create member
-router.post('/create', memberController.createMember)
+router.post('/', verifyIsMemberAdmin, validateMembers, memberController.createMember)
 //update member
 router.put('/update/:id', memberController.updateMember)
 //delete member

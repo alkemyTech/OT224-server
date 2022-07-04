@@ -47,8 +47,27 @@ const deleteContact = async (req, res) => {
     }
 }
 
+const updateContact = async (req,res)=>{
+
+    try {
+        const { id } = req.params
+        const response = await Contact.update(req.body,{
+            where:{
+                id:id
+            }
+        })
+
+        if (!response) return res.status(404).json({ response })
+        res.status(200).json({ response })
+
+    } catch (error) {
+        res.status(500).json({ error })
+    }
+}
+
 module.exports = {
     createContact,
     getAllContacts,
-    deleteContact
+    deleteContact,
+    updateContact
 }

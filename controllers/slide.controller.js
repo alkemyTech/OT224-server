@@ -1,8 +1,9 @@
 const { Slide } = require('../models');
 const { uploadToBucket } = require('../services/s3');
-const sequelize = require('sequelize');
-const { Op } = require('sequelize');
 const { resizeImg } = require('../helpers/thumbNailConverter');
+const { checkSlideOrder } = require('../helpers/checkSlideOrder');
+const { decodeImgName } = require('../helpers/decodeImgName');
+const sequelize = require('sequelize');
 
 
 
@@ -10,7 +11,6 @@ const { resizeImg } = require('../helpers/thumbNailConverter');
 const getAllSlides = async (req, res) => {
 
     try {
-
         const slides = await Slide.findAll({ attributes: ['id', 'thumbnailUrl', 'order'] })
 
         res.status(200).json({
@@ -22,17 +22,11 @@ const getAllSlides = async (req, res) => {
         res.status(500)
     }
 
-}
-
 const createSlide = async (req, res) => {
-
     let img = req.files.img;
-    const body = req.body;
+    let body = req.body;
 
-
-    const decodedName = Buffer.from(img.name, 'base64').toString('ascii');
-    img['name'] = decodedName;
-
+    img = decodeImgName(img)
 
     try {
 
@@ -49,29 +43,15 @@ const createSlide = async (req, res) => {
                 raw: true
             })
             body['order'] = lastOrder.maxOrder + 1
-        } else {
-
-            const slidesByOrg = await Slide.findAll({ where: { organizationId: body.organizationId } })
-
-            const checkForRepeatedOrder = (slide) => slide.order == body.order;
-
-            if (slidesByOrg.some(checkForRepeatedOrder)) {
-                await Slide.increment(
-                    'order',
-                    {
-                        where: {
-                            [Op.and]: [{ organizationId: body.organizationId }, { order: { [Op.gte]: body.order } }]
-                        }
-                    }
-                )
-            }
+        }else{
+            await checkSlideOrder(body)
         }
 
         const slide = await Slide.create({
             text: body.text,
             order: body.order,
-            imageUrl: regularImglocation,
-            thumbnailUrl: thumbnailImgLocation,
+            imageUrl: body.imageUrl,
+            thumbnailUrl: body.thumbnailUrl,
             organizationId: body.organizationId
         })
         res.status(200).json({
@@ -114,14 +94,59 @@ const getSlideById = async (req, res) => {
 
 const updateSlide = async (req, res) => {
 
-    res.json({
-        msg: 'Hello from update slide'
-    })
+
+    const slideId = req.params.id;
+    let body = req.body;
+
+
+    try {
+        const slide = await Slide.findByPk(slideId);
+      
+        if (!slide) {
+            return res.status(400).send({
+                msg: 'Invalid slide id'
+            })
+        }
+
+        if( req.files ){
+            let img = req.files.img;
+
+            img = decodeImgName(img)
+            const regularImglocation = await uploadToBucket(img);
+    
+            const resizedImg = await resizeImg(img);
+    
+            const thumbnailImgLocation = await uploadToBucket(resizedImg)
+    
+            body['imageUrl'] = regularImglocation;
+            body['thumbnailUrl'] = thumbnailImgLocation;
+        }
+        if(body.hasOwnProperty('order')){
+
+            await checkSlideOrder(body)
+        }
+
+
+        const updatedSlide = await Slide.update(body, {
+            where: {
+                id: slideId
+            }
+        })
+
+        res.status(200).send({
+            msg: 'The slide was succesfully updated'
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            msg: 'Something went wrong call the admin'
+        })
+    } 
 }
 
 
 const deleteSlide = async (req, res) => {
-
     const slideId = req.params.id;
 
     try {
@@ -148,8 +173,6 @@ const deleteSlide = async (req, res) => {
         })
 
     }
-
-
 }
 
 module.exports = {

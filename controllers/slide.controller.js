@@ -127,7 +127,7 @@ const deleteSlide = async (req, res) => {
     try {
         const slide = await Slide.findByPk(slideId)
         if(slide === null){
-            return res.status(400).send({
+            return res.status(404).send({
                 msg:'Invalid slide ID'
             })
         }else{

@@ -6,6 +6,14 @@ const { authenticatedUser } = require('../middlewares/authenticatedUser');
 const { verifyIsAdmin } = require('../middlewares/user.middelware');
 
 
+// Define news tags
+/**
+ * @swagger
+ * tags:
+ *   name: News
+ *   description: The news API
+ */
+
 //List News
 
 /**
@@ -16,7 +24,7 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
  *      tags:
  *        - News
  *      summary: "List all News"
- *      description: This endpoint is for list all News 
+ *      description: This endpoint is for list all news 
  *      parameters: []
  *      responses:
  *        '200':
@@ -59,7 +67,7 @@ router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews
  *    post:
  *      tags:
  *        - News
- *      summary: "Create news "
+ *      summary: "Create News "
  *      description: This endpoint is for create news 
  *      parameters: []
  *      responses:
@@ -81,7 +89,7 @@ router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsControlle
  *    put:
  *      tags:
  *        - News
- *      summary: "Update news "
+ *      summary: "Update News "
  *      description: This endpoint is for update news 
  *      parameters: []
  *      responses:
@@ -104,7 +112,7 @@ router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsControl
  *      tags:
  *        - News
  *      summary: "Remove the specified News "
- *      description: This endpoint is for destroy a specific News 
+ *      description: This endpoint is for destroy a specific news 
  *      parameters: []
  *      responses:
  *        '200':

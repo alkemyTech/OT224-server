@@ -58,7 +58,18 @@ const updateMember = async (req, res) =>{
 }
 
 const deleteMember = async (req, res) =>{
-    res.send('Hello from delete member')
+    try {
+        const member = await ModelMember.findOne({where : {id: req.params.id}})
+        if(member){
+            await ModelMember.destroy({where: {id : req.params.id}})
+            res.status(200).send("Member deleted succefuly")
+        }else{
+            res.status(404).send("Member does not exist")
+        }        
+    } catch (error) {
+        res.status(500).send(error)
+        
+    }
 }
 
 

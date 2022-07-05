@@ -12,7 +12,7 @@ router.post('/', verifyIsMemberAdmin, validateMembers, memberController.createMe
 //update member
 router.put('/:id', verifyIsMemberAdmin, memberController.updateMember)
 //delete member
-router.delete('/delete/:id',memberController.deleteMember)
+router.delete('/:id',verifyIsMemberAdmin , memberController.deleteMember)
 
 
 module.exports = router;

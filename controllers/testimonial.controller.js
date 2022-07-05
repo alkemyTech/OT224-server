@@ -1,4 +1,6 @@
 const TestimonialModel = require("../models").Testimonial;
+const ModelHelper = require("../helpers/modelHelper")
+const modelHelper = new ModelHelper(TestimonialModel)
 
 //Create a testimonial
 const createTestimonial = async (req, res) => {
@@ -15,7 +17,8 @@ const createTestimonial = async (req, res) => {
 //Get testimonials
 const getAllTestimonials = async (req, res) => {
     try {        
-        const testimonials = await TestimonialModel.findAll();
+        const page = req.query.page || 1
+        const testimonials = await modelHelper.findAndPaginate(page)
         res.status(200).send(testimonials);                
     } catch (error) {
         res.status(500).send(error);
@@ -67,3 +70,6 @@ module.exports = {
     updateTestimonial,
     deleteTestimonial
 }
+
+
+

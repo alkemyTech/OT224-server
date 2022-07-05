@@ -22,6 +22,8 @@ const getAllSlides = async (req, res) => {
         res.status(500)
     }
 
+}
+
 const createSlide = async (req, res) => {
     let img = req.files.img;
     let body = req.body;

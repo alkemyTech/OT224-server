@@ -30,7 +30,29 @@ const createMember = async (req, res) =>{
 }
 
 const updateMember = async (req, res) =>{
-    res.send('Hello from update member')
+    try {
+        const member = await ModelMember.findOne({where : {id : req.params.id}})
+        const {name, facebookUrl, instagramUrl, linkedinUrl, image, description} = req.body
+        if(member){
+            await ModelMember.update({
+                name: name,
+                facebookUrl: facebookUrl,
+                instagramUrl: instagramUrl,
+                linkedinUrl: linkedinUrl,
+                image: image,
+                description: description
+            },
+            {
+                where: {id : req.params.id}
+            })
+            res.status(200).send(member)
+        }else{
+            res.status(404).send("Member does not exist")
+        }        
+    } catch (error) {
+        res.status(500).send(error)
+        
+    }
 }
 
 const deleteMember = async (req, res) =>{

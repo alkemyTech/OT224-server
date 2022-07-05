@@ -1,6 +1,8 @@
 const { check } = require('express-validator');
 const { validateResult } = require("../helpers/validate");
 const Category=require('../models').Categories;
+const {Op}=require('sequelize')
+
 
 const validateCategories = [
     check('name')
@@ -12,15 +14,16 @@ const validateCategories = [
         .trim()
         .isLength({ min: 3 })
         .withMessage('category name must contain at least 3 characters')
-        .custom(async (name)=>{ 
-            if(name){
-                const isDuplicated = await Category.findOne({ where: { name: name } })
+        .custom(async (name,{req,res})=>{  
+                const where = req.params.id  
+                ? {name,id:{[Op.not]:req.params.id}}
+                : {name};
+                const isDuplicated = await Category.findOne({where, attributes:['name','id']})  
                 if (isDuplicated) {
                     throw new Error('category name already exists')
-                }
-            }
-        }),
-        (req, res, next) => {
+                } 
+            }),   
+    (req, res, next) => {
         validateResult(req, res, next)
     }
 ]

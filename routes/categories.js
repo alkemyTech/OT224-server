@@ -11,7 +11,7 @@ router.get('/:id',verifyIsAdmin,categoriesController.getOneCategory)
 
 router.post('/',verifyIsAdmin,validateCategories,categoriesController.createCategory)
 
-router.put('/:id',categoriesController.updateCategory)
+router.put('/:id',verifyIsAdmin,validateCategories,categoriesController.updateCategory)
 
 router.delete('/:id',verifyIsAdmin,categoriesController.deleteCategory)
 

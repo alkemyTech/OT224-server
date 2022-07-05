@@ -1,9 +1,11 @@
 const newsModel = require('../models').News;
-
+const ModelHelper = require('../helpers/modelHelper');
 
 const getAllNews = async (req, res) =>{
     try{
-        const news = await newsModel.findAll()
+        const modelHelper = new ModelHelper(newsModel);
+        const page = req.query.page || 1;
+        const news = await modelHelper.findAndPaginate(page)
         res.status(200).send(news)
     } catch (error) {
         res.status(500).send(error);

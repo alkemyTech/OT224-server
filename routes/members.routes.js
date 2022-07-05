@@ -10,7 +10,7 @@ router.get('/', verifyIsMemberAdmin, memberController.getAllMember )
 // create member
 router.post('/', verifyIsMemberAdmin, validateMembers, memberController.createMember)
 //update member
-router.put('/update/:id', memberController.updateMember)
+router.put('/:id', verifyIsMemberAdmin, memberController.updateMember)
 //delete member
 router.delete('/delete/:id',memberController.deleteMember)
 

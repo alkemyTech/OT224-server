@@ -45,7 +45,7 @@ const updateMember = async (req, res) =>{
             {
                 where: {id : req.params.id}
             })
-            res.status(200).send(member)
+            res.status(200).send("Member updated succefuly")
         }else{
             res.status(404).send("Member does not exist")
         }        

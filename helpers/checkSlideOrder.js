@@ -9,7 +9,7 @@ const checkSlideOrder = async ( data )=>{
         const checkForRepeatedOrder = (slide) => slide.order == data.order;
 
         if(slidesByOrg.some( checkForRepeatedOrder )){
-         await Slide.increment(
+         return await Slide.increment(
             'order',
             {
                 where: {

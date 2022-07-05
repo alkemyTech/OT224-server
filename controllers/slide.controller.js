@@ -13,7 +13,7 @@ const getAllSlides = async (req, res) => {
     try {
         const slides = await Slide.findAll({ attributes: ['id', 'thumbnailUrl', 'order'] })
 
-        res.status(200).json({
+        res.status(200).send({
             slides
         })
 
@@ -21,6 +21,8 @@ const getAllSlides = async (req, res) => {
         console.log(error)
         res.status(500)
     }
+
+}
 
 const createSlide = async (req, res) => {
     let img = req.files.img;
@@ -50,11 +52,11 @@ const createSlide = async (req, res) => {
         const slide = await Slide.create({
             text: body.text,
             order: body.order,
-            imageUrl: body.imageUrl,
-            thumbnailUrl: body.thumbnailUrl,
+            imageUrl: regularImglocation,
+            thumbnailUrl: thumbnailImgLocation,
             organizationId: body.organizationId
         })
-        res.status(200).json({
+        res.status(200).send({
             slide
         })
 
@@ -79,7 +81,7 @@ const getSlideById = async (req, res) => {
                 msg: 'Invalid or nonexisting slide'
             })
         }
-        res.status(200).json({
+        res.status(200).send({
             slide
         })
 

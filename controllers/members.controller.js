@@ -1,14 +1,16 @@
 const ModelMember = require('../models').Member;
+const ModelHelper = require('../helpers/modelHelper')
 
-const getAllMember = async(req, res) =>{
-    const members = await ModelMember.findAll()
+const getAllMember = async (req, res) => {
+
     try {
-        if(members){
-            res.send(members)
-        }           
+        const modelHelper = new ModelHelper(ModelMember)
+        const page = req.query.page || 1
+        const members = await modelHelper.findAndPaginate(page)
+        return res.status(200).json(members);
     } catch (error) {
-        res.status(400).send(error)
-        
+        res.status(500).send(error)
+
     }
 }
 

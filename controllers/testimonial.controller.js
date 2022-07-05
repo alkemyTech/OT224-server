@@ -48,8 +48,14 @@ const updateTestimonial = async (req, res) => {
 const deleteTestimonial = async (req, res) => {
     try {
         const id = req.params.id;
-        await TestimonialModel.destroy({ where: { id } });
-        res.status(200).send({ message: "Testimonial deleted"});
+        const testimonial = await TestimonialModel.findByPk(id);
+        
+        if(!testimonial) {
+            res.status(404).send({message: "Testimonial no found!"});
+        }else{
+            await TestimonialModel.destroy({ where: { id } });
+            res.status(200).send({ message: "Testimonial deleted"});
+        }
     } catch (error) {
         res.status(500).send(error);
     }

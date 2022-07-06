@@ -33,6 +33,18 @@ const getAllContacts = async (req, res) => {
     }
 }
 
+const getContactById = async (req, res) => {
+
+    try {
+        const { id } = req.params
+        const contact = await Contact.findByPk(id)
+        if (!contact) return res.status(404).json({ msg: 'Contact not found!' })
+        res.status(200).json({ contact })
+    } catch (error) {
+        restart.status(500).json({ error })
+    }
+}
+
 const deleteContact = async (req, res) => {
     try {
         const { id } = req.params
@@ -50,13 +62,13 @@ const deleteContact = async (req, res) => {
     }
 }
 
-const updateContact = async (req,res)=>{
+const updateContact = async (req, res) => {
 
     try {
         const { id } = req.params
-        const response = await Contact.update(req.body,{
-            where:{
-                id:id
+        const response = await Contact.update(req.body, {
+            where: {
+                id: id
             }
         })
 
@@ -71,6 +83,7 @@ const updateContact = async (req,res)=>{
 module.exports = {
     createContact,
     getAllContacts,
+    getContactById,
     deleteContact,
     updateContact
 }

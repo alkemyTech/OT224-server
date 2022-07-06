@@ -7,6 +7,8 @@ const {verifyIsMemberAdmin} = require('../middlewares/member.middleware')
 
 /* GET users listing. */
 router.get('/', verifyIsMemberAdmin, memberController.getAllMember )
+//GET member by id
+router.get('/:id', verifyIsMemberAdmin, memberController.getMemberById)
 // create member
 router.post('/', verifyIsMemberAdmin, validateMembers, memberController.createMember)
 //update member

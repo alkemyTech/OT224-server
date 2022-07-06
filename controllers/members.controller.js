@@ -1,5 +1,8 @@
 const ModelMember = require('../models').Member;
 const ModelHelper = require('../helpers/modelHelper')
+const baseController = require("./base.controller")
+
+const nameModel = "Member"
 
 const getAllMember = async (req, res) => {
 
@@ -12,6 +15,11 @@ const getAllMember = async (req, res) => {
         res.status(500).send(error)
 
     }
+}
+
+//Get member by id
+const getMemberById = async (req, res) => {
+    return baseController.getModelById(req, res, ModelMember, nameModel)
 }
 
 const createMember = async (req, res) =>{
@@ -77,5 +85,6 @@ module.exports = {
     getAllMember,
     createMember,
     updateMember,
-    deleteMember
+    deleteMember,
+    getMemberById
 }

@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { createContact, getAllContacts, deleteContact, updateContact } = require('../controllers/contact.controller')
+const { createContact, getAllContacts, getContactById, deleteContact, updateContact } = require('../controllers/contact.controller')
 const { authenticatedUser } = require('../middlewares/authenticatedUser')
 const { verifyIsAdmin } = require('../middlewares/user.middelware')
 const { contactsValidators } = require('../validators/contactsValidators')
@@ -23,31 +23,6 @@ const router = Router()
  *      Contacts:
  *          type: object
  *          properties:
- *              name:
- *                  type: string
- *                  description: the contact name
- *              phone:
- *                  type: text
- *                  description: the contact phone
- *              email: 
- *                  type: string
- *                  description: the contact email
- *              message: 
- *                  type: string
- *                  description: the contact message
- *          required:
- *              - name
- *              - email
- *
- *          example:
- *              name: Juan
- *              phone: 9999999999
- *              email: juan@email.com
- *              message: Este es un mensaje de Juan
- * 
- *      ContactResponse:
- *          type: object
- *          properties:
  *              id:
  *                  type: integer
  *                  description: the contact id
@@ -65,10 +40,10 @@ const router = Router()
  *                  description: the contact message
  *              updatedAt: 
  *                  type: date
- *                  description: the activity updated date
+ *                  description: the contact updated date
  *              createdAt: 
  *                  type: date
- *                  description: the activity created date
+ *                  description: the contact created date
  *          required:
  *              - name
  *              - email
@@ -140,9 +115,47 @@ router.post('/',  contactsValidators, createContact)
  *              description: Server error
  *          400:
  *              description: Bad request error
+ *          401:
+ *              description: Unauthorized
  *      
  */
 router.get('/', authenticatedUser, verifyIsAdmin, getAllContacts)
+
+// Get contact by id
+/**
+ * @swagger
+ * /api/contacts/{id}:
+ *  get:
+ *      security:
+ *        - bearerAuth: []
+ *      summary: Get contact by id
+ *      tags: [Contacts]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: Contact id
+ *      responses:
+ *          200:
+ *              description: Successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Contacts'
+ *          500:
+ *              description: Server error
+ *          400:
+ *              description: Bad request error
+ *          401:
+ *              description: Unauthorized
+ *          404:
+ *              description: Contact not found
+ *      
+ */
+
+router.get('/:id', authenticatedUser, verifyIsAdmin, getContactById)
 //Delete Contact
 
 /**
@@ -170,6 +183,8 @@ router.get('/', authenticatedUser, verifyIsAdmin, getAllContacts)
  *              description: Server error
  *          400:
  *              description: Bad request error
+ *          401:
+ *              description: Unauthorized
  *          404:
  *              description: 0
  *              content:
@@ -214,6 +229,8 @@ router.delete('/:id', authenticatedUser, verifyIsAdmin, deleteContact)
  *              description: Required imputs error
  *          400:
  *              description: Bad request error
+ *          401:
+ *              description: Unauthorized
  *          404:
  *              description: 0
  *              content:

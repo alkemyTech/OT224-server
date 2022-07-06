@@ -19,23 +19,6 @@ const swaggerDefinition = {
                     type: "http",
                     scheme: "bearer",
                 },
-            },
-            schemas:{
-                Category:  {    			
-                    type: "object",
-                    required: ["name","description","image"],
-                    properties: {
-                        name: {
-                            type: "string",
-                        },                
-                        description:{
-                            type: "string",
-                        }, 
-                        image: {
-                            type: "string",
-                        }, 
-                    },
-                },
             },     	
         },
       

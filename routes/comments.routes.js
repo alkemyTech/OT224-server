@@ -8,5 +8,6 @@ const { verifyIsCommentsAdmin } = require('../middlewares/commentsAdminRole');
 
 // Create a new comment
 router.post('/', authenticatedUser, verifyIsCommentsAdmin, validateComments, commentController.createComment);
+router.get('/', authenticatedUser, verifyIsCommentsAdmin,  commentController.getAllComents);
 
 module.exports = router;

@@ -22,7 +22,21 @@ const getAllComents = async (req, res) => {
         res.status(500).send({ error })
     }
 }
+
+const getCommentById = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const comment = await CommentModel.findByPk(id)
+        if (!comment) return res.status(404).send({ msg: 'Comment not found!' })
+        res.status(200).send({ comment })
+    } catch (error) {
+        res.status(500).res.send({ error })
+    }
+}
+
 module.exports = {
     createComment,
     getAllComents
+    getCommentById
 }

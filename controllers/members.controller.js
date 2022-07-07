@@ -19,7 +19,7 @@ const getAllMember = async (req, res) => {
 
 //Get member by id
 const getMemberById = async (req, res) => {
-    return baseController.getModelById(req, res, ModelMember, nameModel)
+    return baseController.getModelById(req, res, ModelMember)
 }
 
 const createMember = async (req, res) =>{

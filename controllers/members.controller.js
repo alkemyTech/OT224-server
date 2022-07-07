@@ -2,8 +2,6 @@ const ModelMember = require('../models').Member;
 const ModelHelper = require('../helpers/modelHelper')
 const baseController = require("./base.controller")
 
-const nameModel = "Member"
-
 const getAllMember = async (req, res) => {
 
     try {

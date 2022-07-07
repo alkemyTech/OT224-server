@@ -1,10 +1,9 @@
 const ModelHelper = require('../helpers/modelHelper')
 //Create a model
-const createModel = async (req, res, model) => {
-    try {
-        let variables = req.body;
-        variables = await model.create(variables);
-        return res.status(201).send(variables);
+const createModel = async (res, model, inputVars) => {
+    try {        
+        const createdModel = await model.create(inputVars);
+        return res.status(201).send(createdModel);
     } catch (error) {        
         res.status(500).send(error);
     }
@@ -23,34 +22,34 @@ const getAllModels = async (req, res, model) => {
 }
 
 //Get model by id
-const getModelById = async (req, res, model, nameModel) => {
+const getModelById = async (req, res, model) => {
 	try {
 		const id = req.params.id;
-		const variable = await model.findByPk(id);
-		if (!variable) {			
-            return res.status(404).send({message: nameModel + " with id:" + id + " not found!"});
+		const retrievedModel = await model.findByPk(id);
+		if (!retrievedModel) {			
+           return sendNotFound(res, id);
 		}
-		return res.status(200).send(variable);
+		return res.status(200).send(retrievedModel);
 	} catch (error) {		
 		res.status(500).send(error);
 	}
 };
 
 //Update model
-const updateModel = async (req, res, model, nameModel) => {
+const updateModel = async (req, res, model) => {
     try {
         const id = req.params.id
-        const variables = await model.findByPk(id);
-        console.log("Modelo: " + model);
-        if(!variables) {
-            return res.status(404).send({message: nameModel + " not found!"});
-        }else{
-            const modelToUpdate = await model.update(req.body, { where: { id } });
+        const retrievedModel = await model.findByPk(id);
+        
+        if(!retrievedModel) {
+            return sendNotFound(res, id);
+        }
 
-            if (modelToUpdate == 1){
-                const updatedModel = await model.findByPk(id);
-                return res.status(201).send(updatedModel);
-            }
+        const modelToUpdate = await model.update(req.body, { where: { id } });
+
+        if (modelToUpdate == 1){
+            const updatedModel = await model.findByPk(id);
+            return res.status(201).send(updatedModel);
         }
 
     } catch (error) {        
@@ -59,22 +58,25 @@ const updateModel = async (req, res, model, nameModel) => {
 }
 
 //Delete model
-const deleteModel = async (req, res, model, nameModel) => {
+const deleteModel = async (req, res, model) => {
     try {
         const id = req.params.id;
-        const variables = await model.findByPk(id);
+        const retrievedModel = await model.findByPk(id);
         
-        if(!variables) {
-            return res.status(404).send({message: nameModel + " not found!"});
+        if(!retrievedModel) {
+            return sendNotFound(res, id);
         }else{
             await model.destroy({ where: { id } });
-            return res.status(200).send({message: nameModel + " deleted!"});
+            return res.status(200).send({message: `id ${id} deleted!`});
         }
     } catch (error) {
         res.status(500).send(error);
     }
 }
 
+const sendNotFound = (res, id) => res.status(404).send({
+	message : `id ${id} not found!`
+})
 
 module.exports = {
     createModel,

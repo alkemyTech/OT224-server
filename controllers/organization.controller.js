@@ -2,6 +2,23 @@ const OrganizationModel = require("../models").Organization;
 const { Slide } = require("../models");
 
 
+//Get All Organizations
+const getOrganizations = async ( req, res ) => {
+
+    try {
+        const organizations = await OrganizationModel.findAll()
+
+        res.status(200).send({
+            organizations
+        })
+
+    } catch (error) {
+        console.log( error )
+        res.status(500).send( error )
+    }
+
+}
+
 //Create and save an organization
 const createOrganization = async (req, res) => {    
     try {
@@ -64,5 +81,6 @@ const updateOrganization = async (req, res) => {
 module.exports = {
     getOrganizationById,
     createOrganization,
-    updateOrganization
+    updateOrganization,
+    getOrganizations
 }

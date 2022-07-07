@@ -12,18 +12,21 @@ class ModelHelper {
      * @param {[string]} attributes 
      * @returns rows
      */
-    findAndPaginate = async (pageIndex = 1, pageLimit = 10, attributes) => {
+    findAndPaginate = async (pageIndex = 1, pageLimit = 10, attributes=null) => {
         try {
 
             pageLimit = parseInt(pageLimit, 10);
             pageIndex = parseInt(pageIndex, 10);
             pageIndex = pageIndex === 0 ? 1 : pageIndex
-
+            
             let options = {
                 offset: this._getOffset(pageIndex, pageLimit),
                 limit: pageLimit,
-                attributes:attributes
             };
+            
+            if( attributes!==null){
+                options.attributes=attributes
+            }    
 
             let { count, rows } = await this.model.findAndCountAll(options);
 

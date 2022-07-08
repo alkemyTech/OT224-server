@@ -124,5 +124,6 @@ router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsControl
  */
 router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteNews);
 
+router.get('/:id/comments', authenticatedUser , verifyIsAdmin , newsController.getAllCommentsOfNews);
 
 module.exports = router;

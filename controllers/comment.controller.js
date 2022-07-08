@@ -37,6 +37,6 @@ const getCommentById = async (req, res) => {
 
 module.exports = {
     createComment,
-    getAllComents
+    getAllComents,
     getCommentById
 }

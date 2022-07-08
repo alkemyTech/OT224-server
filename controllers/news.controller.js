@@ -1,4 +1,5 @@
 const newsModel = require('../models').News;
+const commentModel = require('../models').Comment;
 const ModelHelper = require('../helpers/modelHelper');
 
 const getAllNews = async (req, res) =>{
@@ -80,12 +81,26 @@ const deleteNews = async (req, res) =>{
     } catch (error) { res.status(500).send(error);}
 }
 
-
+const getAllCommentsOfNews = async (req, res) => {
+    try{
+        const n = await newsModel.findOne({ 
+            where: { id: req.params.id }, 
+            include: [{
+               model: commentModel, as: "comments"
+            }]
+        })
+        res.status(201).json(n.comments);
+    }catch(e) {
+        console.log(e)
+        res.status(500).send(e.message);
+    }
+}
 
 module.exports = {
     getAllNews,
     createNews,
     detailNews,
     updateNews,
-    deleteNews
+    deleteNews,
+    getAllCommentsOfNews,
 }

@@ -2,6 +2,23 @@ const OrganizationModel = require("../models").Organization;
 const { Slide } = require("../models");
 
 
+//Get All Organizations
+const getOrganizations = async ( req, res ) => {
+
+    try {
+        const organizations = await OrganizationModel.findAll()
+
+        res.status(200).send({
+            organizations
+        })
+
+    } catch (error) {
+        console.log( error )
+        res.status(500).send( error )
+    }
+
+}
+
 //Create and save an organization
 const createOrganization = async (req, res) => {    
     try {
@@ -61,8 +78,39 @@ const updateOrganization = async (req, res) => {
     }    
 }
 
+//Delete Organization
+const deleteOrganization = async( req, res ) => {
+
+    const id = req.params.id;
+
+
+     try {
+
+        const org = await OrganizationModel.findByPk(id)
+
+        if(org === null){
+            return res.status(400).send({
+                msg: 'Invalid organization id'
+            })
+        }else{
+            await OrganizationModel.destroy({
+                where: { id }
+            })
+
+            res.status(200).send()
+        }
+        
+    } catch (error) {
+        console.log( error )
+        res.status(500).send( error )
+    }
+ 
+}
+
 module.exports = {
     getOrganizationById,
     createOrganization,
-    updateOrganization
+    updateOrganization,
+    getOrganizations,
+    deleteOrganization
 }

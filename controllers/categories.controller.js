@@ -7,13 +7,13 @@ const getAllCategories= async (req, res) => {
      const paginated=new ModelHelper(ModelCategories)
      const {page}=req.query
      const pageLimit=10 
-     const categoriesPaginated= await paginated.findAndPaginate(page,pageLimit,{attributes: ['name']})
+     const attributes=['name']
 
-     const showNames=categoriesPaginated.data.map((element=>{return element.name}))
+     const categoriesPaginated= await paginated.findAndPaginate(page,pageLimit,attributes)
      
      res.status(200).json({previousPage:categoriesPaginated.previousPage,
                            nextPage:categoriesPaginated.nextPage,
-                           categories:showNames})
+                           categories:categoriesPaginated.data})
    } catch(error) {
      res.status(500).json(error)
    }

@@ -10,6 +10,19 @@ const createComment = async (req, res) => {
     }
 };
 
+const getAllComents = async (req, res) => {
+
+    try {
+        const comments = await CommentModel.findAll({
+            attributes:['body'],
+            order: [['createdAt', 'DESC']]
+        })
+        res.status(200).send({ comments })
+    } catch (error) {
+        res.status(500).send({ error })
+    }
+}
+
 const getCommentById = async (req, res) => {
     try {
         const { id } = req.params
@@ -21,7 +34,9 @@ const getCommentById = async (req, res) => {
         res.status(500).res.send({ error })
     }
 }
+
 module.exports = {
     createComment,
+    getAllComents,
     getCommentById
 }

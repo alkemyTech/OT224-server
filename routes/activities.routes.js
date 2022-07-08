@@ -12,7 +12,7 @@ const { validateActivity } = require('../validators/activity.validator');
  * @swagger 
  * components:
  *  schemas:
- *      ActivityRequest:
+ *      Activity:
  *          type: object
  *          properties:
  *              name:
@@ -32,8 +32,8 @@ const { validateActivity } = require('../validators/activity.validator');
  *              name: Apoyo Escolar Para El Nivel Primario
  *              content: El espacio de apoyo es el corazón del área educativa
  *              image: https://busytoddler.com/wp-content/uploads/2020/03/bigkid-activities.jpg
- * 
- *      ActivityResponse:
+ *  responses: 
+ *      Activity:
  *          type: object
  *          properties:
  *              id:
@@ -75,6 +75,7 @@ const { validateActivity } = require('../validators/activity.validator');
  *      security:
  *        - bearerAuth: []
  *      summary: create a new activity
+ *      description: This endpoint is for create activity
  *      tags: [Activity]
  *      requestBody: 
  *          required: true
@@ -82,14 +83,14 @@ const { validateActivity } = require('../validators/activity.validator');
  *              application/json:
  *                  schema:
  *                      type: object
- *                      $ref: '#/components/schemas/ActivityRequest'
+ *                      $ref: '#/components/schemas/Activity'
  *      responses:
  *          201:
  *              description: Successful response
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ActivityResponse'
+ *                          $ref: '#/components/responses/Activity'
  *          500:
  *              description: Server error
  *          403:
@@ -108,6 +109,7 @@ router.post('', authenticatedUser, verifyIsAdmin, validateActivity, activityCont
  *      security:
  *        - bearerAuth: []
  *      summary: List all activities with pagination
+ *      description: This endpoint is for list all activity with pagination
  *      tags: [Activity]
  *      parameters:
  *        - in: query
@@ -124,7 +126,7 @@ router.post('', authenticatedUser, verifyIsAdmin, validateActivity, activityCont
  *                      schema:
  *                          type: array
  *                          items:
- *                              $ref: '#/components/schemas/ActivityResponse'
+ *                              $ref: '#/components/responses/Activity'
  *          500:
  *              description: Server error
  *          400:
@@ -141,6 +143,7 @@ router.get('', authenticatedUser, activityController.getAllActivities)
  *      security:
  *        - bearerAuth: []
  *      summary: Get activity by id
+ *      description: This endpoint is for get a specific activity
  *      tags: [Activity]
  *      parameters:
  *        - in: path
@@ -155,7 +158,7 @@ router.get('', authenticatedUser, activityController.getAllActivities)
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ActivityResponse'
+ *                          $ref: '#/components/responses/Activity'
  *          500:
  *              description: Server error
  *          400:
@@ -175,6 +178,7 @@ router.get('/:id', authenticatedUser, activityController.getActivityById)
  *      security:
  *        - bearerAuth: []
  *      summary: Update activity by id
+ *      description: This endpoint is for update activity
  *      tags: [Activity]
  *      parameters:
  *        - in: path
@@ -189,7 +193,7 @@ router.get('/:id', authenticatedUser, activityController.getActivityById)
  *              application/json:
  *                  schema:
  *                      type: object
- *                      $ref: '#/components/schemas/ActivityRequest'     
+ *                      $ref: '#/components/schemas/Activity'     
  *      responses:
  *          201:
  *              description: Successful response
@@ -216,6 +220,7 @@ router.put('/:id', authenticatedUser, verifyIsAdmin, validateActivity, activityC
  *      security:
  *        - bearerAuth: []
  *      summary: Delete activity by id
+ *      description: This endpoint is for destroy a specific activity
  *      tags: [Activity]
  *      parameters:
  *        - in: path

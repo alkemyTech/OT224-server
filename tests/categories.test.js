@@ -143,6 +143,22 @@ describe("POST /api/categories", function () {
     expect(response.status).to.eql(403);
   });
 
+  it('create category, with admin credentials, fails when description has non-string data', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category demo 1", description: 2222, image: "https://via.placeholder.com/600/92c952" })
+    expect(response.status).to.eql(403);
+  });
+
+  it('create category, with admin credentials, fails when description has non-string data or not be url', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category demo 1", description:"demo accusamus beatae ad facilis cum similique qui sunt", image: 222 })
+    expect(response.status).to.eql(403);
+  });
+
   it('create a category, sucessful with admin credentials', async function () {
     const response = await request
     .post('/api/categories')
@@ -208,6 +224,22 @@ describe("UPDATE /api/categories/:id", function () {
     .put('/api/categories/1')
     .set("Authorization", `Bearer ${adminToken}`)
     .send({name: "Category demo 6", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
+    expect(response.status).to.eql(403);
+  });
+
+  it('update category, with admin credentials, fails when description has non-string data', async function () {
+    const response = await request
+    .put('/api/categories/1')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category demo 1", description: 2222, image: "https://via.placeholder.com/600/92c952" })
+    expect(response.status).to.eql(403);
+  });
+
+  it('update category, with admin credentials, fails when description has non-string data or not be url ', async function () {
+    const response = await request
+    .put('/api/categories/1')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category demo 1", description:"demo accusamus beatae ad facilis cum similique qui sunt", image: 222 })
     expect(response.status).to.eql(403);
   });
 

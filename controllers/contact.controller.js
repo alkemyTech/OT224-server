@@ -72,7 +72,7 @@ const updateContact = async (req, res) => {
             }
         })
 
-        if (!response) return res.status(404).json({ response })
+        if (response[0] === 0) return res.status(404).json({ response })
         res.status(200).json({ response })
 
     } catch (error) {

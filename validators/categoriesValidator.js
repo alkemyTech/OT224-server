@@ -22,7 +22,15 @@ const validateCategories = [
                 if (isDuplicated) {
                     throw new Error('category name already exists')
                 } 
-            }),   
+            }),
+    check('description')
+        .isString()
+        .withMessage('invalid data type'),
+    check('image')
+        .isString()
+        .withMessage('invalid data type')
+        .isURL()
+        .withMessage('image must be url'),             
     (req, res, next) => {
         validateResult(req, res, next)
     }

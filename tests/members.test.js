@@ -20,6 +20,73 @@ before( async function() {
     });
     memberRegulartoken = responseMemberRegular.body.token;
 });
+ //Create member
+
+ describe("POST api/members", function() {
+  it("return insert a member should fail without credential", async function () {
+      const response = await request
+      .post("/api/members")
+      .send({
+          name: "NewMember",
+          facebookUrl: "http://www.facebook.com/NewMember",
+          instagramUrl: "http://www.isntagram.com/NewMember",
+          linkedinUrl: "http://www.linkdln.com/NewMember",
+          image: "https://via.placeholder.com/600/92c952",
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      })
+  
+      expect(response.status).to.eql(400);
+    });
+  
+    it("return insert a member should fail with regular credentials", async function () {
+      const response = await request
+      .post("/api/members")
+      .set("Authorization", `Bearer ${memberRegulartoken}`)
+      .send({
+        name: "NewMember",
+        facebookUrl: "http://www.facebook.com/NewMember",
+        instagramUrl: "http://www.isntagram.com/NewMember",
+        linkedinUrl: "http://www.linkdln.com/NewMember",
+        image: "https://via.placeholder.com/600/92c952",
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      });
+  
+      expect(response.status).to.eql(401);
+    });
+
+    it("return insert a member should fail with admin credentials and the field name is empty", async function () {
+      const response = await request
+      .post("/api/members")
+      .set("Authorization", `Bearer ${memberAdminToken}`)
+      .send({
+        name: "",
+        facebookUrl: "http://www.facebook.com/NewMember",
+        instagramUrl: "http://www.isntagram.com/NewMember",
+        linkedinUrl: "http://www.linkdln.com/NewMember",
+        image: "https://via.placeholder.com/600/92c952",
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      });
+  
+      expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('should not be empty');
+    });
+
+    it("return insert a member should succeed with admin credentials", async function () {
+      const response = await request
+      .post("/api/members")
+      .set("Authorization", `Bearer ${memberAdminToken}`)
+      .send({
+        name: "NewMember",
+        facebookUrl: "http://www.facebook.com/NewMember",
+        instagramUrl: "http://www.isntagram.com/NewMember",
+        linkedinUrl: "http://www.linkdln.com/NewMember",
+        image: "https://via.placeholder.com/600/92c952",
+          description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      });
+  
+      expect(response.status).to.eql(200);
+    });
+})
+
 //get all members
 
 describe("GET /api/members", function () {
@@ -80,72 +147,7 @@ describe("GET /api/members", function () {
     
         expect(response.status).to.eql(200);
       });
-      //Create member
-
-      describe("POST api/members", function() {
-        it("return insert a member should fail without credential", async function () {
-            const response = await request
-            .post("/api/members")
-            .send({
-                name: "NewMember",
-                facebookUrl: "http://www.facebook.com/NewMember",
-                instagramUrl: "http://www.isntagram.com/NewMember",
-                linkedinUrl: "http://www.linkdln.com/NewMember",
-                image: "https://via.placeholder.com/600/92c952",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            })
-        
-            expect(response.status).to.eql(400);
-          });
-        
-          it("return insert a member should fail with regular credentials", async function () {
-            const response = await request
-            .post("/api/members")
-            .set("Authorization", `Bearer ${memberRegulartoken}`)
-            .send({
-              name: "NewMember",
-              facebookUrl: "http://www.facebook.com/NewMember",
-              instagramUrl: "http://www.isntagram.com/NewMember",
-              linkedinUrl: "http://www.linkdln.com/NewMember",
-              image: "https://via.placeholder.com/600/92c952",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            });
-        
-            expect(response.status).to.eql(401);
-          });
-
-          it("return insert a member should fail with admin credentials and the field name is empty", async function () {
-            const response = await request
-            .post("/api/members")
-            .set("Authorization", `Bearer ${memberAdminToken}`)
-            .send({
-              name: "",
-              facebookUrl: "http://www.facebook.com/NewMember",
-              instagramUrl: "http://www.isntagram.com/NewMember",
-              linkedinUrl: "http://www.linkdln.com/NewMember",
-              image: "https://via.placeholder.com/600/92c952",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            });
-        
-            expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('should not be empty');
-          });
-
-          it("return insert a member should succeed with admin credentials", async function () {
-            const response = await request
-            .post("/api/members")
-            .set("Authorization", `Bearer ${memberAdminToken}`)
-            .send({
-              name: "NewMember",
-              facebookUrl: "http://www.facebook.com/NewMember",
-              instagramUrl: "http://www.isntagram.com/NewMember",
-              linkedinUrl: "http://www.linkdln.com/NewMember",
-              image: "https://via.placeholder.com/600/92c952",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            });
-        
-            expect(response.status).to.eql(200);
-          });
-      })
+     
       //Update member
 
       describe("UPDATE /api/members", function () {

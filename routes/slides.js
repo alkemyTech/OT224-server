@@ -5,6 +5,8 @@ const { validateSlide, validateSlideToUpdate } = require('../validators/slideVal
 
 const router = Router();
 
+
+
 router.get('/', verifyIsAdmin, getAllSlides );
 
 router.get('/:id', verifyIsAdmin ,getSlideById);

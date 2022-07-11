@@ -180,7 +180,7 @@ router.post('/', verifyIsMemberAdmin, validateMembers, memberController.createMe
  *              description: Resource not found
  *      
  */
-router.put('/:id', verifyIsMemberAdmin, memberController.updateMember)
+router.put('/:id', verifyIsMemberAdmin, validateMembers, memberController.updateMember)
 
 //Delete member
 /**

@@ -6,8 +6,8 @@ before( async function() {
     const responseMemberAdmin = await request
     .post("/api/auth/login")
     .send({
-        'email':'connorJhon@gmail.com',
-        'password':'MemberAdmin2022',
+        'email': 'admin@test.com',
+        'password': '1234test',
     });
     memberAdminToken = responseMemberAdmin.body.token;
     //regular member
@@ -15,8 +15,8 @@ before( async function() {
     const responseMemberRegular = await request
     .post("/api/auth/login")
     .send({
-        "email":"Kay_Von@gmail.com",
-        "password":"userStandar2022"
+        'email': 'regular@test.com',
+        'password': '1234test',
     });
     memberRegulartoken = responseMemberRegular.body.token;
 });

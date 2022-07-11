@@ -1,40 +1,48 @@
 const { request, expect } = require("./config");
-
+const Contact= require('../models').Contacts
 
 var adminToken = '';
 var regularToken = '';
-before(async function () {
-    const responseAdmin = await request
-        .post("/api/auth/login")
-        .send({
-            'email': 'admin@test.com',
-            'password': '1234test',
-        });
-    adminToken = responseAdmin.body.token;
+var contact;
+var resp;
 
-    const responseRegular = await request
-        .post("/api/auth/login")
-        .send({
-            'email': 'regular@test.com',
-            'password': '1234test',
-        });
-    regularToken = responseRegular.body.token;
-});
 
-describe("POST /api/contacts", function () {
+describe("ROUTE /api/contacts", function () {
+    this.timeout(10000)
+
+    before(async function () {
+        const responseAdmin = await request
+            .post("/api/auth/login")
+            .send({
+                'email': 'admin@test.com',
+                'password': '1234test',
+            });
+        adminToken = responseAdmin.body.token;
+
+        const responseRegular = await request
+            .post("/api/auth/login")
+            .send({
+                'email': 'regular@test.com',
+                'password': '1234test',
+            });
+        regularToken = responseRegular.body.token;
+    });
+
 
     it('return insert a contact should succeed', async function () {
         const response = await request
             .post('/api/contacts')
-            .send({ name: "Diego Molinas", phone: "1125343209", email: "diego4@gmail.com", message: "message from Diego Molinas" })
+            .send({ name: "Diego Molinas", phone: "1125343209", email: "diego22@mail.com.ar", message: "message from Diego Molinas" })
         expect(response.status).to.eql(200);
+        contact = response.body.contact
+
     });
 
     it('return insert a contact should fail and the field name is empty', async function () {
 
         const response = await request
             .post('/api/contacts')
-            .send({ name: "", phone: "1125343209", email: "diegom4@gmail.com", message: "message from Diego Molinas" })
+            .send({ name: "", phone: "1125343209", email: "diego22@mail.com.ar", message: "message from Diego Molinas" })
         expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Please enter your name!');
     });
 
@@ -50,7 +58,7 @@ describe("POST /api/contacts", function () {
 
         const response = await request
             .post('/api/contacts')
-            .send({ name: "Diego Molinas", phone: "1125343209", email: "diegom4gmail.com", message: "message from Diego Molinas" })
+            .send({ name: "Diego Molinas", phone: "1125343209", email: "diego22mail.com.ar", message: "message from Diego Molinas" })
         expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Please enter a valid email');
     });
 
@@ -58,13 +66,9 @@ describe("POST /api/contacts", function () {
 
         const response = await request
             .post('/api/contacts')
-            .send({ name: "Diego Molinas", phone: "1125343209", email: "diegom3@gmail.com", message: "message from Diego Molinas" })
+            .send({ name: "Diego Molinas", phone: "1125343209", email: "diego22@mail.com.ar", message: "message from Diego Molinas" })
         expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Email already registered');
     });
-
-});
-
-describe("GET /api/contacts", function () {
 
     it('return get all contacts should fail without credentials', async function () {
         const response = await request
@@ -83,102 +87,111 @@ describe("GET /api/contacts", function () {
             .set("Authorization", `Bearer ${adminToken}`)
         expect(response.status).to.eql(200);
     });
-});
-
-describe("GET /api/contacts/6", function () {
 
     it('return get contact by id should fail without credentials', async function () {
+        const { id } = contact
         const response = await request
-            .get('/api/contacts/6')
+            .get(`/api/contacts/${id}`)
         expect(response.status).to.eql(400);
     });
     it('return get contact by id should fail with regular credentials', async function () {
+        const { id } = contact
         const response = await request
-            .get('/api/contacts/6')
+            .get(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${regularToken}`)
         expect(response.status).to.eql(401);
     });
     it('return get contact by id should fail with admin credentials and id not found', async function () {
         const response = await request
-            .get('/api/contacts/23')
+            .get('/api/contacts/1000')
             .set("Authorization", `Bearer ${adminToken}`)
         expect(response.status).to.eql(404);
     });
     it('return get contact by id should succeed with admin credentials', async function () {
+        const { id } = contact
         const response = await request
-            .get('/api/contacts/6')
+            .get(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${adminToken}`)
         expect(response.status).to.eql(200);
     });
-    
-});
 
-describe("UPDATE /api/contacts/13", function () {
-
-    it('return update a contact should fail without credentials', async function () {
+    it('return update contact by id should fail without credentials', async function () {
+        const { id } = contact
         const response = await request
-            .put('/api/contacts/13')
-            .send({ name: "Diego Molinas", phone: "1125343222", email: "diegom3@gmail.com", message: "New message from Diego Molinas" });
+            .put(`/api/contacts/${id}`)
+            .send({ name: "Diego Molinas", phone: "1125343222", email: "diego22@mail.com.ar", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(400);
     });
 
-    it('return update a contact should fail with regular credentials', async function () {
+    it('return update contact by id should fail with regular credentials', async function () {
+        const { id } = contact
         const response = await request
-            .put('/api/contacts/13')
+            .put(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${regularToken}`)
-            .send({ name: "Diego Molinas", phone: "1125343222", email: "diegom3@gmail.com", message: "New message from Diego Molinas" });
+            .send({ name: "Diego Molinas", phone: "1125343222", email: "diego22@mail.com.ar", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(401);
     });
 
-    it('return update a contact should fail with admin credentials and id not found', async function () {
+    it('return update contact by id should fail with admin credentials and id not found', async function () {
         const response = await request
-            .put('/api/contacts/22')
+            .put('/api/contacts/1000')
             .set("Authorization", `Bearer ${adminToken}`)
             .send({ name: "Diego Molinas", phone: "1125343222", email: "diegom3@gmail.com", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(404);
     });
 
-    it('return update a contact should succeed with admin credentials', async function () {
+    it('return update contact by id should succeed with admin credentials', async function () {
+        const { id } = contact
         const response = await request
-            .put('/api/contacts/13')
+            .put(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${adminToken}`)
-            .send({ name: "Diego Molinas", phone: "1125343222", email: "diegom3@gmail.com", message: "New message from Diego Molinas" });
+            .send({ name: "Diego Molinas", phone: "1125343222", email: "diego22@mail.com.ar", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(200);
     });
-});
 
-describe("DELETE /api/contacts/11", function () {
-
-    it('return delete a contact should fail without credentials', async function () {
+    it('return delete contact by id should fail without credentials', async function () {
+        const { id } = contact
         const response = await request
-            .del('/api/contacts/11')
+            .del(`/api/contacts/${id}`)
 
         expect(response.status).to.eql(400);
     });
 
-    it('return delete a contact should fail with regular credentials', async function () {
+    it('return delete contact by id should fail with regular credentials', async function () {
+        const { id } = contact
         const response = await request
-            .del('/api/contacts/11')
+            .del(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${regularToken}`)
 
         expect(response.status).to.eql(401);
     });
 
-    it('return delete a contact should fail with admin credentials and id not found', async function () {
+    it('return delete contact by id should fail with admin credentials and id not found', async function () {
         const response = await request
-            .del('/api/contacts/22')
+            .del('/api/contacts/1000')
             .set("Authorization", `Bearer ${adminToken}`)
 
         expect(response.status).to.eql(404);
     });
 
-    it('return delete a contact should succeed with admin credentials', async function () {
+    it('return delete contact by id should succeed with admin credentials', async function () {
+        const { id } = contact
         const response = await request
-            .del('/api/contacts/11')
+            .del(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${adminToken}`)
 
         expect(response.status).to.eql(200);
     });
 
+
 });
 
+after(async function () {
+    const result = await Contact.destroy({
+        where:{
+            id:contact.id
+        },
+        force:true
+    })
+    console.log(result)
+})

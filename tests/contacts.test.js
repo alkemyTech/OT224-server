@@ -27,6 +27,15 @@ describe("ROUTE /api/contacts", function () {
             });
         regularToken = responseRegular.body.token;
     });
+    after(async function () {
+        const result = await Contact.destroy({
+            where:{
+                id:contact.id
+            },
+            force:true
+        })
+        console.log(result)
+    })
 
 
     it('return insert a contact should succeed', async function () {
@@ -186,12 +195,4 @@ describe("ROUTE /api/contacts", function () {
 
 });
 
-after(async function () {
-    const result = await Contact.destroy({
-        where:{
-            id:contact.id
-        },
-        force:true
-    })
-    console.log(result)
-})
+

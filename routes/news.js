@@ -6,7 +6,6 @@ const { authenticatedUser } = require('../middlewares/authenticatedUser');
 const { verifyIsAdmin } = require('../middlewares/user.middelware');
 
 
-// Define news tags
 /**
  * @swagger
  * tags:
@@ -59,25 +58,93 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
  * 
  */
 
+ * @swagger 
+ * components:
+ *  schemas:
+ *      News:
+ *          type: object
+ *          properties:
+ *              name:
+ *                  type: string
+ *                  description: the news name
+ *              image: 
+ *                  type: string
+ *                  description: the news image
+ *              content:
+ *                  type: text
+ *                  description: the news content
+ *              categoryId:
+ *                  type: integer
+ *                  description: the category id
+ *              type:
+ *                  type: string
+ *                  description: the news type
+ *          required:
+ *              - name
+ *              - image
+ *              - content
+ *          example:
+ *              name: Where can I get some?
+ *              image: https://lh3.googleusercontent.com/u/0/d/18Jub8i5qQnjBpuR-EsVx9Xtc0tzS2dmx=w250-h238-p-k-nu-iv2
+ *              content: There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour
+ *              categoryId: 1
+ *              type: Social
+ * 
+ *      Comments:
+ *          type: object
+ *          properties:
+ *              user_id:
+ *                  type: integer
+ *                  description: the user id
+ *              body: 
+ *                  type: text
+ *                  description: the comment body
+ *              news_id:
+ *                  type: integer
+ *                  description: the news id
+ *          required:
+ *              - user_id
+ *              - body
+ *              - news_id
+ *          example:
+ *              user_id: 1
+ *              body: It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using
+ *              news_id: 1              
+ *              
+ */
+ 
 //List News
 
 /**
  * 
  * @swagger
- * /api/news:
- *    get:
- *      tags:
- *        - News
- *      summary: "List all News"
- *      description: This endpoint is for list all news 
- *      parameters: []
- *      responses:
- *        '200':
- *          description: Return all News.
- *        '400':
- *          description: Bad request.
+  * /api/news:
+ *  get:
  *      security:
- *       - bearerAuth: []
+ *        - bearerAuth: []
+ *      summary: List all news with pagination
+ *      tags: [News]
+ *      parameters:
+ *        - in: query
+ *          name: page
+ *          schema:
+ *              type: integer
+ *          required: false
+ *          description: Page for pagination
+ *      responses:
+ *          200:
+ *              description: Successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/News'
+ *          500:
+ *              description: Server error
+ *          400:
+ *              description: Bad request error
+ *      
  */
 router.get('/', newsController.getAllNews);
 
@@ -88,18 +155,31 @@ router.get('/', newsController.getAllNews);
  * @swagger
  * /api/news/{id}::
  *    get:
- *      tags:
- *        - News
- *      summary: "Display the specified News"
- *      description: This endpoint is for get a specific news 
- *      parameters: []
- *      responses:
- *        '200':
- *          description: Return news by.
- *        '400':
- *          description: Bad request.
  *      security:
  *       - bearerAuth: []
+ *      summary: "Display the specified News"
+ *      tags: [News]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: News id       
+ *      description: This endpoint is for get a specific news 
+ *      responses:
+ *          200:
+ *              description: Successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/News'
+ *          500:
+ *              description: Server error
+ *          400:
+ *              description: Bad request error
+ *          404:
+ *              description: Resource not found
  */
 router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews);
 
@@ -108,20 +188,33 @@ router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews
 /**
  * 
  * @swagger
- * /api/news:
- *    post:
- *      tags:
- *        - News
- *      summary: "Create News "
- *      description: This endpoint is for create news 
- *      parameters: []
- *      responses:
- *        '200':
- *          description: Return news created .
- *        '400':
- *          description: Bad request.
+* /api/news:
+ *  post:
  *      security:
- *       - bearerAuth: []
+ *        - bearerAuth: []
+ *      summary: create a news
+ *      tags: [News]
+ *      requestBody: 
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/News'
+ *      responses:
+ *          200:
+ *              description: Successful response
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/News'
+ *          500:
+ *              description: Server error
+ *          403:
+ *              description: Required inputs error
+ *          400:
+ *              description: Bad request error
+ * 
  */
 router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsController.createNews);
 
@@ -130,20 +223,38 @@ router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsControlle
 /**
  * 
  * @swagger
- * /api/news:
- *    put:
- *      tags:
- *        - News
- *      summary: "Update News "
- *      description: This endpoint is for update news 
- *      parameters: []
- *      responses:
- *        '200':
- *          description: Successful response .
- *        '400':
- *          description: Bad request.
+ * /api/news/{id}:
+ *  put:
  *      security:
- *       - bearerAuth: []
+ *        - bearerAuth: []
+ *      summary: Update a news by id
+ *      tags: [News]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: News id
+ *      requestBody: 
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/News'     
+ *      responses:
+ *          201:
+ *              description: Successful response              
+ *          500:
+ *              description: Server error
+ *          403:
+ *              description: Required inputs error
+ *          400:
+ *              description: Bad request error
+ *          404:
+ *              description: Resource not found
+ *      
  */
 router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsController.updateNews);
 
@@ -152,26 +263,35 @@ router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsControl
 /**
  * 
  * @swagger
- * /api/news:
- *    delete:
- *      tags:
- *        - News
- *      summary: "Remove the specified News "
- *      description: This endpoint is for destroy a specific news 
- *      parameters: []
- *      responses:
- *        '200':
- *          description: Successful response .
- *        '400':
- *          description: Bad request.
+ * /api/news/{id}:
+ *  delete:
  *      security:
- *       - bearerAuth: []
+ *        - bearerAuth: []
+ *      summary: Delete a news by id
+ *      tags: [News]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *              type: integer
+ *          required: true
+ *          description: News id
+ *      responses:
+ *          200:
+ *              description: News deleted
+ *          500:
+ *              description: Server error
+ *          400:
+ *              description: Bad request error
+ *          404:
+ *              description: Resource not found
+ *      
  */
 router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteNews);
 
 // Get comments by new
 
-/**
+ * 
  * @swagger
  * /api/news/{id}/comments:
  *  get:
@@ -200,7 +320,7 @@ router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteN
  *              description: Bad request error
  *          404:
  *              description: Resource not found
- *      
+ * 
  */
 router.get('/:id/comments', authenticatedUser , verifyIsAdmin , newsController.getAllCommentsOfNews);
 

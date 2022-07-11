@@ -8,8 +8,28 @@
  *          properties: 
  *              text: 
  *                  type: String
+ *                  description: The slide text
  *              organizationId: 
  *                  type: Number
+ *                  description: A valid organization id
+ *              order: 
+ *                  type: String
+ *                  description: The slide order
+ *              imageUrl:
+ *                  type: String
+ *                  description: The url where the image is stored
+ *              thumbnailUrl:
+ *                  type: String
+ *                  description: The url where the thumbnail image is stored
+ *              createdAt:
+ *                  type: Date
+ *                  description: The creation date
+ *              updatedAt:
+ *                  type: Date
+ *                  description: The updated date
+ *              deletedAt:
+ *                  type: Date
+ *                  description: The deleted date
  *          required:
  *              - text
  *              - organizationId

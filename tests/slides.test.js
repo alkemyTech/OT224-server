@@ -24,7 +24,7 @@ before(async function () {
 });
 
 
-describe("GET /api/slides", function () {
+ describe("GET /api/slides", function () {
 
   it('should fail if no token is sent', async function () {
     const response = await request
@@ -49,7 +49,7 @@ describe("GET /api/slides", function () {
   })
 
 });
-
+ 
 
 describe('GET /api/slides/:id', function () {
 
@@ -88,7 +88,7 @@ describe('GET /api/slides/:id', function () {
 
 describe('POST /api/slides', function () {
 
-  it('should fail if no token is sent', async function () {
+   it('should fail if no token is sent', async function () {
     const response = await request
       .post('/api/slides')
 
@@ -102,36 +102,35 @@ describe('POST /api/slides', function () {
     expect(response.status).to.eql(401);
   })
 
-  /*   it('should respond with status 403 if text field content is missing in the request body' , async function () {
+  it('should respond with status 403 if text field content is missing in the request body' , async function () {
     const response = await request
     .post('/api/slides')
-    .send({
-      organizationId: 1
-    })
     .set("Authorization", `Bearer ${adminToken}`) 
+    .set('Content-Type', 'multipart/form-data')
+    .field('organizationId', 1)
+    .attach('img', fs.readFileSync(path.join(__dirname, '../dmlsbGFmaW9yaXRv.png')), 'dmlsbGFmaW9yaXRv.png')
     expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Slide text cannot be empty');
-    //expect(response.status).to.eql(403);
+    expect(response.status).to.eql(403);
   }) 
 
     it('should respond with status 403 if organizationId field content is incorrect' , async function () {
     const response = await request
     .post('/api/slides')
-    .send({
-      text: "Some random text for a slide"
-    })
-    .set("Authorization", `Bearer ${adminToken}`) 
+    .set("Authorization", `Bearer ${adminToken}`)
+    .set('Content-Type', 'multipart/form-data')
+    .field('text','Some random text')
+    .attach('img', fs.readFileSync(path.join(__dirname, '../dmlsbGFmaW9yaXRv.png')), 'dmlsbGFmaW9yaXRv.png') 
     expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Invalid organization id');
-    //expect(response.status).to.eql(403);
-  }) */
+    expect(response.status).to.eql(403);
+  })
 
   it('should respond with status 400 if no files are being sent', async function () {
     const response = await request
-      .post('/api/slides')
-      .send({
-        text: "Some random text for a slide",
-        organizationId: 1
-      })
-      .set("Authorization", `Bearer ${adminToken}`)
+    .post('/api/slides')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .set('Content-Type', 'multipart/form-data')
+    .field('text','Some random text')
+    .field('organizationId', 2)
     expect(response.body.msg).to.equal('no files were uploaded')
     expect(response.status).to.eql(400);
   })
@@ -139,8 +138,8 @@ describe('POST /api/slides', function () {
   it('should respond with status 400 when the body is empty', async function () {
 
     const response = await request
-      .post('/api/slides')
-      .set("Authorization", `Bearer ${adminToken}`)
+    .post('/api/slides')
+    .set("Authorization", `Bearer ${adminToken}`)
     expect(response.body.msg).to.equal('no files were uploaded')
     expect(response.status).to.eql(400);
   })
@@ -157,9 +156,7 @@ describe('POST /api/slides', function () {
     expect(response.body).to.have.property('slide').to.be.an('object')
     expect(response.status).to.eql(200);
   }) 
-
-
-
+ 
 })
 
 describe('DELETE /api/slides/:id', function () {
@@ -180,16 +177,16 @@ describe('DELETE /api/slides/:id', function () {
 
   it('should return status 404 when the slide does not exist ', async function () {
     const response = await request
-      .delete('/api/slides/12313')
-      .set("Authorization", `Bearer ${adminToken}`)
+    .delete('/api/slides/12313')
+    .set("Authorization", `Bearer ${adminToken}`)
     expect(response.body).to.have.property('msg').to.eql('Invalid slide ID')
     expect(response.status).to.eql(404);
   })
 
   it('should return status 200 when the slide has been succesfully removed ', async function () {
     const response = await request
-      .delete('/api/slides/1')
-      .set("Authorization", `Bearer ${adminToken}`)
+    .delete('/api/slides/1')
+    .set("Authorization", `Bearer ${adminToken}`)
     expect(response.body).to.have.property('msg').to.eql('Slide has been removed succesfully')
     expect(response.status).to.eql(200);
   })
@@ -199,7 +196,7 @@ describe('DELETE /api/slides/:id', function () {
 
 describe('PUT /api/slides/:id', function () {
 
-
+ 
    it('should fail if no token is sent', async function () {
     const response = await request
       .put('/api/slides/1')
@@ -214,25 +211,27 @@ describe('PUT /api/slides/:id', function () {
     expect(response.status).to.eql(401);
   })
  
-  /* it('should return status 400 when the slide does not exist ', async function () {
+   it('should return status 400 when the slide does not exist ', async function () {
     const response = await request
     .put('/api/slides/12313')
     .set("Authorization", `Bearer ${adminToken}`)
+    .set('Content-Type', 'multipart/form-data')
+    .field('text','Random text')
+    .field('organizationId', 1)
     expect(response.body).to.have.property('msg').to.eql('Invalid slide id')
     expect(response.status).to.eql(400);
-  }) */
+  })
 
-  it('should return status 200 if the slide was succesfully updated', async function () {
+   it('should return status 200 if the slide was succesfully updated', async function () {
     const response = await request
     .put('/api/slides/2')
     .set("Authorization", `Bearer ${adminToken}`)
-    .set('Content-Type', 'application/x-www-form-urlencoded')
-    .field('text','New text')
+    .set('Content-Type', 'multipart/form-data')
+    .field('text','New text 2')
     .field('organizationId', 1)
     .field('order', 3)
-    .attach('img', fs.readFileSync(path.join(__dirname, '../aW1hZ2VuMg==.png')), 'aW1hZ2VuMg==.png')
     expect(response.body).to.have.property('msg').to.eql('The slide was succesfully updated')
     expect(response.status).to.eql(200)
-  })
+  }) 
 
 })

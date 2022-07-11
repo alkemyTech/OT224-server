@@ -7,6 +7,57 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
 
 
 /**
+ * @swagger
+ * tags:
+ *   name: News
+ *   description: The news API
+ * 
+ * components:
+ *  responses: 
+ *      CommentsNews:
+ *          type: array
+ *          items: 
+ *              type: object
+ *              properties:
+ *                  id:
+ *                      type: integer
+ *                      description: the comment id
+ *                  user_id:
+ *                      type: integer
+ *                      description: the user id
+ *                  body:
+ *                      type: text
+ *                      description: the comment body
+ *                  news_id: 
+ *                      type: integer
+ *                      description: the news id
+ *                  updatedAt: 
+ *                      type: date
+ *                      description: the activity updated date
+ *                  createdAt: 
+ *                      type: date
+ *                      description: the activity created date
+ *                  deletedAt: 
+ *                      type: date
+ *                      description: the activity deleted date
+ *          example:
+ *            - id: 1
+ *              user_id: 2
+ *              body: Comentario acerca del dolar
+ *              news_id: 1
+ *              createdAt: 2022-07-07T20:55:30.000Z
+ *              updatedAt: 2022-07-07T20:55:31.000Z
+ *              deletedAt: null
+ *            - id: 2
+ *              user_id: 5
+ *              body: Comentario acerca del dolar
+ *              news_id: 3
+ *              createdAt: 2022-07-07T20:55:30.000Z
+ *              updatedAt: 2022-07-07T20:55:31.000Z
+ *              deletedAt: null
+ * 
+ */
+
  * @swagger 
  * components:
  *  schemas:
@@ -61,6 +112,7 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
  *              news_id: 1              
  *              
  */
+ 
 //List News
 
 /**
@@ -237,14 +289,16 @@ router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsControl
  */
 router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteNews);
 
-/**
+// Get comments by new
+
  * 
  * @swagger
  * /api/news/{id}/comments:
  *  get:
  *      security:
  *        - bearerAuth: []
- *      summary: get all comments of a specific news
+ *      summary: Get comments by new
+ *      description: This endpoint is for get a comments by specific new
  *      tags: [News]
  *      parameters:
  *        - in: path
@@ -252,14 +306,14 @@ router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteN
  *          schema:
  *              type: integer
  *          required: true
- *          description: News id
+ *          description: Comments by new
  *      responses:
- *          201:
+ *          200:
  *              description: Successful response
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/Comments'
+ *                          $ref: '#/components/responses/CommentsNews'
  *          500:
  *              description: Server error
  *          400:

@@ -14,7 +14,7 @@ const createTestimonial = async (req, res) => {
     }
 }
 //Get testimonials by id
-const getAllTestimonialsById =  async (req, res) => {
+const getTestimonialsById =  async (req, res) => {
     try {
         const testimonial = await TestimonialModel.findOne({where : {id: req.params.id}});
         if(testimonial){
@@ -78,7 +78,7 @@ const deleteTestimonial = async (req, res) => {
 
 module.exports = {
     createTestimonial,
-    getAllTestimonialsById,
+    getTestimonialsById,
     getAllTestimonials,
     updateTestimonial,
     deleteTestimonial

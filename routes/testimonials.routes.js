@@ -9,7 +9,7 @@ const { validateTestimonial } = require('../validators/testimonialValidator');
 router.get('/', testimonialController.getAllTestimonials);
 
 /* GET testimonial by Id*/
-router.get('/:id', authenticatedUser, verifyIsAdmin, testimonialController.getAllTestimonialsById)
+router.get('/:id', authenticatedUser, verifyIsAdmin, testimonialController.getTestimonialsById)
 
 /* POST testimonial. */
 router.post('/',authenticatedUser, verifyIsAdmin, validateTestimonial, testimonialController.createTestimonial);

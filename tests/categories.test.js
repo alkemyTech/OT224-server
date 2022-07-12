@@ -1,39 +1,146 @@
 const { request, expect } = require("./config");
+const ModelCategories= require('../models').Categories;
+
+describe("/api/categories", function () {
 
 let adminToken = '';
 let regularToken = '';
-before( async function () {
-  const responseAdmin = await request
-  .post("/api/auth/login")
-  .send({
-    'email': 'admin@test.com',
-    'password': '1234test',
+let idTest='';
+
+  before( async function () {
+    const responseAdmin = await request
+    .post("/api/auth/login")
+    .send({
+      'email': 'admin@test.com',
+      'password': '1234test',
+    });
+    adminToken = responseAdmin.body.token;
+
+    const responseRegular = await request
+    .post("/api/auth/login")
+    .send({
+      'email': 'regular@test.com',
+      'password': '1234test',
+    });
+    regularToken = responseRegular.body.token;
   });
-  adminToken = responseAdmin.body.token;
 
-  const responseRegular = await request
-  .post("/api/auth/login")
-  .send({
-    'email': 'regular@test.com',
-    'password': '1234test',
+  after(async function () {
+    const resp=await ModelCategories.destroy({where:{id:idTest},force:true})
+    console.log(resp)
   });
-  regularToken = responseRegular.body.token;
-});
 
+  // CREATE CATEGORY
+  it('create a category, fails without credentials', async function () {
+    const response = await request
+    .post('/api/categories')    
+    .send({name: "Category Test", description: "descripcion Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(400)
+  });
 
-describe("GET /api/categories", function () {
+  it('create a category, fails with regular user credentials', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${regularToken}`)
+    .send({name: "Category Test", description: "descripcion Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(401)
+  });
 
+  it('create a category, with admin credentials, fails without name', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create category, with admin credentials, fails with spaces in the name', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "    ", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create category, with admin credentials, fails with numbers in the name', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: 22, description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create category, with admin credentials, fails if name when less than 3 letters', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Ca", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create category, with admin credentials, fails when name already exists in database', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category demo 1", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create category, with admin credentials, fails when description has non-string data', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category Test", description: 2222, image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create category, with admin credentials, fails when image has non-string data', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category Test", description:"description Test", image: 222 })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create category, with admin credentials, fails when image not be url', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category Test", description:"description Test", image: "imagen Test" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
+  });
+
+  it('create a category, sucessful with admin credentials', async function () {
+    const response = await request
+    .post('/api/categories')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name: "Category Test Create", description: "description Test", image: "https://Test.com/600/92c952" }) 
+    expect(response.status).to.eql(201);
+    expect(response.body).to.be.an('object')
+    let catchId=expect((response.text).split(",")).__flags.object
+    idTest=JSON.parse(catchId).id
+  });
+
+  // GET ALL CATEGORIES
   it('list all categories whithout pagination, fails without credentials', async function () {
     const response = await request
     .get('/api/categories') 
-    expect(response.status).to.eql(400);
+    expect(response.status).to.eql(400)
   });
 
   it('list all categories whithout pagination, fails with regular user credentials', async function () {
     const response = await request
     .get('/api/categories') 
     .set("Authorization", `Bearer ${regularToken}`)
-    expect(response.status).to.eql(401);
+    expect(response.status).to.eql(401)
   });
 
   it('list all categories whithout pagination, sucessful with admin credentials', async function () {
@@ -41,277 +148,194 @@ describe("GET /api/categories", function () {
     .get('/api/categories')
     .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).to.eql(200);
+    expect(response.body).to.be.an('object')
   });
 
   it('list all categories with pagination, sucessful with admin credentials', async function () {
     const response = await request
     .get('/api/categories?page=2')
     .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.status).to.eql(200);
+    expect(response.status).to.eql(200)
+    expect(response.body).to.be.an('object');
   });
-
-});
-
-
-describe("GET ONE /api/categories/:id", function () {
-
+  
+  // GET ONE CATEGORY
   it('list one category, fails without credentials', async function () {
     const response = await request
-    .get('/api/categories/1') 
-    expect(response.status).to.eql(400);
+    .get(`/api/categories/${idTest}`) 
+    expect(response.status).to.eql(400)
+    expect(response.body).includes({msg:"The request does not have a token"});
   });
 
   it('list one category, fails with regular user credentials', async function () {
     const response = await request
-    .get('/api/categories/1') 
+    .get(`/api/categories/${idTest}`) 
     .set("Authorization", `Bearer ${regularToken}`)
-    expect(response.status).to.eql(401);
+    expect(response.status).to.eql(401)
   });
 
   it('list one category, with admin credentials, fails when id not found', async function () {
     const response = await request
-    .get('/api/categories/500')
+    .get('/api/categories/0')
     .set("Authorization", `Bearer ${adminToken}`)
     .send({name: "Category demo 500", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })       
-    expect(response.status).to.eql(404);
+    expect(response.status).to.eql(404)
+    expect(response.body).includes({msg:'the category does not exist'});
   }); 
 
   it('list one category, sucessful with admin credentials', async function () {
     const response = await request
-    .get('/api/categories/1')
+    .get(`/api/categories/${idTest}`)
     .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.status).to.eql(200);
+    expect(response.status).to.eql(200)
+    expect(response.body).to.be.an('object');
   });
 
-});
-
-
-describe("POST /api/categories", function () {  
-
-  it('create a category, fails without credentials', async function () {
-    const response = await request
-    .post('/api/categories')    
-    .send({name: "Category demo 1", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(400);
-  });
-
-  it('create a category, fails with regular user credentials', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${regularToken}`)
-    .send({name: "Category demo 1", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(401);
-  });
-
-  it('create a category, with admin credentials, fails without name', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create category, with admin credentials, fails with spaces in the name', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "    ", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create category, with admin credentials, fails with numbers in the name', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: 22, description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create category, with admin credentials, fails if name when less than 3 letters', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Ca", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create category, with admin credentials, fails when name already exists in database', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create category, with admin credentials, fails when description has non-string data', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description: 2222, image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create category, with admin credentials, fails when description has non-string data', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description:"demo accusamus beatae ad facilis cum similique qui sunt", image: 222 })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create category, with admin credentials, fails when description not be url', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description:"demo accusamus beatae ad facilis cum similique qui sunt", image: "imagen 1" })
-    expect(response.status).to.eql(403);
-  });
-
-  it('create a category, sucessful with admin credentials', async function () {
-    const response = await request
-    .post('/api/categories')
-    .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 40", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(201);
-  });
-  
-});
-  
-
-describe("UPDATE /api/categories/:id", function () {
-
+  // UPDATE CATEGORY
   it('update a category, fails without credentials', async function () {
     const response = await request
-    .put('/api/categories/1')    
-    .send({name: "Category demo 1", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(400);
+    .put(`/api/categories/${idTest}`)    
+    .send({name: "Category Test", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(400)
+    expect(response.body).includes({msg:"The request does not have a token"});
   });
 
   it('update a category, fails with regular user credentials', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${regularToken}`)
-    .send({name: "Category demo 1", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" }) 
-    expect(response.status).to.eql(401);
+    .send({name: "Category Test", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(401)
   });
 
   it('update a category, with admin credentials, fails without name', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
+    .send({description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
   it('update category, with admin credentials, fails with spaces in the name', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "    ", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
+    .send({name: "    ", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
   it('update category, with admin credentials, fails with numbers in the name', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: 22, description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
+    .send({name: 22, description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
   it('update category, with admin credentials, fails if name when less than 3 letters', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Ca", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
+    .send({name: "Ca", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
   it('update category, with admin credentials, fails when name already exists in database', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 6", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
+    .send({name: "Category demo 6", description: "description Test", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
   it('update category, with admin credentials, fails when description has non-string data', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description: 2222, image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(403);
+    .send({name: "Category Test", description: 2222, image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
-  it('update category, with admin credentials, fails when description has non-string data or not be url ', async function () {
+  it('update category, with admin credentials, fails when image has non-string data  ', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description:"demo accusamus beatae ad facilis cum similique qui sunt", image: 222 })
-    expect(response.status).to.eql(403);
+    .send({name: "Category Test", description:"description Test", image: 222 })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
-  it('update category, with admin credentials, fails when description not be url ', async function () {
+  it('update category, with admin credentials, fails when image not be url ', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description:"demo accusamus beatae ad facilis cum similique qui sunt", image: "imagen 1" })
-    expect(response.status).to.eql(403);
+    .send({name: "Category Test", description:"description Test", image: "imagen Test" })
+    expect(response.status).to.eql(403)
+    expect(response.body).to.be.an('object')
   });
 
   it('update a category, with admin credentials, fails when id not found', async function () {
     const response = await request
-    .put('/api/categories/500')
+    .put('/api/categories/0')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 500", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })       
-    expect(response.status).to.eql(404);
+    .send({name: "Category Test", description: "description Test", image: "https://Test.com/600/92c952" })       
+    expect(response.status).to.eql(404)
+    expect(response.body).includes('id not found');
   }); 
   
   it('update a category, sucessful with admin credentials', async function () {
     const response = await request
-    .put('/api/categories/1')
+    .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Category demo 1", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })
-    expect(response.status).to.eql(200);
+    .send({name: "Category Test Updated", description: "description Test updated", image: "https://Test.com/600/92c952" })
+    expect(response.status).to.eql(200)
+    expect(response.body).to.be.an('object');
   });
 
-});
-
-
-describe("DELETE /api/categories/:id", function () {
-  
+  // DELETE CATEGORY
   it('delete a category, fails withouth credentials', async function () {
     const response = await request
-    .del('/api/categories/2') 
-    expect(response.status).to.eql(400);
+    .del(`/api/categories/${idTest}`)   
+    expect(response.status).to.eql(400)
+    expect(response.body).includes({msg:"The request does not have a token"});
   });
 
   it('delete a category, fails with regular user credentials', async function () {
     const response = await request
-    .del('/api/categories/2')
+    .del(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${regularToken}`)  
-    expect(response.status).to.eql(401);
+    expect(response.status).to.eql(401)
   });
 
   it('delete a category, with admin credentials, fails when id not found', async function () {
     const response = await request
-    .del('/api/categories/500')
+    .del('/api/categories/0')
     .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.status).to.eql(404);
+    expect(response.status).to.eql(404)
+    expect(response.body).includes({msg:'the category does not exist'});
   });
 
   it('delete a category, with admin credentials, fails when the category has associated news', async function () {
     const response = await request
     .del('/api/categories/10')
     .set("Authorization", `Bearer ${adminToken}`)    
-    expect(response.status).to.eql(403);
+    expect(response.status).to.eql(403)
+    expect(response.body).includes({msg:"the category has news associated, can't delete it !"});
   });
 
   it('delete a category,  sucessful with admin credentials', async function () {
     const response = await request
-    .del('/api/categories/11')    
+    .del(`/api/categories/${idTest}`)     
     .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.status).to.eql(200);
+    expect(response.status).to.eql(200)
+    expect(response.body).to.be.an('object');
   });
-  
+
 });
+

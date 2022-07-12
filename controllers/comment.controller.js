@@ -1,4 +1,7 @@
 const CommentModel = require("../models").Comment;
+const { Role } = require('../models');
+const { User } = require('../models');
+const jwt = require('jsonwebtoken');
 
 const createComment = async (req, res) => {
     try {
@@ -35,8 +38,41 @@ const getCommentById = async (req, res) => {
     }
 }
 
+const updateComment = async (req, res ) => {
+    const { id } = req.params;
+    const { body } = req.body;
+    try{
+        const token =  req.headers.authorization.split(' ')[1];
+        
+        if (!token) return res.json({ msg: 'no token in request' });
+
+        const jwtDecoded = jwt.verify(token, process.env.PRIVATE_KEY);
+
+        const comment = await CommentModel.findOne({ where: { id } });
+
+        const userComment = await User.findOne({ where: { id: comment.user_id }})  
+        
+        const { name } = await Role.findOne({ where: { id: jwtDecoded.user.roleId } });
+        
+        if (!comment)
+
+        return res.status(404).json({ msg: 'Comment not found' });
+
+        if (userComment.email !== jwtDecoded.user.email && name !== 'Admin' )
+
+            return res.status(401).send('you dont have permissions to edit')
+        comment.update({ body });
+
+            return res.status(200).send('comment edited successfully')
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     createComment,
     getAllComents,
-    getCommentById
+    getCommentById,
+    updateComment
 }

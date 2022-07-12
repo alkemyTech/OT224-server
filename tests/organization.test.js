@@ -35,9 +35,8 @@ describe("ROUTE /api/organization", function () {
                 'password':'1234567'
             })
         deletedTknUser = responseNewUser.body.token
-        console.log('TOKEN DELETED USER: ', deletedTknUser)
         idUserToDelete = responseNewUser.body.newUser.id
-        console.log('ID OF THE USER TO DELETE: ', idUserToDelete)
+       
 
         const responseDeletedUser = await request
             .delete(`/api/users/${idUserToDelete}`)
@@ -306,7 +305,7 @@ describe("ROUTE /api/organization", function () {
         .get('/api/organization')
         .set("Authorization", `Bearer ${adminToken}`)
         expect( response.body ).to.be.an('object').to.have.property('organizations').to.be.an('array')
-        console.log( response.body )
+       
         expect(response.status).to.eql(200)
 
     })

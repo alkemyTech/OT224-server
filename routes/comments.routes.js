@@ -10,5 +10,6 @@ const { verifyIsCommentsAdmin } = require('../middlewares/commentsAdminRole');
 router.post('/', authenticatedUser, verifyIsCommentsAdmin, validateComments, commentController.createComment);
 router.get('/', authenticatedUser, verifyIsCommentsAdmin,  commentController.getAllComents);
 router.get('/:id', authenticatedUser, verifyIsCommentsAdmin, commentController.getCommentById);
+router.delete('/:id', authenticatedUser, verifyIsCommentsAdmin, commentController.deleteComment);
 
 module.exports = router;

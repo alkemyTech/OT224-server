@@ -56,14 +56,14 @@ const updateComment = async (req, res ) => {
         
         if (!comment)
 
-        return res.status(404).json({ msg: 'Comment not found' });
+        return res.status(404).send({ msg: 'Comment not found' });
 
         if (userComment.email !== jwtDecoded.user.email && name !== 'Admin' )
 
-            return res.status(401).send('you dont have permissions to edit')
+            return res.status(401).send({ msg: 'you dont have permissions to edit'})
         comment.update({ body });
 
-            return res.status(200).send('comment edited successfully')
+            return res.status(200).send({ msg: 'comment edited successfully'})
 
     } catch (error) {
         console.log(error);

@@ -13,53 +13,6 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
  *   description: The news API
  * 
  * components:
- *  responses: 
- *      CommentsNews:
- *          type: array
- *          items: 
- *              type: object
- *              properties:
- *                  id:
- *                      type: integer
- *                      description: the comment id
- *                  user_id:
- *                      type: integer
- *                      description: the user id
- *                  body:
- *                      type: text
- *                      description: the comment body
- *                  news_id: 
- *                      type: integer
- *                      description: the news id
- *                  updatedAt: 
- *                      type: date
- *                      description: the activity updated date
- *                  createdAt: 
- *                      type: date
- *                      description: the activity created date
- *                  deletedAt: 
- *                      type: date
- *                      description: the activity deleted date
- *          example:
- *            - id: 1
- *              user_id: 2
- *              body: Comentario acerca del dolar
- *              news_id: 1
- *              createdAt: 2022-07-07T20:55:30.000Z
- *              updatedAt: 2022-07-07T20:55:31.000Z
- *              deletedAt: null
- *            - id: 2
- *              user_id: 5
- *              body: Comentario acerca del dolar
- *              news_id: 3
- *              createdAt: 2022-07-07T20:55:30.000Z
- *              updatedAt: 2022-07-07T20:55:31.000Z
- *              deletedAt: null
- * 
- */
-
- * @swagger 
- * components:
  *  schemas:
  *      News:
  *          type: object
@@ -109,10 +62,52 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
  *          example:
  *              user_id: 1
  *              body: It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using
- *              news_id: 1              
- *              
+ *              news_id: 1  
+ *  responses: 
+ *      CommentsNews:
+ *          type: array
+ *          items: 
+ *              type: object
+ *              properties:
+ *                  id:
+ *                      type: integer
+ *                      description: the comment id
+ *                  user_id:
+ *                      type: integer
+ *                      description: the user id
+ *                  body:
+ *                      type: text
+ *                      description: the comment body
+ *                  news_id: 
+ *                      type: integer
+ *                      description: the news id
+ *                  updatedAt: 
+ *                      type: date
+ *                      description: the activity updated date
+ *                  createdAt: 
+ *                      type: date
+ *                      description: the activity created date
+ *                  deletedAt: 
+ *                      type: date
+ *                      description: the activity deleted date
+ *          example:
+ *            - id: 1
+ *              user_id: 2
+ *              body: Comentario acerca del dolar
+ *              news_id: 1
+ *              createdAt: 2022-07-07T20:55:30.000Z
+ *              updatedAt: 2022-07-07T20:55:31.000Z
+ *              deletedAt: null
+ *            - id: 2
+ *              user_id: 5
+ *              body: Comentario acerca del dolar
+ *              news_id: 3
+ *              createdAt: 2022-07-07T20:55:30.000Z
+ *              updatedAt: 2022-07-07T20:55:31.000Z
+ *              deletedAt: null
+ * 
  */
- 
+
 //List News
 
 /**
@@ -290,7 +285,7 @@ router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsControl
 router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteNews);
 
 // Get comments by new
-
+/**
  * 
  * @swagger
  * /api/news/{id}/comments:

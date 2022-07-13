@@ -49,19 +49,10 @@ const updateComment = async (req, res ) => {
         const jwtDecoded = jwt.verify(token, process.env.PRIVATE_KEY);
 
         const comment = await CommentModel.findOne({ where: { id } });
-
-        const userComment = await User.findOne({ where: { id: comment.user_id }})  
-        
-        const { name } = await Role.findOne({ where: { id: jwtDecoded.user.roleId } });
         
         if (!comment){
             
             return res.status(404).send({ msg: 'Comment not found' });
-        }
-
-        if (userComment.email !== jwtDecoded.user.email && name !== 'Admin' ){
-
-            return res.status(401).send({ msg: 'you dont have permissions to edit'})
         }
 
         comment.update({ body });

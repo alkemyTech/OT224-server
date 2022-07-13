@@ -50,19 +50,9 @@ const deleteComment = async (req, res) => {
 
         const comment = await CommentModel.findOne({ where: { id } });
 
-        const userComment = await User.findOne({ where: { id: comment.user_id }})  
-
-        const { name } = await Role.findOne({ where: { id: jwtDecoded.user.roleId } });
-
         if (!comment){
             
             return res.status(404).send({ msg: 'Comment not found' });
-        }
-
-
-        if (userComment.email !== jwtDecoded.user.email && name !== 'Admin' ){
-
-            return res.status(401).send({ msg: 'you dont have permissions to delete' })
         }
 
         comment.destroy();

@@ -1,6 +1,7 @@
 const { request, expect } = require("./config");
 
 let adminToken, regularToken, activityId = null;
+const requestPost = {name: "Activity 1", content: "activity content", image: "https://via.placeholder.com/600/92c952"}
 before( async () =>{
   const responseAdmin = await request
   .post("/api/auth/login")
@@ -24,7 +25,7 @@ describe("POST /api/activities", function () {
   it('return insert a activity should fail without credentials', async function () {
     const response = await request
     .post('/api/activities')    
-    .send({name: "Activity 1", content: "activity content", image: "https://via.placeholder.com/600/92c952"})
+    .send(requestPost)
     
     expect(response.status).to.eql(400);
   });
@@ -33,7 +34,7 @@ describe("POST /api/activities", function () {
     const response = await request
     .post('/api/activities')
     .set("Authorization", `Bearer ${regularToken}`)
-    .send({name: "Activity 1", content: "activity content", image: "https://via.placeholder.com/600/92c952"})
+    .send(requestPost)
     
     expect(response.status).to.eql(401);
   });
@@ -42,7 +43,7 @@ describe("POST /api/activities", function () {
     const response = await request
     .post('/api/activities')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Activity 1", content: "activity content", image: "https://via.placeholder.com/600/92c952"})
+    .send(requestPost)
     
     expect(response.status).to.eql(201);
     activityId = response.body.id
@@ -52,13 +53,12 @@ describe("POST /api/activities", function () {
     const response = await request
     .post('/api/activities')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({name: "Activity 1", content: "activity content", image: "https://via.placeholder.com/600/92c952"})
+    .send(requestPost)
     
     expect(response.body).to.have.property('name').to.be.equal("Activity 1");
   });
 
   it('return insert a activity should fail with admin credentials and the field name is empty', async function () {
-    
     const response = await request    
     .post('/api/activities')
     .set("Authorization", `Bearer ${adminToken}`)
@@ -114,6 +114,7 @@ describe("GET /api/activities", function () {
 
     expect(response.status).to.eql(200);
   });
+
   it("returns all activity should succeed with admin credentials", async function () {
     const response = await request
     .get("/api/activities")
@@ -133,12 +134,37 @@ describe("GET /api/activities", function () {
 
 describe("GET /api/activities/:id", function () {
 
-  it('should get an activity', async function () {
+  it("returns all activity should fail without credentials", async function () {
+    const response = await request
+    .get("/api/activities");
+
+    expect(response.status).to.eql(400);
+  });
+
+  it('return get a activity should fail with admin credentials and id not found', async function () {
+    const response = await request
+    .put('/api/activities/3343452')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send(requestPost);        
+    expect(response.status).to.eql(404);
+  });
+
+  it('returns all activity should succeed with regular credentials', async function () {
     const response = await request
     .get(`/api/activities/${activityId}`)
     .set("Authorization", `Bearer ${regularToken}`)
     expect(response.status).to.eql(200);
   });
+
+  it("returns all activity should succeed with admin credentials", async function () {
+    const response = await request
+    .get("/api/activities")
+    .set("Authorization", `Bearer ${adminToken}`);
+
+    expect(response.status).to.eql(200);
+  });
+
+
 });
 
 describe("UPDATE /api/activities/:id", function () {
@@ -156,11 +182,7 @@ describe("UPDATE /api/activities/:id", function () {
     const response = await request
     .put('/api/activities/3343452')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({
-      name: "Activity 2",
-      image: "https://via.placeholder.com/600/92c952",
-      content: "content activity"
-    });        
+    .send(requestPost);        
     expect(response.status).to.eql(404);
   });
   
@@ -208,23 +230,27 @@ describe("UPDATE /api/activities/:id", function () {
     const response = await request
     .put(`/api/activities/${activityId}`)
     .set("Authorization", `Bearer ${adminToken}`)
-    .send({
-      name: "activities 3",
-      image: "https://via.placeholder.com/600/92c952",
-      content: "content act"
-    });
+    .send(requestPost);
         
     expect(response.status).to.eql(200);
   });  
 });
 
-/*describe("DELETE /api/activities/:id", function () {
+describe("DELETE /api/activities/:id", function () {
   
   it('return delete a activity should fail without credentials', async function () {
     const response = await request
     .del(`/api/activities/${activityId}`)    
         
     expect(response.status).to.eql(400);
+  });
+
+  it('return delete a activity should fail with admin credentials and id not found', async function () {
+    const response = await request
+    .put('/api/activities/3343452')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send(requestPost);        
+    expect(response.status).to.eql(404);
   });
 
   it('return delete a activity should succeed with admin credentials', async function () {
@@ -242,4 +268,4 @@ describe("UPDATE /api/activities/:id", function () {
         
     expect(response.status).to.eql(404);
   });
-});*/
+});

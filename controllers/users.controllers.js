@@ -92,9 +92,10 @@ const findMe = async (req, res) => {
 
 const getUserId= async (req, res)=>{
     try {
-        const user = await ModeloUser.findOne({where : {id : req.params.id}})
+        const user = await ModeloUser.findByPk(req.params.id)
         user ? res.status(200).send(user) : res.sendStatus(404)
     } catch (error) {
+        res.status(500).send(error)
     }
 }
 

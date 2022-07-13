@@ -4,7 +4,7 @@ const Contact= require('../models').Contacts
 var adminToken = '';
 var regularToken = '';
 var contact;
-var resp;
+
 
 
 describe("ROUTE /api/contacts", function () {
@@ -28,20 +28,20 @@ describe("ROUTE /api/contacts", function () {
         regularToken = responseRegular.body.token;
     });
     after(async function () {
-        const result = await Contact.destroy({
+        await Contact.destroy({
             where:{
                 id:contact.id
             },
             force:true
         })
-        console.log(result)
+        
     })
 
 
     it('return insert a contact should succeed', async function () {
         const response = await request
             .post('/api/contacts')
-            .send({ name: "Diego Molinas", phone: "1125343209", email: "diego22@mail.com.ar", message: "message from Diego Molinas" })
+            .send({ name: "Diego Molinas", phone: "1125343209", email: "diegoOT224@mail.com.ar", message: "message from Diego Molinas" })
         expect(response.status).to.eql(200);
         contact = response.body.contact
 
@@ -51,7 +51,7 @@ describe("ROUTE /api/contacts", function () {
 
         const response = await request
             .post('/api/contacts')
-            .send({ name: "", phone: "1125343209", email: "diego22@mail.com.ar", message: "message from Diego Molinas" })
+            .send({ name: "", phone: "1125343209", email: "diegoOT224@mail.com.ar", message: "message from Diego Molinas" })
         expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Please enter your name!');
     });
 
@@ -67,7 +67,7 @@ describe("ROUTE /api/contacts", function () {
 
         const response = await request
             .post('/api/contacts')
-            .send({ name: "Diego Molinas", phone: "1125343209", email: "diego22mail.com.ar", message: "message from Diego Molinas" })
+            .send({ name: "Diego Molinas", phone: "1125343209", email: "diegoOT224mail.com.ar", message: "message from Diego Molinas" })
         expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Please enter a valid email');
     });
 
@@ -75,7 +75,7 @@ describe("ROUTE /api/contacts", function () {
 
         const response = await request
             .post('/api/contacts')
-            .send({ name: "Diego Molinas", phone: "1125343209", email: "diego22@mail.com.ar", message: "message from Diego Molinas" })
+            .send({ name: "Diego Molinas", phone: "1125343209", email: "diegoOT224@mail.com.ar", message: "message from Diego Molinas" })
         expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('Email already registered');
     });
 
@@ -128,7 +128,7 @@ describe("ROUTE /api/contacts", function () {
         const { id } = contact
         const response = await request
             .put(`/api/contacts/${id}`)
-            .send({ name: "Diego Molinas", phone: "1125343222", email: "diego22@mail.com.ar", message: "New message from Diego Molinas" });
+            .send({ name: "Diego Molinas", phone: "1125343222", email: "diegoOT224@mail.com.ar", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(400);
     });
 
@@ -137,7 +137,7 @@ describe("ROUTE /api/contacts", function () {
         const response = await request
             .put(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${regularToken}`)
-            .send({ name: "Diego Molinas", phone: "1125343222", email: "diego22@mail.com.ar", message: "New message from Diego Molinas" });
+            .send({ name: "Diego Molinas", phone: "1125343222", email: "diegoOT224@mail.com.ar", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(401);
     });
 
@@ -145,7 +145,7 @@ describe("ROUTE /api/contacts", function () {
         const response = await request
             .put('/api/contacts/1000')
             .set("Authorization", `Bearer ${adminToken}`)
-            .send({ name: "Diego Molinas", phone: "1125343222", email: "diegom3@gmail.com", message: "New message from Diego Molinas" });
+            .send({ name: "Diego Molinas", phone: "1125343222", email: "diegoOT224@gmail.com", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(404);
     });
 
@@ -154,7 +154,7 @@ describe("ROUTE /api/contacts", function () {
         const response = await request
             .put(`/api/contacts/${id}`)
             .set("Authorization", `Bearer ${adminToken}`)
-            .send({ name: "Diego Molinas", phone: "1125343222", email: "diego22@mail.com.ar", message: "New message from Diego Molinas" });
+            .send({ name: "Diego Molinas", phone: "1125343221", email: "diegoOT224@mail.com.ar", message: "New message from Diego Molinas" });
         expect(response.status).to.eql(200);
     });
 

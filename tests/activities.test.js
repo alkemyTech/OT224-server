@@ -143,7 +143,7 @@ describe("GET /api/activities/:id", function () {
 
   it('return get a activity should fail with admin credentials and id not found', async function () {
     const response = await request
-    .put('/api/activities/3343452')
+    .put('/api/activities/0')
     .set("Authorization", `Bearer ${adminToken}`)
     .send(baseRequest);        
     expect(response.status).to.eql(404);
@@ -180,7 +180,7 @@ describe("UPDATE /api/activities/:id", function () {
 
   it('return update a activity should fail with admin credentials and id not found', async function () {
     const response = await request
-    .put('/api/activities/3343452')
+    .put('/api/activities/0')
     .set("Authorization", `Bearer ${adminToken}`)
     .send(baseRequest);        
     expect(response.status).to.eql(404);
@@ -247,7 +247,7 @@ describe("DELETE /api/activities/:id", function () {
 
   it('return delete a activity should fail with admin credentials and id not found', async function () {
     const response = await request
-    .put('/api/activities/3343452')
+    .put('/api/activities/0')
     .set("Authorization", `Bearer ${adminToken}`)
     .send(baseRequest);        
     expect(response.status).to.eql(404);
@@ -263,7 +263,7 @@ describe("DELETE /api/activities/:id", function () {
 
   it('return delete a activity should fail with admin credentials and id not found', async function () {
     const response = await request
-    .del('/api/activities/524352342')
+    .del('/api/activities/0')
     .set("Authorization", `Bearer ${adminToken}`)
         
     expect(response.status).to.eql(404);

@@ -91,7 +91,7 @@ describe("GET api/news", function () {
         
         expect(response.status).to.eql(200);
     });
-     //////////////////////////////////////////////////////////
+    
     it('list get one news, fails without credentials', async function () {
         const response = await request
         .get('/api/news/1') 
@@ -121,7 +121,7 @@ describe("GET api/news", function () {
         
         expect(response.status).to.eql(200);
     });
-            ////////////////////////////////////
+    
     it('update a news, fails without credentials', async function () {
         const response = await request
         .put('/api/news/7')

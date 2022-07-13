@@ -36,7 +36,7 @@ const getModelById = async (req, res, model) => {
 };
 
 //Update model
-const updateModel = async (req, res, model) => {
+const updateModel = async (req, res, model, inputVars) => {
     try {
         const id = req.params.id
         const retrievedModel = await model.findByPk(id);
@@ -45,7 +45,7 @@ const updateModel = async (req, res, model) => {
             return sendNotFound(res, id);
         }
 
-        const modelToUpdate = await model.update(req.body, { where: { id } });
+        const modelToUpdate = await model.update(inputVars, { where: { id } });
 
         if (modelToUpdate == 1){
             const updatedModel = await model.findByPk(id);

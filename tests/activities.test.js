@@ -1,7 +1,7 @@
 const { request, expect } = require("./config");
 
 let adminToken, regularToken, activityId = null;
-const requestPost = {name: "Activity 1", content: "activity content", image: "https://via.placeholder.com/600/92c952"}
+const baseRequest = {name: "Activity 1", content: "activity content", image: "https://via.placeholder.com/600/92c952"}
 before( async () =>{
   const responseAdmin = await request
   .post("/api/auth/login")
@@ -25,7 +25,7 @@ describe("POST /api/activities", function () {
   it('return insert a activity should fail without credentials', async function () {
     const response = await request
     .post('/api/activities')    
-    .send(requestPost)
+    .send(baseRequest)
     
     expect(response.status).to.eql(400);
   });
@@ -34,7 +34,7 @@ describe("POST /api/activities", function () {
     const response = await request
     .post('/api/activities')
     .set("Authorization", `Bearer ${regularToken}`)
-    .send(requestPost)
+    .send(baseRequest)
     
     expect(response.status).to.eql(401);
   });
@@ -43,7 +43,7 @@ describe("POST /api/activities", function () {
     const response = await request
     .post('/api/activities')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send(requestPost)
+    .send(baseRequest)
     
     expect(response.status).to.eql(201);
     activityId = response.body.id
@@ -53,7 +53,7 @@ describe("POST /api/activities", function () {
     const response = await request
     .post('/api/activities')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send(requestPost)
+    .send(baseRequest)
     
     expect(response.body).to.have.property('name').to.be.equal("Activity 1");
   });
@@ -145,7 +145,7 @@ describe("GET /api/activities/:id", function () {
     const response = await request
     .put('/api/activities/3343452')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send(requestPost);        
+    .send(baseRequest);        
     expect(response.status).to.eql(404);
   });
 
@@ -182,7 +182,7 @@ describe("UPDATE /api/activities/:id", function () {
     const response = await request
     .put('/api/activities/3343452')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send(requestPost);        
+    .send(baseRequest);        
     expect(response.status).to.eql(404);
   });
   
@@ -230,7 +230,7 @@ describe("UPDATE /api/activities/:id", function () {
     const response = await request
     .put(`/api/activities/${activityId}`)
     .set("Authorization", `Bearer ${adminToken}`)
-    .send(requestPost);
+    .send(baseRequest);
         
     expect(response.status).to.eql(200);
   });  
@@ -249,7 +249,7 @@ describe("DELETE /api/activities/:id", function () {
     const response = await request
     .put('/api/activities/3343452')
     .set("Authorization", `Bearer ${adminToken}`)
-    .send(requestPost);        
+    .send(baseRequest);        
     expect(response.status).to.eql(404);
   });
 

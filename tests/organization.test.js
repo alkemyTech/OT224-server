@@ -263,7 +263,7 @@ describe("ROUTE /api/organization", function () {
 
     it('should respond with status code 404 if there is no organization with the id sent', async function () {
         const response = await request
-        .get('/api/organization/public/213212')
+        .get('/api/organization/public/0')
 
         expect(response.body).to.be.an('object').to.have.property('message').to.be.eql('There is no information about the organization')
         expect(response.status).to.eql(404)

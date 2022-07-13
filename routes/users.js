@@ -9,6 +9,8 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
 
 /* GET users listing. */
 router.get('/', authenticatedUser, verifyIsAdmin, userController.getAllUsers )
+/* GET user by ID */
+router.get('/:id', verifyIsAdmin, userController.getUserId)
 //update user
 router.put('/update/:id', authenticatedUser, verifyIsAdmin, userController.updateUser)
 //delete user

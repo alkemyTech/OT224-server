@@ -1,7 +1,4 @@
 const CommentModel = require("../models").Comment;
-const { Role } = require('../models');
-const { User } = require('../models');
-const jwt = require('jsonwebtoken');
 
 const createComment = async (req, res) => {
     try {
@@ -45,8 +42,6 @@ const updateComment = async (req, res ) => {
         const token =  req.headers.authorization.split(' ')[1];
         
         if (!token) return res.json({ msg: 'no token in request' });
-
-        const jwtDecoded = jwt.verify(token, process.env.PRIVATE_KEY);
 
         const comment = await CommentModel.findOne({ where: { id } });
         

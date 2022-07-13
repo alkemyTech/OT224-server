@@ -1,11 +1,15 @@
 const { request, expect } = require("./config");
 const ModelCategories= require('../models').Categories;
+const ModelNews= require('../models').News;
 
 describe("/api/categories", function () {
 
 let adminToken = '';
 let regularToken = '';
 let idTest='';
+let idNews='';
+let newsCatgoryId='';
+let idNotFound='a';
 
   before( async function () {
     const responseAdmin = await request
@@ -23,11 +27,27 @@ let idTest='';
       'password': '1234test',
     });
     regularToken = responseRegular.body.token;
+
   });
 
   after(async function () {
-    const resp=await ModelCategories.destroy({where:{id:idTest},force:true})
-    console.log(resp)
+    const respCategories=await ModelCategories.destroy({where:{id:idTest},force:true})
+    console.log('AfterRespCategories',respCategories)
+
+    const respNews=await ModelNews.destroy({where:{id:idNews},force:true})
+    console.log('AfterRespNews',respNews)
+  });
+
+  // CREATE NEWS WITH CATEGORYID FOR TEST DELETE CATEGORY
+  it('create a news, sucessful with admin credentials', async function () {
+    const response = await request
+    .post('/api/news')
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({name:"NewsforCategoryTest", image:"https://NewsforCategoryTest.com/600/92c952", type:"news",content: "NewsforCategoryTest", categoryId:10, deletdAt:null}) 
+    expect(response.status).to.eql(201);
+    expect(response.body).to.be.an('object')
+    idNews=response.body.data.id
+    newsCatgoryId=response.body.data.categoryId
   });
 
   // CREATE CATEGORY
@@ -125,8 +145,7 @@ let idTest='';
     .send({name: "Category Test Create", description: "description Test", image: "https://Test.com/600/92c952" }) 
     expect(response.status).to.eql(201);
     expect(response.body).to.be.an('object')
-    let catchId=expect((response.text).split(",")).__flags.object
-    idTest=JSON.parse(catchId).id
+    idTest=response.body.id
   });
 
   // GET ALL CATEGORIES
@@ -176,7 +195,7 @@ let idTest='';
 
   it('list one category, with admin credentials, fails when id not found', async function () {
     const response = await request
-    .get('/api/categories/0')
+    .get(`/api/categories/${idNotFound}`)
     .set("Authorization", `Bearer ${adminToken}`)
     .send({name: "Category demo 500", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })       
     expect(response.status).to.eql(404)
@@ -282,7 +301,7 @@ let idTest='';
 
   it('update a category, with admin credentials, fails when id not found', async function () {
     const response = await request
-    .put('/api/categories/0')
+    .put(`/api/categories/${idNotFound}`)
     .set("Authorization", `Bearer ${adminToken}`)
     .send({name: "Category Test", description: "description Test", image: "https://Test.com/600/92c952" })       
     expect(response.status).to.eql(404)
@@ -315,7 +334,7 @@ let idTest='';
 
   it('delete a category, with admin credentials, fails when id not found', async function () {
     const response = await request
-    .del('/api/categories/0')
+    .del(`/api/categories/${idNotFound}`)
     .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).to.eql(404)
     expect(response.body).includes({msg:'the category does not exist'});
@@ -323,8 +342,8 @@ let idTest='';
 
   it('delete a category, with admin credentials, fails when the category has associated news', async function () {
     const response = await request
-    .del('/api/categories/10')
-    .set("Authorization", `Bearer ${adminToken}`)    
+    .del(`/api/categories/${newsCatgoryId}`)
+    .set("Authorization", `Bearer ${adminToken}`)   
     expect(response.status).to.eql(403)
     expect(response.body).includes({msg:"the category has news associated, can't delete it !"});
   });

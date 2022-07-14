@@ -14,37 +14,37 @@ const idExists = (req, res, next) => {
 const getModel = (id, url) => {
   let model;
   switch (url) {
-    case 'activity': 
+    case 'activities': 
       model = models.Activity.findByPk(id);
     break;
     case 'categories': 
       model = models.Categories.findByPk(id);
       break;
-    case 'comment': 
+    case 'comments': 
       model = models.Comment.findByPk(id);
     break;
     case 'contacts': 
       model = models.Contacts.findByPk(id);
     break;
-    case 'member': 
+    case 'members': 
       model = models.Member.findByPk(id);
     break;
-    case 'new': 
+    case 'news': 
       model = models.News.findByPk(id);
     break;
     case 'organization': 
       model = models.Organization.findByPk(id);
     break;
-    case 'role': 
+    case 'roles': 
       model = models.Role.findByPk(id);
     break;
-    case 'slide': 
+    case 'slides': 
       model = models.Slide.findByPk(id);
     break;
-    case 'testimonial': 
+    case 'testimonials': 
       model = models.Testimonial.findByPk(id);
     break;
-    case 'user': 
+    case 'users': 
       model = models.User.findByPk(id);
     break;
     default: 

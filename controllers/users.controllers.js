@@ -90,10 +90,20 @@ const findMe = async (req, res) => {
     return res.status(200).json(req.user);
 };
 
+const getUserId= async (req, res)=>{
+    try {
+        const user = await ModeloUser.findByPk(req.params.id)
+        user ? res.status(200).send(user) : res.sendStatus(404)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}
+
 module.exports = {
     getAllUsers,
     createUser,
     updateUser,
     deleteUser,
     findMe,
+    getUserId
 };

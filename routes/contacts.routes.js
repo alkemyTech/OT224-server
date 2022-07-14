@@ -1,4 +1,4 @@
-const { Router } = require('express')
+const express = require('express')
 const {
     createContact,
     getAllContacts,
@@ -12,7 +12,7 @@ const {
 } = require('../middlewares')
 const { contactsValidators } = require('../validators')
 
-const router = Router()
+const router = express.Router()
 
 router.post('/', contactsValidators, createContact)
 router.get('/', authenticatedUser, verifyIsAdmin, getAllContacts)

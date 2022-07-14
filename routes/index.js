@@ -12,7 +12,7 @@ const authRouter = require('./auth')
 const membersRouter = require('./members.routes')
 const rolesRouter = require('./role');
 const activitiesRouter = require('./activities.routes');
-const slidesRouter = require('./slides');
+const slidesRouter = require('./slides.routes');
 const contactRoutes = require('./contacts.routes');
 const commentRouter = require('./comments.routes');
 

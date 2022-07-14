@@ -1,5 +1,6 @@
 const { Slide } = require('../models');
 const { uploadToBucket } = require('../services/s3');
+const baseController = require('./base.controller')
 const { resizeImg } = require('../helpers/thumbNailConverter');
 const { checkSlideOrder } = require('../helpers/checkSlideOrder');
 const { decodeImgName } = require('../helpers/decodeImgName');
@@ -45,7 +46,7 @@ const createSlide = async (req, res) => {
                 raw: true
             })
             body['order'] = lastOrder.maxOrder + 1
-        }else{
+        } else {
             await checkSlideOrder(body)
         }
 
@@ -70,28 +71,7 @@ const createSlide = async (req, res) => {
 }
 
 const getSlideById = async (req, res) => {
-
-    const id = req.params.id;
-
-    try {
-
-        const slide = await Slide.findByPk(id);
-        if (!slide) {
-            return res.status(404).json({
-                msg: 'Invalid or nonexisting slide'
-            })
-        }
-        res.status(200).send({
-            slide
-        })
-
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            msg: 'Something went wrong call the admin'
-        })
-    }
-
+    return baseController.getModelById(req, res, Slide )
 }
 
 const updateSlide = async (req, res) => {
@@ -102,28 +82,21 @@ const updateSlide = async (req, res) => {
 
 
     try {
-        const slide = await Slide.findByPk(slideId);
-      
-        if (!slide) {
-            return res.status(400).send({
-                msg: 'Invalid slide id'
-            })
-        }
-
-        if( req.files ){
+       
+        if (req.files) {
             let img = req.files.img;
 
             img = decodeImgName(img)
             const regularImglocation = await uploadToBucket(img);
-    
+
             const resizedImg = await resizeImg(img);
-    
+
             const thumbnailImgLocation = await uploadToBucket(resizedImg)
-    
+
             body['imageUrl'] = regularImglocation;
             body['thumbnailUrl'] = thumbnailImgLocation;
         }
-        if(body.hasOwnProperty('order')){
+        if (body.hasOwnProperty('order')) {
 
             await checkSlideOrder(body)
         }
@@ -144,37 +117,12 @@ const updateSlide = async (req, res) => {
         res.status(500).send({
             msg: 'Something went wrong call the admin'
         })
-    } 
+    }
 }
 
 
 const deleteSlide = async (req, res) => {
-    const slideId = req.params.id;
-
-    try {
-        const slide = await Slide.findByPk(slideId)
-        if(slide === null){
-            return res.status(404).send({
-                msg:'Invalid slide ID'
-            })
-        }else{
-            Slide.destroy({
-                where:{
-                    id: slideId
-                }
-            })
-            res.status(200).send({
-                msg:'Slide has been removed succesfully'
-            })
-        }
-    } catch (error) {
-
-        console.log(error)
-        return res.status(500).json({
-            msg: 'Something went wrong call the admin'
-        })
-
-    }
+    return baseController.deleteModel( req, res, Slide ) 
 }
 
 module.exports = {

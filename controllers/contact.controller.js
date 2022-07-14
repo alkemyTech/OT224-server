@@ -8,7 +8,6 @@ const {
 
 
 const createContact = async (req, res) => {
-
     try {
         const { name, phone, email, message } = req.body
 
@@ -28,7 +27,6 @@ const createContact = async (req, res) => {
 }
 
 const getAllContacts = async (req, res) => {
-
     try {
         const contacts = await Contact.findAll()
         res.status(200).json({ contacts })

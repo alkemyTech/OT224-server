@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {verifyIsAdmin}=require('../middlewares/user.middelware');
+const { idExists }=require('../middlewares/idExists.middleware');
 const {validateCategories}=require('../validators/categoriesValidator');
 const categoriesController=require('../controllers/categories.controller');
 
@@ -104,7 +105,7 @@ router.post("/", verifyIsAdmin, validateCategories, categoriesController.createC
  *       '500':
  *         descripcion: server error
  */
-router.put("/:id", verifyIsAdmin, validateCategories, categoriesController.updateCategory
+router.put("/:id", verifyIsAdmin, idExists, validateCategories, categoriesController.updateCategory
 );
 /**
  * @swagger

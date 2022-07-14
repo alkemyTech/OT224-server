@@ -10,19 +10,7 @@ const sequelize = require('sequelize');
 
 
 const getAllSlides = async (req, res) => {
-
-    try {
-        const slides = await Slide.findAll({ attributes: ['id', 'thumbnailUrl', 'order'] })
-
-        res.status(200).send({
-            slides
-        })
-
-    } catch (error) {
-        console.log(error)
-        res.status(500)
-    }
-
+    return baseController.getAllModels( req, res, Slide )
 }
 
 const createSlide = async (req, res) => {

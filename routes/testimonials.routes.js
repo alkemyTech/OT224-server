@@ -6,7 +6,7 @@ const {
   createTestimonial,
   updateTestimonial,
   deleteTestimonial
-} = require('../controllers/testimonial.controller');
+} = require('../controllers/testimonials.controller');
 
 const { authenticatedUser, verifyIsAdmin } = require("../middlewares");
 
@@ -21,7 +21,7 @@ router.get('/:id',  getTestimonialsById)
 /* POST testimonial. */ 
 router.post('/', validateTestimonial, createTestimonial);
 /* PUT testimonial. */  
-router.put('/:id',  validateTestimonial, updateTestimonial);
+router.put('/:id', validateTestimonial, updateTestimonial);
 /* DELETE testimonial. */ 
 router.delete('/:id',  deleteTestimonial);
 

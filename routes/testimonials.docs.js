@@ -7,13 +7,13 @@
  *          properties:
  *              name:
  *                  type: string
- *                  description: the member name
+ *                  description: the testimonial name
  *              image:
  *                  type: string
- *                  description: the facebook url
+ *                  description: the testimonial image
  *              content:
  *                  type: string
- *                  description: the instagram url
+ *                  description: the testimonial content
  *              createdAt:
  *                  type: Date
  *                  description: The creation date
@@ -46,7 +46,13 @@
  *        - bearerAuth: []
  *      summary: List all testimonials
  *      tags: [Testimonials]
- *      parameters: []
+ *      parameters:
+ *        - in: query
+ *          name: page
+ *          schema:
+ *              type: integer
+ *          required: false
+ *          description: Page for pagination
  *      responses:
  *          200:
  *              description: Successful response
@@ -94,7 +100,7 @@
   *          401:
   *              description: Unauthorized / admin privileges
   *          404:
-  *              description: Not found / Invalid or nonexisting slide id
+  *              description: Not found / Invalid or nonexisting testimonial id
   *      
   */
 
@@ -119,7 +125,7 @@
   *                              type: String
   *                              
   *                          image:
-  *                              type: Number
+  *                              type: string
   *                              format: binary
   *                               
   *                          content:
@@ -162,10 +168,19 @@
   *      requestBody: 
   *          required: true
   *          content:
-  *              application/json:
+  *               multipart/form-data:
   *                  schema:
   *                      type: object
-  *                      $ref: '#/components/schemas/Testimonials'     
+  *                      properties:
+  *                          name:
+  *                              type: String
+  *                              
+  *                          image:
+  *                              type: string
+  *                              format: binary
+  *                               
+  *                          content:
+  *                              type: text     
   *      responses:
   *          200:
   *              description: Successful response

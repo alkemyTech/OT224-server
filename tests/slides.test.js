@@ -5,52 +5,49 @@ const path = require('path')
 
 
 
+let adminToken = '';
+let regularToken = '';
+let orgId;
+let slideId;
 
+before(async function () {
+  const responseAdmin = await request
+    .post("/api/auth/login")
+    .send({
+      'email': 'admin@test.com',
+      'password': '1234test',
+    });
+  adminToken = responseAdmin.body.token;
 
-describe('ROUTE /api/slides', function () {
+  const responseRegular = await request
+    .post("/api/auth/login")
+    .send({
+      'email': 'regular@test.com',
+      'password': '1234test',
+    });
+  regularToken = responseRegular.body.token;
 
+  const responseOrganization = await request
+    .post('/api/organization/create')
+    .send({
+      'name': 'Batakis ong',
+      'image': 'some url',
+      'address': 'fake address1',
+      'phone': '123456789',
+      'email': 'fakeemail@email.com',
+      'welcomeText': 'Lorem ipsum dolor sit amet. Et facilis vitae eum nihil maiores aut accusantium omnis et enim sint rem quia quia hic',
+      'aboutUsText': 'Lorem ipsum dolor sit amet. Et facilis vitae eum nihil maiores aut accusantium omnis et enim sint rem quia quia hic'
 
-  let adminToken = '';
-  let regularToken = '';
-  let orgId;
-  let slideId;
-  before(async function () {
-    const responseAdmin = await request
-      .post("/api/auth/login")
-      .send({
-        'email': 'admin@test.com',
-        'password': '1234test',
-      });
-    adminToken = responseAdmin.body.token;
+    })
+  
+  const { id } = responseOrganization.body;
+  
+  orgId = id;
+  
+});
 
-    const responseRegular = await request
-      .post("/api/auth/login")
-      .send({
-        'email': 'regular@test.com',
-        'password': '1234test',
-      });
-    regularToken = responseRegular.body.token;
-
-    const responseOrganization = await request
-      .post('/api/organization/create')
-      .send({
-        'name': 'Batakis ong',
-        'image': 'some url',
-        'address': 'fake address1',
-        'phone': '123456789',
-        'email': 'fakeemail@email.com',
-        'welcomeText': 'Lorem ipsum dolor sit amet. Et facilis vitae eum nihil maiores aut accusantium omnis et enim sint rem quia quia hic',
-        'aboutUsText': 'Lorem ipsum dolor sit amet. Et facilis vitae eum nihil maiores aut accusantium omnis et enim sint rem quia quia hic'
-
-      })
-    
-    const { id } = responseOrganization.body;
-    
-    orgId = id;
-  });
-
-
-  /*POST /api/slides */
+describe('POST /api/slides', function () {
+ this.timeout(30000)
 
   it('should fail if no token is sent', async function () {
     const response = await request
@@ -117,13 +114,13 @@ describe('ROUTE /api/slides', function () {
       .field('text', 'Slide 5')
       .field('organizationId', orgId)
       .attach('img', fs.readFileSync(path.join(__dirname, './img/dmlsbGFmaW9yaXRv.png')), 'dmlsbGFmaW9yaXRv.png')
-      console.log( 'RESPONSE: ', response.body.slide.id)
       slideId = response.body.slide.id;
     expect(response.body).to.have.property('slide').to.be.an('object')
     expect(response.status).to.eql(200);
   })
+})
 
-  /** PUT /api/slides/:id */
+describe('PUT /api/slides/:id', function () {
 
   it('should fail if no token is sent', async function () {
     const response = await request
@@ -139,15 +136,14 @@ describe('ROUTE /api/slides', function () {
     expect(response.status).to.eql(401);
   })
  
-   it('should return status 400 when the slide does not exist ', async function () {
+   it('should return status 404 when the slide does not exist ', async function () {
     const response = await request
-    .put('/api/slides/12313')
+    .put('/api/slides/0')
     .set("Authorization", `Bearer ${adminToken}`)
     .set('Content-Type', 'multipart/form-data')
     .field('text','Random text')
     .field('organizationId', 1)
-    expect(response.body).to.have.property('msg').to.eql('Invalid slide id')
-    expect(response.status).to.eql(400);
+    expect(response.status).to.eql(404);
   })
 
    it('should return status 200 if the slide was succesfully updated', async function () {
@@ -162,7 +158,9 @@ describe('ROUTE /api/slides', function () {
     expect(response.status).to.eql(200)
   }) 
 
-  /* GET /api/slides/:id */
+ })
+
+ describe('GET /api/slides/:id', function () {
 
   it('should fail if no token is sent', async function () {
     const response = await request
@@ -191,11 +189,13 @@ describe('ROUTE /api/slides', function () {
     const response = await request
       .get(`/api/slides/${slideId}`)
       .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.body).to.have.property('slide').to.be.an('object')
+    expect(response.body).to.be.an('object').to.have.all.keys('id','text','order','imageUrl','thumbnailUrl','organizationId','createdAt','deletedAt','updatedAt')
     expect(response.status).to.eql(200);
   })
 
-  /** GET /api/slides */
+ })
+  
+ describe('GET /api/slides', function () {
 
   it('should fail if no token is sent', async function () {
     const response = await request
@@ -211,17 +211,20 @@ describe('ROUTE /api/slides', function () {
     expect(response.status).to.eql(401);
   })
 
-  it('returns an array with all slides if user is admin', async function () {
+  it('should respond with status code 200 and with an object containing the page parameters and array of the data', async function () {
     const response = await request
       .get('/api/slides')
       .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.body).to.have.property('slides').to.be.an('array')
+    expect(response.body).to.be.an('object').to.have.all.keys('previousPage','currentPage','nextPage','totalPages','total','limit','data')
+    expect(response.body.data).to.be.an('array')
     expect(response.status).to.eql(200);
   })
 
-  /** DELETE /api/slides/:id */
+ })
+  
+ describe('DELETE /api/slides/:id', function () {
 
-  it('should fail if no token is sent', async function () {
+   it('should fail if no token is sent', async function () {
     const response = await request
       .delete(`/api/slides/${slideId}`)
 
@@ -239,7 +242,6 @@ describe('ROUTE /api/slides', function () {
     const response = await request
     .delete('/api/slides/12313')
     .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.body).to.have.property('msg').to.eql('Invalid slide ID')
     expect(response.status).to.eql(404);
   })
 
@@ -247,8 +249,12 @@ describe('ROUTE /api/slides', function () {
     const response = await request
     .delete(`/api/slides/${slideId}`)
     .set("Authorization", `Bearer ${adminToken}`)
-    expect(response.body).to.have.property('msg').to.eql('Slide has been removed succesfully')
+    expect(response.body).to.have.property('message').to.eql(`id ${slideId} deleted!`)
     expect(response.status).to.eql(200);
   })
 
-})
+ })
+
+ 
+
+

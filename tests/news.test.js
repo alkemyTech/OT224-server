@@ -3,6 +3,8 @@ const { request, expect } = require("./config");
 describe("GET api/news", function () {
     let adminToken = '';
     let regularToken = '';
+    let newId = 0;
+    const NOT_EXISTING_ID = 0;
 
     before( async function () {
         const responseAdmin = await request
@@ -75,11 +77,13 @@ describe("GET api/news", function () {
         expect(response.body.error).to.have.nested.property('[0].msg').to.eql('El campo no puede estar vacio');
     });
 
-    it('create a news, sucessful with admin credentials', async function () {
+    it('create a news, successful with admin credentials', async function () {
         const response = await request
         .post('/api/news')
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952",content: "content", categoryId: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
+
+        newId = response.body.data.id;
 
         expect(response.status).to.eql(201);
     });
@@ -94,13 +98,14 @@ describe("GET api/news", function () {
     
     it('list get one news, fails without credentials', async function () {
         const response = await request
-        .get('/api/news/1') 
+        .get(`/api/news/${newId}`)
+        
         expect(response.status).to.eql(400);
     });
     
     it('list get one news, fails with regular user credentials', async function () {
         const response = await request
-        .get('/api/news/1') 
+        .get(`/api/news/${newId}`) 
         .set("Authorization", `Bearer ${regularToken}`)
         
         expect(response.status).to.eql(401);
@@ -108,15 +113,15 @@ describe("GET api/news", function () {
 
     it('list get one news, , with admin credentials, fails when id not found', async function (){
         const response = await request
-        .get('/api/news/1000')
+        .get(`/api/news/${NOT_EXISTING_ID}`)
         .set("Authorization", `Bearer ${adminToken}`)
 
         expect(response.status).to.eql(404);
     })
     
-    it('list get one news, with admin credentials, sucessful with admin credentials', async function () {
+    it('list get one news, with admin credentials, successful with admin credentials', async function () {
         const response = await request
-        .get('/api/news/7')
+        .get(`/api/news/${newId}`) 
         .set("Authorization", `Bearer ${adminToken}`)
         
         expect(response.status).to.eql(200);
@@ -124,7 +129,7 @@ describe("GET api/news", function () {
     
     it('update a news, fails without credentials', async function () {
         const response = await request
-        .put('/api/news/7')
+        .put(`/api/news/${newId}`) 
         .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryid: "1", type: "type" })
         
         expect(response.status).to.eql(400);
@@ -132,7 +137,7 @@ describe("GET api/news", function () {
     
     it('update a news, fails with regular user credentials', async function () {
         const response = await request
-        .put('/api/news/7')
+        .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${regularToken}`)
         .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
         
@@ -142,7 +147,7 @@ describe("GET api/news", function () {
     
     it('update a news, with admin credentials, fails without name', async function () {
         const response = await request
-        .put('/api/news/7')
+        .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({name:"", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
         
@@ -151,7 +156,7 @@ describe("GET api/news", function () {
     
     it('update a news, with admin credentials, fails without image', async function () {
         const response = await request
-        .put('/api/news/7')
+        .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({name: "news", content: "content", categoryId: "1", type: "type" })
         
@@ -160,7 +165,7 @@ describe("GET api/news", function () {
     
     it('update a news, with admin credentials, fails without content', async function () {
         const response = await request
-        .put('/api/news/7')
+        .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({name: "news", image: "https://via.placeholder.com/600/92c952" , categoryId: "1", type: "type" })
     
@@ -169,7 +174,7 @@ describe("GET api/news", function () {
 
     it('update a news, with admin credentials, fails without categoryId', async function () {
         const response = await request
-        .put('/api/news/7')
+        .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({name: "news", image: "https://via.placeholder.com/600/92c952" , content: "content", type: "type"  })
     
@@ -178,33 +183,32 @@ describe("GET api/news", function () {
 
     it('update a news, with admin credentials, fails when id not found', async function (){
         const response = await request
-        .put('/api/news/0')
+        .put(`/api/news/${NOT_EXISTING_ID}`)
         .set("Authorization", `Bearer ${adminToken}`)
         .send({name: "news", image: "https://via.placeholder.com/600/92c952",content: "content", categoryId: "1", type: "type" })
         
         expect(response.status).to.eql(404);
     })
 
-    it('update a news, sucessful with admin credentials', async function () {
+    it('update a news, successful with admin credentials', async function () {
         const response = await request
-        .put('/api/news/7')
+        .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952",content: "content", categoryId: "1", type: "type" })
-    
+        .send({name:"news", image:"https://via.placeholder.com/600/92c952", content:"content", categoryId:"1", type:"type" })
+
         expect(response.status).to.eql(201);
     });
-            
-
+    
     it('delete a news, fails without credentials', async function (){
         const response = await request
-        .delete('/api/news/7')
+        .delete(`/api/news/${newId}`)
 
         expect(response.status).to.eql(400);
     });
 
     it('delete a news, fails with regular user credentials', async function () {
         const response = await request
-        .delete('/api/news/7')
+        .delete(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${regularToken}`)
         
         expect(response.status).to.eql(401);
@@ -212,15 +216,15 @@ describe("GET api/news", function () {
 
     it('delete a news, with admin credentials, fails when id not found', async function () {
         const response = await request
-        .delete('/api/news/550')
+        .delete(`/api/news/${NOT_EXISTING_ID}`)
         .set("Authorization", `Bearer ${adminToken}`)
         
         expect(response.status).to.eql(404);
     });
 
-    it('delete a news, sucessful with admin credentials', async function () {
+    it('delete a news, successful with admin credentials', async function () {
         const response = await request
-        .delete('/api/news/7')
+        .delete(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
         
         expect(response.status).to.eql(200);

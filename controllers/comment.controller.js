@@ -39,10 +39,6 @@ const deleteComment = async (req, res) => {
     const { id } = req.params;
     
     try{
-        const token =  req.headers.authorization.split(' ')[1];
-
-        if (!token) return res.json({ msg: 'no token in request' });
-
         const comment = await CommentModel.findOne({ where: { id } });
 
         if (!comment){

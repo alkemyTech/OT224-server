@@ -21,6 +21,6 @@ router.get("/:id", idExists, getOneCategory);
 
 router.put("/:id", idExists, validateCategories, updateCategory);
 
-router.delete("/:id", idExists, deleteCategory);
+router.delete("/:id", deleteCategory);
 
 module.exports = router;

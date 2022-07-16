@@ -43,7 +43,7 @@ const deleteCategory=async (req,res)=>{
     const category= await ModelCategories.findByPk(req.params.id) 
     
     if(!category){
-      return res.status(404).json({msg:'the category does not exist'})
+      return res.status(404).json('id not found')
     } else{
       const findNews=await ModelNews.findOne({where:{categoryId:category.id}})
       if(findNews!==null){

@@ -7,7 +7,7 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "pretest": "NODE_ENV=test npx sequelize-cli db:migrate:undo:all && NODE_ENV=test npx sequelize-cli db:migrate && NODE_ENV=test npx sequelize-cli db:seed:all",
-    "test": "NODE_ENV=test mocha ./tests/*.test.js"
+    "test": "NODE_ENV=test mocha ./tests/auth.test.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",

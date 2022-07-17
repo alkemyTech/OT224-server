@@ -50,8 +50,21 @@ const updateTestimonial = async (req, res) => {
 
             regularImglocation = await uploadToBucket(img);
         }
-        
-        const updatedTestimonial = await TestimonialModel.update({
+        if(editTestimonial){
+            editTestimonial.update({                
+                name: !req.body.name ? editTestimonial.name: req.body.name,                                
+                image: !req.files? editTestimonial.image: regularImglocation,
+                content: !req.body.content ? editTestimonial.content : req.body.content
+            });
+
+            res.status(201).send(editTestimonial)
+        }else {
+            res.status(404).send({
+                msg: 'Testimonial not found!'                
+            })
+        }
+        /*
+        const updatedTestimonial = await TestimonialModel.update({            
             name: req.body.name,                                
             image: regularImglocation,
             content: req.body.content   
@@ -60,13 +73,9 @@ const updateTestimonial = async (req, res) => {
                 id: testimonialId
             }
         })
-
-        res.status(201).send({
-            msg: 'The testimonial was succesfully updated'
-        })
+        */        
     } catch (error) {
-        res.status(500).send(error);
-        console.log(error)
+        res.status(500).send(error);        
     }
 }
 

@@ -62,18 +62,7 @@ const updateTestimonial = async (req, res) => {
             res.status(404).send({
                 msg: 'Testimonial not found!'                
             })
-        }
-        /*
-        const updatedTestimonial = await TestimonialModel.update({            
-            name: req.body.name,                                
-            image: regularImglocation,
-            content: req.body.content   
-        }, {
-            where: {
-                id: testimonialId
-            }
-        })
-        */        
+        }              
     } catch (error) {
         res.status(500).send(error);        
     }

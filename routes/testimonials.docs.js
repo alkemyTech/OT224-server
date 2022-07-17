@@ -182,11 +182,12 @@
   *                          content:
   *                              type: text     
   *      responses:
-  *          200:
+  *          201:
   *              description: Successful response
   *              content:
   *                  application/json:
-  *                      example: Testimonial updated succefuly
+  *                      schema:
+  *                          $ref: '#/components/schemas/Testimonials'
   *          400:
   *              description: Bad request error
   *          403:

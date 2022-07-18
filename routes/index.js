@@ -7,12 +7,12 @@ const usersRouter = require('./users');
 const organizationRouter = require('./organizations.routes');
 const testimonialsRouter = require('./testimonials.routes');
 const newsRouter = require('./news');
-const categoriesRouter = require('./categories');
+const categoriesRouter = require('./categories.routes');
 const authRouter = require('./auth')
 const membersRouter = require('./members.routes')
 const rolesRouter = require('./role');
 const activitiesRouter = require('./activities.routes');
-const slidesRouter = require('./slides');
+const slidesRouter = require('./slides.routes');
 const contactRoutes = require('./contacts.routes');
 const commentRouter = require('./comments.routes');
 

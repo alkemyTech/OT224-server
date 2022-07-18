@@ -1,20 +1,28 @@
-let express = require('express');
-let router = express.Router();
-const testimonialController = require('../controllers/testimonial.controller');
-const { authenticatedUser } = require("../middlewares/authenticatedUser");
-const { verifyIsAdmin } = require('../middlewares/user.middelware');
-const { validateTestimonial } = require('../validators/testimonialValidator');
+const express = require('express');
+const router = express.Router();
+const {
+  getAllTestimonials,
+  getTestimonialsById,
+  createTestimonial,
+  updateTestimonial,
+  deleteTestimonial
+} = require('../controllers/testimonials.controller');
 
-/* GET testimonials listen. */
-router.get('/', testimonialController.getAllTestimonials);
+const { authenticatedUser, verifyIsAdmin, idExists } = require("../middlewares");
 
-/* POST testimonial. */
-router.post('/',authenticatedUser, verifyIsAdmin, validateTestimonial, testimonialController.createTestimonial);
+const { validateTestimonial, validateUpdateTestimonial } = require('../validators');
 
-/* PUT testimonial. */ 
-router.put('/:id', authenticatedUser, verifyIsAdmin, validateTestimonial, testimonialController.updateTestimonial);
+router.use(authenticatedUser, verifyIsAdmin);
 
+router.get('/', getAllTestimonials);
+
+/* GET testimonial by Id*/
+router.get('/:id', idExists, getTestimonialsById)
+/* POST testimonial. */ 
+router.post('/', validateTestimonial, createTestimonial);
+/* PUT testimonial. */  
+router.put('/:id', idExists, validateUpdateTestimonial, updateTestimonial);
 /* DELETE testimonial. */ 
-router.delete('/:id', authenticatedUser, verifyIsAdmin, testimonialController.deleteTestimonial);
+router.delete('/:id', idExists, deleteTestimonial);
 
 module.exports = router;

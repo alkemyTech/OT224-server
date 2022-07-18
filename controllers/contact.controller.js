@@ -1,5 +1,10 @@
 const Contact = require('../models').Contacts
 const { emailContact } = require('../services/emailContact')
+const { 
+    getModelById,
+    updateModel,
+    deleteModel
+} = require('./base.controller')
 
 
 const createContact = async (req, res) => {
@@ -16,7 +21,7 @@ const createContact = async (req, res) => {
 
         const emailSend = await emailContact(contact)
 
-        res.status(200).json({ contact, emailSend })
+        res.status(201).json({ contact, emailSend })
     } catch (error) {
         res.status(500).json({ error })
     }
@@ -34,56 +39,24 @@ const getAllContacts = async (req, res) => {
 }
 
 const getContactById = async (req, res) => {
-
-    try {
-        const { id } = req.params
-        const contact = await Contact.findByPk(id)
-        if (!contact) return res.status(404).json({ msg: 'Contact not found!' })
-        res.status(200).json({ contact })
-    } catch (error) {
-        restart.status(500).json({ error })
-    }
-}
-
-const deleteContact = async (req, res) => {
-    try {
-        const { id } = req.params
-
-        const response = await Contact.destroy({
-            where: {
-                id: id
-            }
-        })
-
-        if (!response) return res.status(404).json({ response })
-        res.status(200).json({ response })
-    } catch (error) {
-        res.status(500).json({ error })
-    }
+    getModelById(req,res,Contact)
 }
 
 const updateContact = async (req, res) => {
 
-    try {
-        const { id } = req.params
-        const response = await Contact.update(req.body, {
-            where: {
-                id: id
-            }
-        })
-
-        if (!response) return res.status(404).json({ response })
-        res.status(200).json({ response })
-
-    } catch (error) {
-        res.status(500).json({ error })
-    }
+    updateModel(req,res,Contact,req.body)
 }
+
+const deleteContact = async (req, res) => {
+    deleteModel(req,res,Contact)
+}
+
+
 
 module.exports = {
     createContact,
     getAllContacts,
     getContactById,
+    updateContact,
     deleteContact,
-    updateContact
 }

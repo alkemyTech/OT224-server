@@ -41,14 +41,11 @@ const getOrganizationById = async(req, res) => {
            order:[['order','ASC']]
         })
 
-        if(!organization){
-            res.status(404).send({message: "There is no information about the organization"})
-        }else{            
-            res.status(200).send({
-                organization,
-                slides: slidesByOrg
-            });
-        }        
+        res.status(200).send({
+            organization,
+            slides: slidesByOrg
+        });
+               
     } catch (error) {
         res.status(500).send(error);
     }

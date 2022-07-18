@@ -12,5 +12,6 @@ router.post('/', authenticatedUser, verifyIsCommentsAdmin, validateComments, com
 router.get('/', authenticatedUser, verifyIsCommentsAdmin,  commentController.getAllComents);
 router.get('/:id', authenticatedUser, verifyIsCommentsAdmin, commentController.getCommentById);
 router.put('/:id', authenticatedUser, verifyIsCommentsAdmin, isOwner ,commentController.updateComment )
+router.delete('/:id', authenticatedUser, verifyIsCommentsAdmin, isOwner, commentController.deleteComment);
 
 module.exports = router;

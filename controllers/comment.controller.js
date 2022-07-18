@@ -35,8 +35,30 @@ const getCommentById = async (req, res) => {
     }
 }
 
+const updateComment = async (req, res ) => {
+    const { id } = req.params;
+    const { body } = req.body;
+    try{
+
+        const comment = await CommentModel.findOne({ where: { id } });
+        
+        if (!comment){
+            
+            return res.status(404).send({ msg: 'Comment not found' });
+        }
+
+        comment.update({ body });
+
+            return res.status(200).send({ msg: 'comment edited successfully'})
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     createComment,
     getAllComents,
-    getCommentById
+    getCommentById,
+    updateComment
 }

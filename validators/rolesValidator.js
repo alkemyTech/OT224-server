@@ -7,8 +7,9 @@ const validateRoles = [
         .withMessage('should not be empty')
         .isString()
         .withMessage('invalid data type, should be a string')
-        .trim(),
-
+        .trim()      
+        .isLength({ min: 3 })
+        .withMessage('role name must contain at least 3 characters'),
     check('description')
         .notEmpty()
         .withMessage('should not be empty')

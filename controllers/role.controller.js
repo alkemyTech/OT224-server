@@ -3,23 +3,21 @@ const { Role } = require('../models');
 
 const createRole = async( req, res ) => {
     try{
-        let roles = req.body;
-        roles = await Role.create(roles);
-        res.status(201).send({
-            data: roles,
-            status:201
-        })
+        let role = {name:req.body.name, 
+                     description : req.body.description};
+        role= await Role.create(role);
+        res.status(201).json(role)
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json(error);
     }
 }
 
 const getAllRoles = async( req, res ) => {
     try{
         const roles = await Role.findAll()
-        res.status(200).send(roles)
+        res.status(200).json(roles)
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json(error);
     }
 }
 
@@ -27,36 +25,30 @@ const getRoleById = async( req, res ) => {
     try{
         const role = await Role.findByPk(req.params.id);
         if(!role) {
-            res.status(404).send({
-                message:'Role no found!',
-                status:404
-            })
+            res.status(404).json({msg:'Role no found!'})
         }else {
-            res.status(200).send(role);
+            res.status(200).json(role);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json(error);
     }
 }
 
 const deleteRole = async( req, res ) => {
     try{
-        const roles = await Role.findOne({
+        const role = await Role.findOne({
             where:{
                 id: req.params.id
             }
         })
-        if(!roles) {
-            res.status(404).send({
-                message:'Role no found!',
-                status:404
-            })
+        if(!role) {
+            res.status(404).json({msg: 'Role no found!' })
         }else {
-            roles.destroy(roles)
-            res.status(200).send({ message:'Role delete' })
+            role.destroy(role)
+            res.status(200).json({msg: 'Role delete' })
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json(error);
     }
 }
 
@@ -64,27 +56,23 @@ const updateRole = async( req, res ) => {
     try{
         const role = await Role.findByPk(req.params.id)
         if(!role){
-            res.status(404).send({
-                message:'Role no found!',
-                status:404
-            })
+            res.status(404).json({ msg:'Role no found!' })
         }else {
             const updateRole = await Role.update(req.body,{where: { id: req.params.id}});
 
             if(updateRole == 1){
                 const updatedRole = await Role.findByPk(req.params.id);
-                res.status(201).send( updatedRole);
+                res.status(201).json( updatedRole);
             }
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json(error);
     }
 }
 
-module.exports = {
-    createRole,
-    getAllRoles,
-    getRoleById,
-    deleteRole,
-    updateRole
-}
+module.exports = {createRole,
+                  getAllRoles,
+                  getRoleById,
+                  deleteRole,
+                  updateRole
+                 }

@@ -8,21 +8,21 @@ const {
   deleteTestimonial
 } = require('../controllers/testimonials.controller');
 
-const { authenticatedUser, verifyIsAdmin } = require("../middlewares");
+const { authenticatedUser, verifyIsAdmin, idExists } = require("../middlewares");
 
-const { validateTestimonial } = require('../validators');
+const { validateTestimonial, validateUpdateTestimonial } = require('../validators');
 
 router.use(authenticatedUser, verifyIsAdmin);
 
 router.get('/', getAllTestimonials);
 
 /* GET testimonial by Id*/
-router.get('/:id',  getTestimonialsById)
+router.get('/:id', idExists, getTestimonialsById)
 /* POST testimonial. */ 
 router.post('/', validateTestimonial, createTestimonial);
 /* PUT testimonial. */  
-router.put('/:id', validateTestimonial, updateTestimonial);
+router.put('/:id', idExists, validateUpdateTestimonial, updateTestimonial);
 /* DELETE testimonial. */ 
-router.delete('/:id',  deleteTestimonial);
+router.delete('/:id', idExists, deleteTestimonial);
 
 module.exports = router;

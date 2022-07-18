@@ -1,10 +1,3 @@
-const express = require('express');
-const router = express.Router();
-const {verifyIsAdmin}=require('../middlewares/user.middelware');
-const { idExists }=require('../middlewares/idExists.middleware');
-const {validateCategories}=require('../validators/categoriesValidator');
-const categoriesController=require('../controllers/categories.controller');
-
 /**
  * @swagger
  * components:
@@ -37,7 +30,6 @@ const categoriesController=require('../controllers/categories.controller');
  *          createdAt: 2022-07-05T03:02:09.285Z
  */
 
-router.get("/", verifyIsAdmin, categoriesController.getAllCategories);
 /**
  * @swagger
  * /api/categories:
@@ -59,7 +51,7 @@ router.get("/", verifyIsAdmin, categoriesController.getAllCategories);
  *       '500':
  *         descripcion: server error
  */
-router.get("/:id", verifyIsAdmin, categoriesController.getOneCategory);
+
 /**
  * @swagger
  * /api/categories/{id} :
@@ -83,7 +75,7 @@ router.get("/:id", verifyIsAdmin, categoriesController.getOneCategory);
  *       '500':
  *         descripcion: server error
  */
-router.post("/", verifyIsAdmin, validateCategories, categoriesController.createCategory);
+
 /**
  * @swagger
  * /api/categories :
@@ -105,8 +97,7 @@ router.post("/", verifyIsAdmin, validateCategories, categoriesController.createC
  *       '500':
  *         descripcion: server error
  */
-router.put("/:id", verifyIsAdmin, idExists, validateCategories, categoriesController.updateCategory
-);
+
 /**
  * @swagger
  * /api/categories/{id} :
@@ -137,7 +128,7 @@ router.put("/:id", verifyIsAdmin, idExists, validateCategories, categoriesContro
  *       '500':
  *         descripcion: server error
  */
-router.delete("/:id", verifyIsAdmin, categoriesController.deleteCategory);
+
 /**
  * @swagger
  * /api/categories/{id} :
@@ -163,4 +154,3 @@ router.delete("/:id", verifyIsAdmin, categoriesController.deleteCategory);
  *       '500':
  *         descripcion: server error
  */
-module.exports = router;

@@ -8,7 +8,7 @@ const { validateNews } = require('./newsValidator');
 const { validateOrganization } = require('./organizationValidator');
 const { validateRoles } = require('./rolesValidator');
 const { validateSlide, validateSlideToUpdate } = require('./slideValidator');
-const { validateTestimonial } = require('./testimonials.validator');
+const { validateTestimonial, validateUpdateTestimonial } = require('./testimonials.validator');
 const { validateRegister } = require('./validatorRegister');
 
 module.exports = {
@@ -24,5 +24,6 @@ module.exports = {
     validateSlide, 
     validateSlideToUpdate,
     validateTestimonial,
+    validateUpdateTestimonial,
     validateRegister
 }

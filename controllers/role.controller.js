@@ -2,8 +2,8 @@ const ModelRole = require('../models').Role;
 const baseController = require("./base.controller")
 
 const createRole = async( req, res ) => {
-    const inputVars={name:req.body.name,
-                     description:req.body.description }
+    const {name,description}=req.body
+    const inputVars={name,description}
 return baseController.createModel( res, ModelRole, inputVars) 
 }
 
@@ -20,8 +20,8 @@ const deleteRole = async( req, res ) => {
 }
 
 const updateRole = async( req, res ) => {
-    const inputVars={name:req.body.name,
-                     description:req.body.description }
+    const {name,description}=req.body
+    const inputVars={name,description}
 return baseController.updateModel(req, res, ModelRole, inputVars) 
 }
 

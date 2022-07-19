@@ -10,13 +10,15 @@ const getMemberById = async (req, res) => {
 }
 
 const createMember = async (req, res) =>{
-    const data = req.body;
+    const {name, facebookUrl, instagramUrl, linkedinUrl, image, description} = req.body;
+    const data = {name, facebookUrl, instagramUrl, linkedinUrl, image, description}
     return baseController.createModel(res, ModelMember, data)
 
 }
 
 const updateMember = async (req, res) =>{
-    const data = req.body;
+    const {name, facebookUrl, instagramUrl, linkedinUrl, image, description} = req.body;
+    const data = {name, facebookUrl, instagramUrl, linkedinUrl, image, description}
     return baseController.updateModel(req, res, ModelMember, data)
 }
 

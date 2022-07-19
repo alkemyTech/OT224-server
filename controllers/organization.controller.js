@@ -12,7 +12,7 @@ const getOrganizations = async ( req, res ) => {
 const createOrganization = async (req, res) => {  
 
     const { name, image, address, phone, email, welcomeText, aboutUsText } = req.body;
-    let data = {
+    const data = {
         name,
         image,
         address,
@@ -53,7 +53,17 @@ const getOrganizationById = async(req, res) => {
 
 //Update organization
 const updateOrganization = async (req, res) => {  
-    const data = req.body;
+    const { name, image, address, phone, email, welcomeText, aboutUsText } = req.body;
+
+    const data = {
+        name,
+        image,
+        address,
+        phone,
+        email,
+        welcomeText,
+        aboutUsText
+    }
     return baseController.updateModel( req, res, OrganizationModel, data)
 }
 

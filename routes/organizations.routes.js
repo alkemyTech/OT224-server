@@ -1,14 +1,25 @@
-const { validateOrganization } = require("../validators/organizationValidator");
-const organization = require("../controllers/organization.controller");
-const { authenticatedUser } = require("../middlewares/authenticatedUser");
-const { verifyIsAdmin } = require("../middlewares/user.middelware")
+const { validateOrganization } = require("../validators");
+const {
+    createOrganization,
+    getOrganizations,
+    getOrganizationById,
+    updateOrganization,
+    deleteOrganization
+} = require("../controllers/organization.controller");
+const { authenticatedUser, verifyIsAdmin, idExists } = require("../middlewares");
+
 
 const express = require('express');
 const router = express.Router();
-/* POST create organization. */
-router.post('/create', validateOrganization, organization.createOrganization);
-router.get('/', verifyIsAdmin ,organization.getOrganizations)
-router.get('/public/:id', organization.getOrganizationById);
-router.put('/public/:id', authenticatedUser, verifyIsAdmin, organization.updateOrganization);
-router.delete('/:id', verifyIsAdmin ,organization.deleteOrganization)
+
+
+router.post('/create', validateOrganization, createOrganization);
+router.get('/public/:id', idExists ,getOrganizationById);
+
+router.use( verifyIsAdmin )
+
+router.get('/', getOrganizations)
+router.put('/public/:id', authenticatedUser, idExists ,updateOrganization);
+router.delete('/:id', idExists ,deleteOrganization)
+
 module.exports = router;

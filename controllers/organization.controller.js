@@ -1,33 +1,29 @@
 const OrganizationModel = require("../models").Organization;
 const { Slide } = require("../models");
+const baseController = require('./base.controller')
 
 
 //Get All Organizations
 const getOrganizations = async ( req, res ) => {
-
-    try {
-        const organizations = await OrganizationModel.findAll()
-
-        res.status(200).send({
-            organizations
-        })
-
-    } catch (error) {
-        console.log( error )
-        res.status(500).send( error )
-    }
-
+    return baseController.getAllModels( req, res, OrganizationModel )
 }
 
 //Create and save an organization
-const createOrganization = async (req, res) => {    
-    try {
-        let organization = req.body;        
-        organization = await OrganizationModel.create (organization);        
-        res.status(201).send(organization);           
-    } catch (error) {
-        res.status(500).send(error);
+const createOrganization = async (req, res) => {  
+
+    const { name, image, address, phone, email, welcomeText, aboutUsText } = req.body;
+    const data = {
+        name,
+        image,
+        address,
+        phone,
+        email,
+        welcomeText,
+        aboutUsText
     }
+
+    return baseController.createModel( res, OrganizationModel, data )
+
 }
 // Get Organization
 const getOrganizationById = async(req, res) => {    
@@ -45,14 +41,11 @@ const getOrganizationById = async(req, res) => {
            order:[['order','ASC']]
         })
 
-        if(!organization){
-            res.status(404).send({message: "There is no information about the organization"})
-        }else{            
-            res.status(200).send({
-                organization,
-                slides: slidesByOrg
-            });
-        }        
+        res.status(200).send({
+            organization,
+            slides: slidesByOrg
+        });
+               
     } catch (error) {
         res.status(500).send(error);
     }
@@ -60,51 +53,24 @@ const getOrganizationById = async(req, res) => {
 
 //Update organization
 const updateOrganization = async (req, res) => {  
-    try {
-        const id = req.params.id
-        const organization = await OrganizationModel.findByPk(id);
-        if(!organization){
-            res.status(404).send({message: "Organization no found!"})
-        }else{
-            const updateOrganization = await OrganizationModel.update(req.body,{ where: { id } });
-            
-            if(updateOrganization==1){
-                res.status(201).send({message: "Organization updated"});
-            }
-        }        
-    } catch (error) {
-        console.log(error)
-        res.status(500).send(error)
-    }    
+    const { name, image, address, phone, email, welcomeText, aboutUsText } = req.body;
+
+    const data = {
+        name,
+        image,
+        address,
+        phone,
+        email,
+        welcomeText,
+        aboutUsText
+    }
+    return baseController.updateModel( req, res, OrganizationModel, data)
 }
 
 //Delete Organization
 const deleteOrganization = async( req, res ) => {
-
-    const id = req.params.id;
-
-
-     try {
-
-        const org = await OrganizationModel.findByPk(id)
-
-        if(org === null){
-            return res.status(400).send({
-                msg: 'Invalid organization id'
-            })
-        }else{
-            await OrganizationModel.destroy({
-                where: { id }
-            })
-
-            res.status(200).send()
-        }
-        
-    } catch (error) {
-        console.log( error )
-        res.status(500).send( error )
-    }
- 
+    return baseController.deleteModel( req, res, OrganizationModel )
+    
 }
 
 module.exports = {

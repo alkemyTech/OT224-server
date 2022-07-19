@@ -22,12 +22,13 @@ const deleteRole = async( req, res ) => {
 const updateRole = async( req, res ) => {
     const {name,description}=req.body
     const inputVars={name,description}
-return baseController.updateModel(req, res, ModelRole, inputVars) 
+    return baseController.updateModel(req, res, ModelRole, inputVars) 
 }
 
-module.exports = {createRole,
-                  getAllRoles,
-                  getRoleById,
-                  deleteRole,
-                  updateRole
-                 }
+module.exports = {
+  createRole,
+  getAllRoles,
+  getRoleById,
+  deleteRole,
+  updateRole
+ };

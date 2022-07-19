@@ -2,14 +2,13 @@ const { set } = require("../routes/news");
 const { request, expect } = require("./config");
 
 
-describe("ROUTE /api/organization", function () {
-
-    let adminToken = '';
+let adminToken = '';
     let regularToken = '';
     let deletedTknUser;
     let orgId;
     let idUserToDelete;
     before(async function () {
+        this.timeout(30000)
         const responseAdmin = await request
             .post("/api/auth/login")
             .send({
@@ -32,7 +31,8 @@ describe("ROUTE /api/organization", function () {
                 'firstName':'Emanuel',
                 'lastName':'Ginobili',
                 'email':'ginobili20@correo.com',
-                'password':'1234567'
+                'password':'1234567',
+                'roleId': 1
             })
         deletedTknUser = responseNewUser.body.token
         idUserToDelete = responseNewUser.body.newUser.id
@@ -44,8 +44,9 @@ describe("ROUTE /api/organization", function () {
     });
 
 
-    /*POST /api/organization/create*/
 
+describe('POST /api/organization', function () {
+    this.timeout(30000)
     it('should respond with status 403 if name field is less than 6 chars long', async function () {
         const response = await request
         .post('/api/organization/create')
@@ -258,14 +259,14 @@ describe("ROUTE /api/organization", function () {
 
     })
 
+})
 
-    /** GET /api/organization/public/:id */
+
+describe('GET /api/organization/public/:id', function () {
 
     it('should respond with status code 404 if there is no organization with the id sent', async function () {
         const response = await request
         .get('/api/organization/public/0')
-
-        expect(response.body).to.be.an('object').to.have.property('message').to.be.eql('There is no information about the organization')
         expect(response.status).to.eql(404)
 
     })
@@ -281,7 +282,9 @@ describe("ROUTE /api/organization", function () {
 
     })
 
-    /**GET /api/organizations */
+})
+
+describe('GET /api/organizations', function () {
 
     it('should return with status code 400 if no token is sent in the request', async function () {
         const response = await request
@@ -292,7 +295,7 @@ describe("ROUTE /api/organization", function () {
 
     })
 
-    it('should return with status code 401 if user is admin', async function () {
+    it('should return with status code 401 if user is not admin', async function () {
         const response = await request
         .get('/api/organization')
         .set("Authorization", `Bearer ${regularToken}`)
@@ -300,18 +303,23 @@ describe("ROUTE /api/organization", function () {
 
     })
 
+ 
+
     it('should respond with status code 200 & return an array with all the existing organizations', async function () {
         const response = await request
         .get('/api/organization')
         .set("Authorization", `Bearer ${adminToken}`)
-        expect( response.body ).to.be.an('object').to.have.property('organizations').to.be.an('array')
-       
+        expect( response.body ).to.be.an('object').to.have.all.keys('previousPage','currentPage','nextPage','totalPages','total','limit','data')
+        expect( response.body.data ).to.be.an('array')
+    
         expect(response.status).to.eql(200)
 
     })
 
+})
 
-    /**PUT /api/organization/public/:id */
+
+describe('PUT /api/organization/public/:id', function () {
 
     it('should respond with status code 400 if there is no token in the request', async function () {
         const response = await request
@@ -323,6 +331,7 @@ describe("ROUTE /api/organization", function () {
         const response = await request
         .put(`/api/organization/public/${orgId}`)
         .set("Authorization", `Bearer ${deletedTknUser}`)
+        console.log( response.body )
         expect( response.body ).to.have.property('msg').to.be.eql('User does not exist')
         expect( response.status ).to.be.eql(401)
     })
@@ -336,9 +345,8 @@ describe("ROUTE /api/organization", function () {
 
     it('should respond with status code 404 if there is no organization with the id sent', async function () {
         const response = await request
-        .put('/api/organization/public/213123')
+        .put('/api/organization/public/0')
         .set("Authorization", `Bearer ${adminToken}`)
-        expect( response.body ).to.be.an('object').to.have.property('message').to.be.eql('Organization no found!')
         expect( response.status ).to.be.eql(404)
     })
 
@@ -352,8 +360,9 @@ describe("ROUTE /api/organization", function () {
         })
         expect( response.status ).to.be.eql(201)
     })
+})
 
-    /**DELETE /api/organization/:id */
+describe('DELETE /api/organization/:id', function () {
 
     it('should respond with status code 400 if no token is sent' , async function () {
         const response = await request
@@ -370,11 +379,11 @@ describe("ROUTE /api/organization", function () {
 
     })
 
-    it('should respond with status code 400 if the id sent does not match any existing organization ' , async function () {
+    it('should respond with status code 404 if the id sent does not match any existing organization ' , async function () {
         const response = await request
         .delete('/api/organization/2131313')
         .set("Authorization", `Bearer ${adminToken}`)
-        expect( response.status ).to.be.eql(400)
+        expect( response.status ).to.be.eql(404)
 
     })
 
@@ -382,8 +391,10 @@ describe("ROUTE /api/organization", function () {
         const response = await request
         .delete(`/api/organization/${orgId}`)
         .set("Authorization", `Bearer ${adminToken}`)
+        expect( response.body ).to.be.an('object').to.have.property('message').to.eql(`id ${orgId} deleted!`)
         expect( response.status ).to.be.eql(200)
 
     })
+})
 
-});
+

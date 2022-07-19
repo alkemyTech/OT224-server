@@ -205,10 +205,10 @@
  *                      properties:
  *                          text:
  *                               type: String
- *                              
  *                          organizationId:
  *                               type: Number
- *                               
+ *                          order:
+ *                                type: Number
  *                          img:
  *                              type: string
  *                              format: binary
@@ -252,6 +252,8 @@
  *                      properties:
  *                          text:
  *                               type: String
+ *                          order:
+ *                               type: Number
  *                          organizationId:
  *                               type: Number     
  *                          img:

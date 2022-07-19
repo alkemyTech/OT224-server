@@ -1,5 +1,4 @@
 const { request, expect } = require("./config");
-const { Organization } = require('../models');
 const fs = require('fs')
 const path = require('path')
 
@@ -11,6 +10,7 @@ let orgId;
 let slideId;
 
 before(async function () {
+  this.timeout(30000)
   const responseAdmin = await request
     .post("/api/auth/login")
     .send({
@@ -30,7 +30,7 @@ before(async function () {
   const responseOrganization = await request
     .post('/api/organization/create')
     .send({
-      'name': 'Batakis ong',
+      'name': 'Random ong',
       'image': 'some url',
       'address': 'fake address1',
       'phone': '123456789',
@@ -45,6 +45,13 @@ before(async function () {
   orgId = id;
   
 });
+
+after(async function (){
+  this.timeout(30000)
+  const responseAdmin = await request
+  .delete(`/api/organization/${orgId}`)
+  .set("Authorization", `Bearer ${adminToken}`)
+})
 
 describe('POST /api/slides', function () {
  this.timeout(30000)
@@ -254,7 +261,6 @@ describe('PUT /api/slides/:id', function () {
   })
 
  })
-
  
 
 

@@ -123,12 +123,12 @@ describe("GET /api/activities", function () {
     expect(response.status).to.eql(200);
   });
 
-  it("returns all user should succeed with admin credentials and return activities", async function () {
+  it("returns all activity should succeed with admin credentials and return activities", async function () {
     const response = await request
     .get("/api/activities")
     .set("Authorization", `Bearer ${adminToken}`);
 
-    expect(response.body).to.have.lengthOf.greaterThan(0);
+    expect(response.body).to.have.nested.property('data').to.have.lengthOf.greaterThan(0);
   });
 });
 
@@ -232,7 +232,7 @@ describe("UPDATE /api/activities/:id", function () {
     .set("Authorization", `Bearer ${adminToken}`)
     .send(baseRequest);
         
-    expect(response.status).to.eql(200);
+    expect(response.status).to.eql(201);
   });  
 });
 
@@ -258,7 +258,7 @@ describe("DELETE /api/activities/:id", function () {
     .del(`/api/activities/${activityId}`)
     .set("Authorization", `Bearer ${adminToken}`)
         
-    expect(response.status).to.eql(204);
+    expect(response.status).to.eql(200);
   });
 
   it('return delete a activity should fail with admin credentials and id not found', async function () {

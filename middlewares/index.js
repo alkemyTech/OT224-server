@@ -5,6 +5,7 @@ const { verifyIsMemberAdmin } = require('./member.middleware');
 const { verifyIsAdmin } = require('./user.middelware');
 const { verifyFile } = require('./verifyFile');
 const { idExists } = require('./idExists.middleware');
+const { optionsFileUpload } = require('./fileUpload.middleware');
 
 module.exports = {
     authenticatedUser,
@@ -13,5 +14,6 @@ module.exports = {
     verifyIsMemberAdmin,
     verifyIsAdmin,
     verifyFile,
-    idExists
+    idExists,
+    optionsFileUpload
 }

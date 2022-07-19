@@ -8,7 +8,7 @@ const {
   deleteTestimonial
 } = require('../controllers/testimonials.controller');
 
-const { authenticatedUser, verifyIsAdmin, idExists } = require("../middlewares");
+const { authenticatedUser, verifyIsAdmin, idExists, optionsFileUpload } = require("../middlewares");
 
 const { validateTestimonial, validateUpdateTestimonial } = require('../validators');
 
@@ -19,9 +19,9 @@ router.get('/', getAllTestimonials);
 /* GET testimonial by Id*/
 router.get('/:id', idExists, getTestimonialsById)
 /* POST testimonial. */ 
-router.post('/', validateTestimonial, createTestimonial);
+router.post('/', optionsFileUpload, validateTestimonial, createTestimonial);
 /* PUT testimonial. */  
-router.put('/:id', idExists, validateUpdateTestimonial, updateTestimonial);
+router.put('/:id', idExists, optionsFileUpload, validateUpdateTestimonial, updateTestimonial);
 /* DELETE testimonial. */ 
 router.delete('/:id', idExists, deleteTestimonial);
 

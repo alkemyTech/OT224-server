@@ -1,17 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const commentController = require('../controllers/comment.controller');
-const { authenticatedUser } = require('../middlewares/authenticatedUser');
-const { validateComments } = require('../validators/commentValidator');
-const { verifyIsCommentsAdmin } = require('../middlewares/commentsAdminRole');
-const { isOwner } = require('../middlewares/isOwner');
+const {
+    createComment,
+    getAllComments,
+    getCommentById,
+    updatedComment,
+    deleteComment
+} = require('../controllers/comment.controller');
 
+const { authenticatedUser, verifyIsCommentsAdmin, idExists} = require('../middlewares');
+const { validateComments } = require('../validators');
+router.use(authenticatedUser)
 
-// Create a new comment
-router.post('/', authenticatedUser, verifyIsCommentsAdmin, validateComments, commentController.createComment);
-router.get('/', authenticatedUser, verifyIsCommentsAdmin,  commentController.getAllComents);
-router.get('/:id', authenticatedUser, verifyIsCommentsAdmin, commentController.getCommentById);
-router.put('/:id', authenticatedUser, verifyIsCommentsAdmin, isOwner ,commentController.updateComment )
-router.delete('/:id', authenticatedUser, verifyIsCommentsAdmin, isOwner, commentController.deleteComment);
+router.post('', verifyIsCommentsAdmin, validateComments, createComment)
+router.get('', getAllComments)
+router.get('/:id', idExists, getCommentById)
+router.put('/:id', verifyIsCommentsAdmin, idExists, validateComments, updatedComment)
+router.delete('/:id', verifyIsCommentsAdmin, idExists, deleteComment)
 
 module.exports = router;

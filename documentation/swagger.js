@@ -1,4 +1,5 @@
 const swaggerJSDoc = require('swagger-jsdoc');
+require('dotenv').config()
 
 const swaggerDefinition = {
     

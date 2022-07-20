@@ -3,7 +3,7 @@ var router = express.Router();
 const swaggerUi = require('swagger-ui-express');
 const swagger = require('../documentation/swagger');
 
-const usersRouter = require('./users');
+const usersRouter = require('./users.routes');
 const organizationRouter = require('./organizations.routes');
 const testimonialsRouter = require('./testimonials.routes');
 const newsRouter = require('./news.routes');

@@ -46,8 +46,8 @@ let idNotFound='a';
     .send({name:"NewsforCategoryTest", image:"https://NewsforCategoryTest.com/600/92c952", type:"news",content: "NewsforCategoryTest", categoryId:10, deletdAt:null}) 
     expect(response.status).to.eql(201);
     expect(response.body).to.be.an('object')
-    idNews=response.body.data.id
-    newsCatgoryId=response.body.data.categoryId
+    idNews=response.body.id
+    newsCatgoryId=response.body.categoryId
   });
 
   // CREATE CATEGORY

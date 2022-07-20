@@ -199,7 +199,7 @@ let idNotFound='a';
     .set("Authorization", `Bearer ${adminToken}`)
     .send({name: "Category demo 500", description: "demo accusamus beatae ad facilis cum similique qui sunt", image: "https://via.placeholder.com/600/92c952" })       
     expect(response.status).to.eql(404)
-    expect(response.body).includes({msg:'the category does not exist'});
+    expect(response.body).includes('id not found');
   }); 
 
   it('list one category, sucessful with admin credentials', async function () {
@@ -313,7 +313,7 @@ let idNotFound='a';
     .put(`/api/categories/${idTest}`)   
     .set("Authorization", `Bearer ${adminToken}`)
     .send({name: "Category Test Updated", description: "description Test updated", image: "https://Test.com/600/92c952" })
-    expect(response.status).to.eql(200)
+    expect(response.status).to.eql(201)
     expect(response.body).to.be.an('object');
   });
 
@@ -337,7 +337,7 @@ let idNotFound='a';
     .del(`/api/categories/${idNotFound}`)
     .set("Authorization", `Bearer ${adminToken}`)
     expect(response.status).to.eql(404)
-    expect(response.body).includes({msg:'the category does not exist'});
+    expect(response.body).includes('id not found');
   });
 
   it('delete a category, with admin credentials, fails when the category has associated news', async function () {

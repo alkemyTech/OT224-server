@@ -8,7 +8,7 @@ let regularToken = '';
 let testimonial;
 
 describe("ROUTE /api/testimonials", function () {
-  this.timeout(20000)
+  this.timeout(30000)
 
   before( async function () {
     const responseAdmin = await request
@@ -210,19 +210,6 @@ describe("ROUTE /api/testimonials", function () {
     expect(response.body.error).to.have.nested.property('[0].msg').to.be.equal('name must contain at least 6 characters');
   });
 
-  it('return update a testimonial should fail with admin credentials and the field image is empty', async function () {
-    const { id } = testimonial
-    const response = await request    
-      .put(`/api/testimonials/${id}`)        
-      .set("Authorization", `Bearer ${adminToken}`)
-      .set('Content-Type', 'multipart/form-data')    
-      .field('name', 'Testimonial 1')      
-      .field('content', 'test content')        
-    
-    expect(response.body.msg).to.equal('no files were uploaded')
-    expect(response.status).to.eql(400);
-  });
-
   it('return update a testimonial should fail with admin credentials and the field content is empty', async function () {
     const { id } = testimonial
     const response = await request    
@@ -246,8 +233,19 @@ describe("ROUTE /api/testimonials", function () {
       .attach('image', fs.readFileSync(path.join(__dirname, './img/dmlsbGFmaW9yaXRv.png')), 'dmlsbGFmaW9yaXRv.png')
       .field('content', 'Content test updated')
         
-    expect(response.status).to.eql(201);
-    
+    expect(response.status).to.eql(201);    
+  });
+
+  it('return update a testimonial should succeed with admin credentials whithout image', async function () {
+    const { id } = testimonial
+    const response = await request
+      .put(`/api/testimonials/${id}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .field('name', 'Testimonial 1')      
+      .field('content', 'Content test updated')
+        
+    expect(response.status).to.eql(201);    
   });
 
   /* DELETE /api/testimonials/:id */

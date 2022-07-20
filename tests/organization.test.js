@@ -1,4 +1,4 @@
-const { set } = require("../routes/news");
+const { set } = require("../routes/news.routes");
 const { request, expect } = require("./config");
 
 

@@ -3,7 +3,7 @@ const { request, expect } = require("./config");
 describe("GET api/news", function () {
     let adminToken = '';
     let regularToken = '';
-    let newId = 0;
+    let newId;
     const NOT_EXISTING_ID = 0;
 
     before( async function () {
@@ -27,7 +27,7 @@ describe("GET api/news", function () {
     it('create a news, fails without credentials', async function () {
         const response = await request
         .post('/api/news')
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: 1, type: "type" })
 
         expect(response.status).to.eql(400);
     });
@@ -36,7 +36,7 @@ describe("GET api/news", function () {
         const response = await request
         .post('/api/news')
         .set("Authorization", `Bearer ${regularToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: 1, type: "type" })
 
         expect(response.status).to.eql(401);
     });
@@ -45,7 +45,7 @@ describe("GET api/news", function () {
         const response = await request
         .post('/api/news')
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name:"", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
+        .send({name:"", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: 1, type: "type" })
 
         expect(response.body.error).to.have.nested.property('[0].msg').to.eql('El campo no puede estar vacio');
     });
@@ -54,7 +54,7 @@ describe("GET api/news", function () {
         const response = await request
         .post('/api/news')
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", content: "content", categoryId: "1", type: "type" })
+        .send({name: "news", content: "content", categoryId: 1, type: "type" })
 
         expect(response.body.error).to.have.nested.property('[0].msg').to.eql('El campo no puede estar vacio');
     });
@@ -63,7 +63,7 @@ describe("GET api/news", function () {
         const response = await request
         .post('/api/news')
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952" , categoryId: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952" , categoryId: 1, type: "type" })
 
         expect(response.body.error).to.have.nested.property('[0].msg').to.eql('El campo no puede estar vacio');
     });
@@ -81,10 +81,10 @@ describe("GET api/news", function () {
         const response = await request
         .post('/api/news')
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
-
-        newId = response.body.data.id;
-
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: 1, type: "type" })
+        
+        newId = response.body.id;
+        
         expect(response.status).to.eql(201);
     });
 
@@ -130,7 +130,7 @@ describe("GET api/news", function () {
     it('update a news, fails without credentials', async function () {
         const response = await request
         .put(`/api/news/${newId}`) 
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryid: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryid: 1, type: "type" })
         
         expect(response.status).to.eql(400);
     });
@@ -139,7 +139,7 @@ describe("GET api/news", function () {
         const response = await request
         .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${regularToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: 1, type: "type" })
         
         expect(response.status).to.eql(401);
     });
@@ -149,7 +149,7 @@ describe("GET api/news", function () {
         const response = await request
         .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name:"", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: "1", type: "type" })
+        .send({name:"", image: "https://via.placeholder.com/600/92c952", content: "content", categoryId: 1, type: "type" })
         
         expect(response.body.error).to.have.nested.property('[0].msg').to.eql('El campo no puede estar vacio');
     });
@@ -158,7 +158,7 @@ describe("GET api/news", function () {
         const response = await request
         .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", content: "content", categoryId: "1", type: "type" })
+        .send({name: "news", content: "content", categoryId: 1, type: "type" })
         
         expect(response.body.error).to.have.nested.property('[0].msg').to.eql('El campo no puede estar vacio');
     });
@@ -167,7 +167,7 @@ describe("GET api/news", function () {
         const response = await request
         .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952" , categoryId: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952" , categoryId: 1, type: "type" })
     
         expect(response.body.error).to.have.nested.property('[0].msg').to.eql('El campo no puede estar vacio');
     });
@@ -185,7 +185,7 @@ describe("GET api/news", function () {
         const response = await request
         .put(`/api/news/${NOT_EXISTING_ID}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name: "news", image: "https://via.placeholder.com/600/92c952",content: "content", categoryId: "1", type: "type" })
+        .send({name: "news", image: "https://via.placeholder.com/600/92c952",content: "content", categoryId: 1, type: "type" })
         
         expect(response.status).to.eql(404);
     })
@@ -194,7 +194,7 @@ describe("GET api/news", function () {
         const response = await request
         .put(`/api/news/${newId}`)
         .set("Authorization", `Bearer ${adminToken}`)
-        .send({name:"news", image:"https://via.placeholder.com/600/92c952", content:"content", categoryId:"1", type:"type" })
+        .send({name:"news", image:"https://via.placeholder.com/600/92c952", content:"content", categoryId: 1, type:"type" })
 
         expect(response.status).to.eql(201);
     });

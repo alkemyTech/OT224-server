@@ -1,11 +1,3 @@
-const express = require("express");
-const router = express();
-const newsController = require('../controllers/news.controller');
-const { validateNews } = require('../validators/newsValidator');
-const { authenticatedUser } = require('../middlewares/authenticatedUser');
-const { verifyIsAdmin } = require('../middlewares/user.middelware');
-
-
 /**
  * @swagger
  * tags:
@@ -141,7 +133,6 @@ const { verifyIsAdmin } = require('../middlewares/user.middelware');
  *              description: Bad request error
  *      
  */
-router.get('/', newsController.getAllNews);
 
 //Detail News
 
@@ -176,7 +167,6 @@ router.get('/', newsController.getAllNews);
  *          404:
  *              description: Resource not found
  */
-router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews);
 
 // Create News
 
@@ -211,7 +201,6 @@ router.get('/:id', authenticatedUser , verifyIsAdmin , newsController.detailNews
  *              description: Bad request error
  * 
  */
-router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsController.createNews);
 
 //Update News
 
@@ -251,7 +240,6 @@ router.post('/', authenticatedUser , verifyIsAdmin , validateNews ,newsControlle
  *              description: Resource not found
  *      
  */
-router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsController.updateNews);
 
 //Delete News
 
@@ -282,9 +270,9 @@ router.put('/:id', authenticatedUser , verifyIsAdmin , validateNews, newsControl
  *              description: Resource not found
  *      
  */
-router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteNews);
 
 // Get comments by new
+
 /**
  * 
  * @swagger
@@ -317,6 +305,3 @@ router.delete('/:id', authenticatedUser , verifyIsAdmin , newsController.deleteN
  *              description: Resource not found
  * 
  */
-router.get('/:id/comments', authenticatedUser , verifyIsAdmin , newsController.getAllCommentsOfNews);
-
-module.exports = router;

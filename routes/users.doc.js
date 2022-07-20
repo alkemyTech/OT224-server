@@ -42,6 +42,8 @@
  * @swagger
  * /api/users:
  *  get:
+ * security:
+ *        - bearerAuth: []
  *      summary: return all users
  *      tags: [Users]
  *      responses:
@@ -58,6 +60,8 @@
  * @swagger
  * /api/users/{id}:
  *  get:
+ * security:
+ *        - bearerAuth: []
  *      summary: return a users
  *      tags: [Users]
  *      parameters:
@@ -80,6 +84,8 @@
  * @swagger
  * /api/users/{id}:
  *  delete:
+ * security:
+ *        - bearerAuth: []
  *      summary: delete user by id
  *      tags: [Users]
  *      parameters:
@@ -99,6 +105,8 @@
  * @swagger
  * /api/users/update/{id}:
  *  put:
+ * security:
+ *        - bearerAuth: []
  *      summary: delete user by id
  *      tags: [Users]
  *      parameters:

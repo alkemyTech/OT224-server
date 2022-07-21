@@ -1,10 +1,3 @@
-const express = require("express");
-const router = express();
-const { validateCreate } = require("../validators/authValidator");
-const authControllers = require("../controllers/authControllers");
-const userController = require("../controllers/users.controllers");
-const { authenticatedUser } = require("../middlewares/authenticatedUser");
-const { validateRegister } = require("../validators/validatorRegister");
 
 /**
  * @swagger
@@ -21,8 +14,8 @@ const { validateRegister } = require("../validators/validatorRegister");
  *        - email
  *        - password
  *      example:
- *        email: prueba@gmail.com
- *        password: 123456789
+ *        email: admin@test.com
+ *        password: 1234test
  *        
  */
 
@@ -71,7 +64,7 @@ const { validateRegister } = require("../validators/validatorRegister");
 
 /**
  * @swagger
- * api/auth/login:
+ * /api/auth/login:
  *  post:
  *    summary: login user
  *    tags: [User]
@@ -80,25 +73,23 @@ const { validateRegister } = require("../validators/validatorRegister");
  *      content: 
  *        application/json:
  *          schema:
- *            type: objet
+ *            type: object
  *            $ref: '#/components/schemas/LoginCredentials'
- *    response: 
- *      201: 
- *        description: Created
+ *    responses: 
+ *      200: 
+ *        description: Succesful response
  *      401:
  *        description: Unauthorized
  *      500: 
  *        description: Internal Server Error     
  */
 
-router.post("/login", validateCreate, authControllers.login);
-
 
 //register User
 
 /**
  * @swagger
- * api/auth/register:
+ * /api/auth/register:
  *  post:
  *    summary: create new user
  *    tags: [User]
@@ -109,30 +100,33 @@ router.post("/login", validateCreate, authControllers.login);
  *          schema:
  *            type: objet
  *            $ref: '#/components/schemas/User'
- *    response: 
+ *    responses: 
  *      200: 
  *        description: Ok
- *      400:
- *        description: User not found
  *      500: 
  *        description: Internal Server Error     
  */
 
-router.post("/register", validateRegister, userController.createUser);
 
 // get auth user
 
 
 /**
  * @swagger 
- * api/auth/me:
+ * /api/auth/me:
  *  get: 
- *    summary: user information
+ *    security:
+ *        - bearerAuth: []
+ *    summary: Returns the user information
+ *    description: This endpoint returns the user's information
  *    tags: [User]
- *  response: 
- *    200: 
+ *    responses: 
+ *      200: 
+ *          description: Succesful response
+ *      401:
+ *          description: Unauthorized
+ *      400:
+ *          description: Bad request / request does not have a token
+ *      500:
+ *          description: Internal server error
  */
-
-router.get("/me", authenticatedUser, userController.findMe);
-
-module.exports = router;

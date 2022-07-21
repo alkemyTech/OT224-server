@@ -1,13 +1,12 @@
-
 {
   "name": "ong-server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www",
-    "pretest": "export NODE_ENV=test && npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
-    "test": "export NODE_ENV=test && mocha ./tests/*.test.js"
+    "dev": "nodemon ./bin/www",    
+    "pretest": "cross-env NODE_ENV=test npx sequelize-cli db:migrate:undo:all && cross-env NODE_ENV=test npx sequelize-cli db:migrate && cross-env NODE_ENV=test npx sequelize-cli db:seed:all",
+    "test": "cross-env NODE_ENV=test mocha ./tests/*.test.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
@@ -33,6 +32,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.3.0",
     "chai": "^4.3.6",
+    "cross-env": "^7.0.3",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.16",
     "sequelize-cli": "^6.2.0",

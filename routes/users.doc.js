@@ -40,11 +40,11 @@
 
 /**
  * @swagger
- * api/users:
+ * /api/users:
  *  get:
  *     security:
  *        - bearerAuth: []
- *     summary: return all users
+ *     summary: Return all users
  *     tags: [User]
  *     responses:
  *       200:
@@ -54,15 +54,21 @@
  *              schemma:
  *                 type: array
  *                 $ref: '#/components/schemas/User'
- */
+ *       400:
+ *          description: Bad request / request does not have a token
+ *       401:
+ *          description: Unauthorized
+ *       500:
+ *          description: Internal server error
+ */    
 
 /**
  * @swagger
- * api/users/{id}:
+ * /api/users/{id}:
  *  get:
  *     security:
  *        - bearerAuth: []
- *     summary: return user
+ *     summary: Returns a user
  *     tags: [User]
  *     parameters:
  *       - in: path
@@ -79,14 +85,22 @@
  *              schemma:
  *                 type: object
  *                 $ref: '#/components/schemas/User'
+ *       401:
+ *         description: Unauthorized
+ *       400:
+ *         description: Bad request / request does not have a token
+ *       404:
+ *         description: Not found / user not found
+ *       500:
+ *         description: Internal server error
  */
 /**
  * @swagger
- * api/users/{id}:
+ * /api/users/{id}:
  *  delete:
  *     security:
  *        - bearerAuth: []
- *     summary: delete user
+ *     summary: Deletes a user
  *     tags: [User]
  *     parameters:
  *       - in: path
@@ -97,16 +111,24 @@
  *         description: the user id
  *     responses:
  *       200:
- *         description: delete users
- *         $ref: '#/components/schemas/User'
+ *         description: Succesful response
+ *       401:
+ *         description: Unauthorized
+ *       400:
+ *         description: Bad request / request does not have a token
+ *       404:
+ *         description: Not found / user not found
+ *       500:
+ *         description: Internal server error
+ *     
  */
 /**
  * @swagger
- * api/users/update/{id}:
+ * /api/users/update/{id}:
  *  put:
  *     security:
  *        - bearerAuth: []
- *     summary: delete user
+ *     summary: Updates a User
  *     tags: [User]
  *     parameters:
  *       - in: path
@@ -123,7 +145,14 @@
  *             type: object
  *             $ref: '#/components/schemas/User'
  *     responses:
- *       200:
- *         description: update users
- *         $ref: '#/components/schemas/User'
+ *       201:
+ *         description: User modified
+ *       401:
+ *          description: Unauthorized
+ *       400:
+ *          description: Bad request / request does not have a token
+ *       500:
+ *          description: Internal server error
+ *       404:
+ *          description: Not found
  */

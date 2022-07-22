@@ -1,9 +1,9 @@
-
-
 const decodeImgName = ( file ) => {
 
-    const decodedName = Buffer.from( file.name , 'base64').toString('ascii');
-    file['name'] = decodedName
+   
+    const [ imgName, ext ] = file.name.split('.')
+    const decodedName = Buffer.from( imgName , 'base64').toString('ascii');
+    file['name'] = decodedName + '.' + ext;
 
     return file;
 }

@@ -19,7 +19,9 @@ const uploadToBucket = async (file)=>{
    const params = {
     Bucket: config.aws.s3BucketName,
     Key: fileName,
-    Body: stream
+    Body: stream,
+    ACL: 'public-read',
+    ContentType: file.mimetype
    }
    const upload= await storage.upload(params).promise()
    return  upload.Location  

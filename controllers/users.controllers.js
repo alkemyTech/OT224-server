@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
       email: email,
       photo: photo,
       password: pass,
-      roleId: roleId,
+      roleId: roleId ? roleId : 2,
     });
 
     const token = tokenGenerator(user);
